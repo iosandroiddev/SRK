@@ -19,6 +19,7 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		addContentLayout(R.layout.activity_login);
 		loadLayoutReferences();
+		hideSoftKeyboard();
 	}
 
 	private void loadLayoutReferences() {
@@ -46,7 +47,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void btnLoginUserClicked() {
-
+		hideSoftKeyboard();
 	}
 
 }

@@ -40,5 +40,8 @@
     <string name="rent_value_details">Rent Value Details</string>
     <string name="enter_email_id">Enter Email-Id</string>
     <string name="enter_password">Enter Password</string>
+    <string name="forgot_password_">Forgot Password?</string>
+    <string name="don_t_have_an_account_">Don\'t have an Account?</string>
+    <string name="register">Register</string>
 
 </resources>

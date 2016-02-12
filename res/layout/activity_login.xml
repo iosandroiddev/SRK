@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -28,25 +28,91 @@
             android:hint="@string/enter_password"
             android:inputType="textPassword" />
 
-        <com.utils.CustomTextView
-            android:id="@+id/btnLoginUser"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@drawable/blue_custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
+            android:layout_margin="10dp"
+            android:orientation="horizontal" >
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnLoginUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:layout_margin="5dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_margin="5dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/forgot_password_"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="bottom"
+            android:orientation="vertical" >
+
+            <com.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/don_t_have_an_account_"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/register"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

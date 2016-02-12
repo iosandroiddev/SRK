@@ -12,6 +12,7 @@ import android.text.style.MetricAffectingSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -88,6 +89,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	private void btnLoginClicked() {
+		btnMenuClicked();
 		Intent mIntent = new Intent(this, LoginActivity.class);
 		startActivity(mIntent);
 	}
@@ -141,6 +143,14 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		public void updateDrawState(TextPaint tp) {
 			tp.setTypeface(mTypeface);
 			tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+		}
+	}
+
+	public void hideSoftKeyboard() {
+		if (getCurrentFocus() != null) {
+			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
+					.getWindowToken(), 0);
 		}
 	}
 
