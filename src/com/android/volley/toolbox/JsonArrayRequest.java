@@ -95,7 +95,7 @@ public class JsonArrayRequest extends JsonRequest<JSONArray> {
      */
     public JsonArrayRequest(int method, String url, JSONObject jsonRequest,
                             Listener<JSONArray> listener, ErrorListener errorListener) {
-        super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener,
+        super(method, url, (jsonRequest == null) ? null : jsonRequest.toString().replace("\\", ""), listener,
                 errorListener);
     }
 

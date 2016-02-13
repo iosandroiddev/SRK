@@ -112,6 +112,9 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />
+
+            <requestFocus>
+            </requestFocus>
         </LinearLayout>
     </LinearLayout>
 

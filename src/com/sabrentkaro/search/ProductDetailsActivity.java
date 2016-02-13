@@ -292,11 +292,24 @@ public class ProductDetailsActivity extends BaseActivity {
 	}
 
 	private void startSelectDatesActivity() {
-
+		Intent intent = new Intent(this, RentDatesActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("selectedAdId", selectedProductAdId);
+		mBundle.putString("productPrice", mPricePerMonth);
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
+		intent.putExtras(mBundle);
+		startActivity(intent);
 	}
 
 	private void startLoginActivity() {
 		Intent mIntent = new Intent(this, LoginActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("selectedAdId", selectedProductAdId);
+		mBundle.putString("productPrice", mPricePerMonth);
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
+		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
 

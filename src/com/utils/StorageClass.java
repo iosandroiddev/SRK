@@ -250,4 +250,53 @@ public class StorageClass {
 	public void setUserCity(String cityName) {
 		edit.putString("user_city", cityName).commit();
 	}
+
+	public String getUserState() {
+		return sh.getString("user_state", "");
+	}
+
+	public void setUserState(String userState) {
+		edit.putString("user_state", userState).commit();
+	}
+
+	public String getUserCountry() {
+		return sh.getString("user_country", "");
+	}
+
+	public void setUserCountry(String userState) {
+		edit.putString("user_country", userState).commit();
+	}
+
+	public String getPinCode() {
+		return sh.getString("pin_code", "");
+	}
+
+	public void setPinCode(String userState) {
+		edit.putString("pin_code", userState).commit();
+	}
+
+	public String getMobileNumber() {
+		return sh.getString("mobile_no", "");
+	}
+
+	public void setMobileNumber(String userState) {
+		edit.putString("mobile_no", userState).commit();
+	}
+
+	public String getAddress() {
+		return sh.getString("address", "");
+	}
+
+	public void setAddress(String userState) {
+		edit.putString("address", userState).commit();
+	}
+
+	public String getAuthHeader() {
+		return sh.getString("auth_header", "");
+	}
+
+	public void setAuthHeader(String userState) {
+		edit.putString("auth_header", userState).commit();
+	}
+
 }
