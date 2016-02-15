@@ -33,17 +33,20 @@ public class ProductDetailsActivity extends BaseActivity {
 	private TextView mtxtProductName, mtxtBrand, mtxtType, mtxtModel,
 			mtxtCategory, mtxtLocation, mtxtDailyCost, mtxtMonthCost,
 			mtxtWeekCost, mtxtSecurityDeposit, mtxtYearOfPurchase,
-			mtxtMonthOfPurchase, mtxtCapacity, mtxtQuantity;
+			mtxtMonthOfPurchase, mtxtCapacity, mtxtQuantity, mtxtTonnage;
 	private EditText mEditQuantity;
 	private TextView mbtnRent;
 	private String selectedProductAdId;
 
 	private String mType, mModel, mBrand, mCapacity, mQuantity, mCategory,
 			mProductCategory, mYearOfPurchase, mMonthOfPurchase, mDailyCost,
-			locationValue, productConditionValue, mWeekCost, mMonthlyCost;
+			locationValue, productConditionValue, mWeekCost, mMonthlyCost,
+			mTonnage;
 	private String mStrSecurityDeposit;
 	private LinearLayout mLayoutWeekCost, mLayoutMonthCost, mLayoutDailyCost;
 	private String mImageUrl;
+	private LinearLayout mLayoutTonnage;
+	private LinearLayout mLayoutCapacity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +115,7 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtYearOfPurchase = (TextView) findViewById(R.id.txtYearOfPurchase);
 		mtxtMonthOfPurchase = (TextView) findViewById(R.id.txtMonthOfPurchase);
 		mtxtCapacity = (TextView) findViewById(R.id.txtCapacity);
+		mtxtTonnage = (TextView) findViewById(R.id.txtTonnage);
 		mImageRating = (ImageView) findViewById(R.id.imgProductRating);
 		mImageProduct = (ImageView) findViewById(R.id.itemProduct);
 		mEditQuantity = (EditText) findViewById(R.id.editTextQuantity);
@@ -120,6 +124,9 @@ public class ProductDetailsActivity extends BaseActivity {
 		mLayoutMonthCost = (LinearLayout) findViewById(R.id.layoutMonthCost);
 		mLayoutWeekCost = (LinearLayout) findViewById(R.id.layoutWeekCost);
 		mLayoutDailyCost = (LinearLayout) findViewById(R.id.layoutDailyCost);
+
+		mLayoutTonnage = (LinearLayout) findViewById(R.id.layoutTonnage);
+		mLayoutCapacity = (LinearLayout) findViewById(R.id.layoutCapacity);
 		mbtnRent.setOnClickListener(this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
 	}
@@ -158,6 +165,9 @@ public class ProductDetailsActivity extends BaseActivity {
 									} else if (mItemObj.optString("Title")
 											.equalsIgnoreCase("Storage Volume")) {
 										mCapacity = mItemObj.optString("Value");
+									} else if (mItemObj.optString("Title")
+											.equalsIgnoreCase("Tonnage")) {
+										mTonnage = mItemObj.optString("Value");
 									}
 								}
 							}
@@ -291,11 +301,20 @@ public class ProductDetailsActivity extends BaseActivity {
 
 		if (mCapacity == null || mCapacity.length() == 0) {
 			mtxtCapacity.setText(mCapacity);
-			mtxtCapacity.setVisibility(View.GONE);
+			mLayoutCapacity.setVisibility(View.GONE);
 		} else {
 			mtxtCapacity.setText(mCapacity);
-			mtxtCapacity.setVisibility(View.VISIBLE);
+			mLayoutCapacity.setVisibility(View.VISIBLE);
 		}
+
+		if (mTonnage == null || mTonnage.length() == 0) {
+			mtxtTonnage.setText(mTonnage);
+			mLayoutTonnage.setVisibility(View.GONE);
+		} else {
+			mtxtTonnage.setText(mTonnage);
+			mLayoutTonnage.setVisibility(View.VISIBLE);
+		}
+
 		mtxtLocation.setText(locationValue);
 		mtxtSecurityDeposit.setText(mStrSecurityDeposit);
 

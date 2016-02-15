@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -47,10 +48,9 @@ public class OrderDetailsActivity extends BaseActivity {
 			mFaciliValue;
 
 	private String fromDate;
-
 	private String toDate;
-
 	private String mSecurityValue;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -164,6 +164,8 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtServiceTaxCost = (TextView) findViewById(R.id.txtServiceTaxCost);
 		mtxtLogistics = (TextView) findViewById(R.id.txtLogisticsTax);
 		mtxtLogisticsCost = (TextView) findViewById(R.id.txtLogisticsTaxCost);
+
+		
 
 		mbtnContinue.setOnClickListener(this);
 	}
