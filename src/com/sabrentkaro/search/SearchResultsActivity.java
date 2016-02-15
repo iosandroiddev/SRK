@@ -160,6 +160,25 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 						mModel.setProductCondition(resultObj
 								.optString("productcondition"));
 						mModel.setCategory(resultObj.optString("category"));
+
+						JSONArray mCatTonArray = resultObj
+								.optJSONArray("itemJsonobject");
+						if (mCatTonArray != null) {
+							for (int k = 0; k < mCatTonArray.length(); k++) {
+								JSONObject mCatTonObj = mCatTonArray
+										.optJSONObject(k);
+								if (mCatTonObj.optString("Title")
+										.equalsIgnoreCase("Storage Volume")) {
+									mModel.setCapacity(mCatTonObj
+											.optString("Value"));
+								}
+								if (mCatTonObj.optString("Title")
+										.equalsIgnoreCase("Tonnage")) {
+									mModel.setTonnage(mCatTonObj
+											.optString("Value"));
+								}
+							}
+						}
 						mSearchResultsArray.add(mModel);
 					}
 				}

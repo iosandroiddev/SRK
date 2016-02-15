@@ -173,6 +173,7 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtFacilitaionCharges.setText("Total Amount: " + mFaciliValue);
 		mtxtServiceTax.setText("Total Amount: " + mServiceValue);
 		mtxtLogistics.setText("Total Amount: " + mLogisticsValue);
+		mtxtTotalCost.setText(mProdRentValue);
 	}
 
 	private void loadDetails() {
@@ -189,7 +190,6 @@ public class OrderDetailsActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 
-		mtxtTotalCost.setText(mPrice);
 		mtxtRentalPeriod.setText(String.valueOf(days));
 		mtxtShippingAddress.setText(txtAddress);
 		mtxtDescription.setText(mProductDescription);

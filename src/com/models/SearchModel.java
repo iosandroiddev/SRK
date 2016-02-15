@@ -23,6 +23,9 @@ public class SearchModel implements Serializable {
 	private String yearOfPurchase;
 	private String productCondition;
 
+	private String tonnage;
+	private String capacity;
+
 	public String getAdId() {
 		return adId;
 	}
@@ -125,6 +128,22 @@ public class SearchModel implements Serializable {
 
 	public void setProductCondition(String productCondition) {
 		this.productCondition = productCondition;
+	}
+
+	public String getTonnage() {
+		return tonnage;
+	}
+
+	public void setTonnage(String tonnage) {
+		this.tonnage = tonnage;
+	}
+
+	public String getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(String capacity) {
+		this.capacity = capacity;
 	}
 
 }
