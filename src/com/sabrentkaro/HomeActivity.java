@@ -20,6 +20,7 @@ import com.adapters.HomeAdapter;
 import com.models.CategoryModel;
 import com.models.CityModel;
 import com.models.ProductModel;
+import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchActivity;
 import com.sabrentkaro.search.SearchResultsActivity;
 import com.utils.StorageClass;
@@ -33,7 +34,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	private ArrayList<CityModel> mCityArray = new ArrayList<CityModel>();
 
 	private HomeAdapter mAdapter;
-	private TextView mbtnSearchProducts;
+	private TextView mbtnSearchProducts, mbtnPostAd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			if (mCities != null) {
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
+				alert.setCancelable(false);
 				alert.setSingleChoiceItems(mCities, -1,
 						new DialogInterface.OnClickListener() {
 							@Override
@@ -84,6 +86,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private void addClickListeners() {
 		mbtnSearchProducts.setOnClickListener(this);
+		mbtnPostAd.setOnClickListener(this);
 	}
 
 	private void setAdapter() {
@@ -169,6 +172,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		mGridView = (GridView) findViewById(R.id.gridView);
 		mGridView.setOnItemClickListener(this);
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearch);
+		mbtnPostAd = (TextView) findViewById(R.id.btnPost);
 	}
 
 	@Override
@@ -189,7 +193,9 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		case R.id.btnSearch:
 			btnSearchProductsClicked();
 			break;
-
+		case R.id.btnPost:
+			btnPostAdClicked();
+			break;
 		default:
 			break;
 		}
@@ -197,6 +203,12 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private void btnSearchProductsClicked() {
 		Intent mIntent = new Intent(this, SearchActivity.class);
+		startActivity(mIntent);
+	}
+
+	private void btnPostAdClicked() {
+		btnMenuClicked();
+		Intent mIntent = new Intent(this, PostAdActivity.class);
 		startActivity(mIntent);
 	}
 

@@ -158,6 +158,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mPanCardLayout, true);
+			meditPanCardNumber.requestFocus();
 			if (isAadharCardSelected) {
 				isAadharCardSelected = false;
 				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
@@ -180,6 +181,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
+			mEditAadharCardName.requestFocus();
 			isAadharCardSelected = true;
 			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.btn_select, 0, 0, 0);

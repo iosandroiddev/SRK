@@ -3,6 +3,8 @@
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:padding="5dp" >
 
     <ScrollView
@@ -71,10 +73,10 @@
                     <EditText
                         android:id="@+id/editAddress"
                         android:layout_width="match_parent"
-                        android:textSize="15sp"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:padding="3dp" >
+                        android:padding="3dp"
+                        android:textSize="15sp" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
@@ -123,10 +125,10 @@
                     <EditText
                         android:id="@+id/editCityTown"
                         android:layout_width="match_parent"
-                        android:textSize="15sp"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:padding="3dp" >
+                        android:padding="3dp"
+                        android:textSize="15sp" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
@@ -177,8 +179,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:textSize="15sp"
-                        android:padding="3dp" >
+                        android:padding="3dp"
+                        android:textSize="15sp" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
@@ -229,8 +231,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:textSize="15sp"
-                        android:padding="3dp" >
+                        android:padding="3dp"
+                        android:textSize="15sp" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
@@ -280,9 +282,9 @@
                         android:id="@+id/editPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
                         android:inputType="number"
-                        android:padding="3dp" >
+                        android:padding="3dp"
+                        android:textSize="15sp" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
@@ -340,8 +342,8 @@
                     android:id="@+id/editPanCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <com.utils.CustomTextView
@@ -385,8 +387,8 @@
                     android:id="@+id/editAadharName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:textSize="15sp" />
 
                 <com.utils.CustomTextView
                     android:layout_width="wrap_content"
@@ -401,9 +403,9 @@
                     android:id="@+id/editAadharNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
                     android:inputType="text"
-                    android:padding="3dp" />
+                    android:padding="3dp"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <com.utils.CustomTextView

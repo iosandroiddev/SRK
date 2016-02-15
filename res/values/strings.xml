@@ -84,5 +84,8 @@
     <string name="service_tax">Service Tax</string>
     <string name="logistics_cost">Logistics Cost</string>
     <string name="the_product_rental_process_will_start_only_after_we_verify_your_details_thanks_for_helping_us_build_a_trusted_platform_">The product rental process will start only after we verify your details. Thanks for helping us build a trusted platform!</string>
+    <string name="week_cost">Week Cost</string>
+    <string name="month_cost">Month Cost</string>
+    <string name="post_ad">Post Ad</string>
 
 </resources>

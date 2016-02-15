@@ -84,7 +84,6 @@ public class OrderDetailsActivity extends BaseActivity {
 
 					@Override
 					public void onResponse(JSONArray response) {
-						// hideProgressLayout();
 						responseForRentPricingApi(response);
 					}
 
@@ -181,7 +180,7 @@ public class OrderDetailsActivity extends BaseActivity {
 		int days = 0;
 		try {
 			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-					"dd/MM/yyyy");
+					"MM/dd/yyyy");
 			Date startDate = mSimpleDateFormat.parse(mStartDate);
 			Date endDate = mSimpleDateFormat.parse(mEndDate);
 			rentalDays = endDate.getTime() - startDate.getTime();

@@ -17,13 +17,14 @@ public class ApiUtils {
 
 	public static final String LOADADDETAILS = BASE_URL
 			+ "Search/LoadAdDetails";
-	
+
 	public static final String POSTUSERINFORMATION = BASE_URL
 			+ "User/PostUserInformation";
-	
+
+	public static final String POSTREGISTERUSER = BASE_URL
+			+ "User/PostRegisterUser";
+
 	public static final String CALCULATERENTALPRICING = BASE_URL
 			+ "Rental/CalculateRentalPricing";
-	
-	
 
 }

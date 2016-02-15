@@ -73,7 +73,7 @@ public class RentDatesActivity extends BaseActivity {
 		}
 
 		public void onDateSet(DatePicker view, int yy, int mm, int dd) {
-			mTxtView.setText((mm+1) + "/" +dd + "/" + yy);
+			mTxtView.setText((mm + 1) + "/" + dd + "/" + yy);
 		}
 
 		@Override
@@ -108,7 +108,7 @@ public class RentDatesActivity extends BaseActivity {
 	}
 
 	private void btnNextClicked() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		Date startDate = null;
 		try {
 			startDate = simpleDateFormat.parse(mtxtStartDate.getText()
@@ -131,6 +131,14 @@ public class RentDatesActivity extends BaseActivity {
 			} else {
 				navigateToAdressDocuments();
 			}
+		} else {
+			if (mtxtStartDate.getText().toString()
+					.equalsIgnoreCase("Select Date")) {
+				showToast("Please Select Start Date");
+			} else {
+				showToast("Please Select End Date");
+			}
+
 		}
 	}
 

@@ -370,7 +370,7 @@ public class StaticUtils {
 	}
 
 	public static Animation expandCollapse(final View v, final boolean expand) {
-		return expandCollapse(v, expand, 1500);
+		return expandCollapse(v, expand, 500);
 	}
 
 	public static Animation expandCollapse(final View v, final boolean expand,

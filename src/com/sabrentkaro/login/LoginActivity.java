@@ -62,8 +62,8 @@ public class LoginActivity extends BaseActivity {
 		mbtnLogin.setOnClickListener(this);
 		mbtnRegister.setOnClickListener(this);
 
-		mEditEmail.setText("harathithippaluru@sabrentkaro.com");
-		mEditPassword.setText("harathi@raj1");
+		// mEditEmail.setText("harathithippaluru@sabrentkaro.com");
+		// mEditPassword.setText("harathi@raj1");
 	}
 
 	@Override

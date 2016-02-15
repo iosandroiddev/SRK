@@ -3,6 +3,8 @@
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:padding="5dp" >
 
     <ScrollView
@@ -195,7 +197,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -247,7 +250,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -621,6 +625,7 @@
                 custom:fonttype="trebuchet_ms" />
 
             <LinearLayout
+                android:id="@+id/layoutDailyCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -663,6 +668,116 @@
 
                     <com.utils.CustomTextView
                         android:id="@+id/txtDailyCost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutWeekCost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/week_cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtWeekCost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutMonthCost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/month_cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtMonthCost"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"

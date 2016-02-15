@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -30,17 +31,18 @@ public class ProductDetailsActivity extends BaseActivity {
 
 	private ImageView mImageProduct, mImageRating;
 	private TextView mtxtProductName, mtxtBrand, mtxtType, mtxtModel,
-			mtxtCategory, mtxtLocation, mtxtDailyCost, mtxtSecurityDeposit,
-			mtxtYearOfPurchase, mtxtMonthOfPurchase, mtxtCapacity,
-			mtxtQuantity;
+			mtxtCategory, mtxtLocation, mtxtDailyCost, mtxtMonthCost,
+			mtxtWeekCost, mtxtSecurityDeposit, mtxtYearOfPurchase,
+			mtxtMonthOfPurchase, mtxtCapacity, mtxtQuantity;
 	private EditText mEditQuantity;
 	private TextView mbtnRent;
 	private String selectedProductAdId;
 
 	private String mType, mModel, mBrand, mCapacity, mQuantity, mCategory,
-			mProductCategory, mYearOfPurchase, mMonthOfPurchase,
-			mPricePerMonth, locationValue, productConditionValue;
-
+			mProductCategory, mYearOfPurchase, mMonthOfPurchase, mDailyCost,
+			locationValue, productConditionValue, mWeekCost, mMonthlyCost;
+	private String mStrSecurityDeposit;
+	private LinearLayout mLayoutWeekCost, mLayoutMonthCost, mLayoutDailyCost;
 	private String mImageUrl;
 
 	@Override
@@ -78,6 +80,7 @@ public class ProductDetailsActivity extends BaseActivity {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						hideProgressLayout();
+						showToast(error.toString());
 					}
 
 				}) {
@@ -103,6 +106,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtCategory = (TextView) findViewById(R.id.txtCategoryName);
 		mtxtLocation = (TextView) findViewById(R.id.txtLocationName);
 		mtxtDailyCost = (TextView) findViewById(R.id.txtDailyCost);
+		mtxtWeekCost = (TextView) findViewById(R.id.txtWeekCost);
+		mtxtMonthCost = (TextView) findViewById(R.id.txtMonthCost);
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.txtSecurityDeposit);
 		mtxtYearOfPurchase = (TextView) findViewById(R.id.txtYearOfPurchase);
 		mtxtMonthOfPurchase = (TextView) findViewById(R.id.txtMonthOfPurchase);
@@ -112,12 +117,18 @@ public class ProductDetailsActivity extends BaseActivity {
 		mEditQuantity = (EditText) findViewById(R.id.editTextQuantity);
 		mtxtQuantity = (TextView) findViewById(R.id.txtQuantity);
 		mbtnRent = (TextView) findViewById(R.id.btnRentProduct);
+		mLayoutMonthCost = (LinearLayout) findViewById(R.id.layoutMonthCost);
+		mLayoutWeekCost = (LinearLayout) findViewById(R.id.layoutWeekCost);
+		mLayoutDailyCost = (LinearLayout) findViewById(R.id.layoutDailyCost);
 		mbtnRent.setOnClickListener(this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
 	}
 
 	private void responseForProductDetailsApi(JSONObject response) {
 		if (response != null) {
+			mStrSecurityDeposit = response.optString("SecurityDeposit");
+			Double mSD = response.optDouble("SecurityDeposit");
+			mStrSecurityDeposit = String.valueOf((int) Math.round(mSD));
 			JSONArray productsArray = response.optJSONArray("Products");
 			if (productsArray != null) {
 				for (int i = 0; i < productsArray.length(); i++) {
@@ -183,18 +194,62 @@ public class ProductDetailsActivity extends BaseActivity {
 						}
 
 						JSONArray mPricingArray = mObj.optJSONArray("Pricing");
+						String mPricePerday = "";
+						String mPricePerWeek = "";
+						String mPriceMonth = "";
 						if (mPricingArray != null) {
 							for (int l = 0; l < mPricingArray.length(); l++) {
 								JSONObject mPriceObj = mPricingArray
 										.optJSONObject(l);
 								if (mPriceObj != null) {
-									Double mPrice = mPriceObj
-											.optDouble("Price");
-									if (mPrice > 0) {
-										mPricePerMonth = String.valueOf(mPrice);
+									if (mPriceObj.optString("UnitCode")
+											.equalsIgnoreCase("PerWeekDay")) {
+										Double mPrice = mPriceObj
+												.optDouble("Price");
+										if (mPrice > 0) {
+											mPricePerday = String
+													.valueOf((int) Math
+															.round(mPrice));
+										}
+									}
+									if (mPriceObj.optString("UnitCode")
+											.equalsIgnoreCase("PerWeek")) {
+										Double mPrice = mPriceObj
+												.optDouble("Price");
+										if (mPrice > 0) {
+											mPricePerWeek = String
+													.valueOf((int) Math
+															.round(mPrice));
+										}
+									}
+									if (mPriceObj.optString("UnitCode")
+											.equalsIgnoreCase("PerMonth")) {
+										Double mPrice = mPriceObj
+												.optDouble("Price");
+
+										if (mPrice > 0) {
+											mPriceMonth = String
+													.valueOf((int) Math
+															.round(mPrice));
+										}
 									}
 								}
 							}
+						}
+						if (TextUtils.isEmpty(mPricePerday)) {
+							mDailyCost = "";
+							if (TextUtils.isEmpty(mPricePerWeek)) {
+								mWeekCost = "";
+								if (TextUtils.isEmpty(mPriceMonth)) {
+									mMonthlyCost = "";
+								} else {
+									mMonthlyCost = mPriceMonth;
+								}
+							} else {
+								mWeekCost = mPricePerWeek;
+							}
+						} else {
+							mDailyCost = mPricePerday;
 						}
 
 						JSONArray adSettingsArray = response
@@ -235,7 +290,28 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtType.setText(mType);
 		mtxtCapacity.setText(mCapacity);
 		mtxtLocation.setText(locationValue);
-		mtxtSecurityDeposit.setText("0");
+		mtxtSecurityDeposit.setText(mStrSecurityDeposit);
+
+		if (TextUtils.isEmpty(mDailyCost)) {
+			mLayoutDailyCost.setVisibility(View.GONE);
+		} else {
+			mtxtDailyCost.setText(mDailyCost);
+			mLayoutDailyCost.setVisibility(View.VISIBLE);
+		}
+
+		if (TextUtils.isEmpty(mWeekCost)) {
+			mLayoutWeekCost.setVisibility(View.GONE);
+		} else {
+			mtxtWeekCost.setText(mWeekCost);
+			mLayoutWeekCost.setVisibility(View.VISIBLE);
+		}
+
+		if (TextUtils.isEmpty(mMonthlyCost)) {
+			mLayoutMonthCost.setVisibility(View.GONE);
+		} else {
+			mtxtMonthCost.setText(mMonthlyCost);
+			mLayoutMonthCost.setVisibility(View.VISIBLE);
+		}
 
 		if (TextUtils.isEmpty(productConditionValue)
 				|| productConditionValue.equalsIgnoreCase("0")) {
@@ -295,8 +371,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		Intent intent = new Intent(this, RentDatesActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedAdId", selectedProductAdId);
-		mBundle.putString("productPrice", mPricePerMonth);
-		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productPrice", mDailyCost);
+		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
 		intent.putExtras(mBundle);
 		startActivity(intent);
@@ -306,8 +382,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		Intent mIntent = new Intent(this, LoginActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedAdId", selectedProductAdId);
-		mBundle.putString("productPrice", mPricePerMonth);
-		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productPrice", mDailyCost);
+		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);

@@ -1,9 +1,13 @@
 package com.sabrentkaro;
 
+import java.util.ArrayList;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -19,7 +23,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.models.CityModel;
 import com.sabrentkaro.login.LoginActivity;
+import com.sabrentkaro.postad.PostAdActivity;
+import com.sabrentkaro.search.SearchActivity;
+import com.sabrentkaro.search.SearchResultsActivity;
 import com.utils.StorageClass;
 import com.utils.slidingmenu.SlidingMenu;
 import com.utils.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -33,6 +41,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
 	private TextView mbtnLogin;
+	private TextView mbtnPostAd, mbtnSearchProducts;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,9 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	private void setClickListeners() {
 		mbtnMenu.setOnClickListener(this);
 		mbtnLogin.setOnClickListener(this);
+		mtxtLocation.setOnClickListener(this);
+		mbtnPostAd.setOnClickListener(this);
+		mbtnSearchProducts.setOnClickListener(this);
 	}
 
 	private void getLayoutReferences() {
@@ -54,6 +66,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mProgressLayout = (RelativeLayout) findViewById(R.id.layoutWait);
 		mtxtLocation = (TextView) findViewById(R.id.txtLocation);
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
+		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
+		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearchProducts);
 	}
 
 	private void setSlidingMenu() {
@@ -83,9 +97,34 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		case R.id.btnLogin:
 			btnLoginClicked();
 			break;
+		case R.id.txtLocation:
+			btnLocationClicked();
+			break;
+		case R.id.btnPostAd:
+			btnPostAdClicked();
+			break;
+		case R.id.btnSearchProducts:
+			btnSearchProductsClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnPostAdClicked() {
+		btnMenuClicked();
+		Intent mIntent = new Intent(this, PostAdActivity.class);
+		startActivity(mIntent);
+	}
+
+	private void btnSearchProductsClicked() {
+		btnMenuClicked();
+		Intent mIntent = new Intent(this, SearchActivity.class);
+		startActivity(mIntent);
+	}
+
+	private void btnLocationClicked() {
+		showCityAlert();
 	}
 
 	private void btnLoginClicked() {
@@ -152,6 +191,49 @@ public class BaseActivity extends SlidingFragmentActivity implements
 			inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
 					.getWindowToken(), 0);
 		}
+	}
+
+	private void showCityAlert() {
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
+		int pos = -1;
+		if (mCityArray != null) {
+			final String[] mCities = new String[mCityArray.size()];
+			for (int i = 0; i < mCityArray.size(); i++) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this)
+						.getUserCity())) {
+					pos = -1;
+				} else {
+					if (mCityArray
+							.get(i)
+							.getName()
+							.equalsIgnoreCase(
+									StorageClass.getInstance(this)
+											.getUserCity())) {
+						pos = i;
+					}
+				}
+				mCities[i] = mCityArray.get(i).getName();
+			}
+			if (mCities != null) {
+				StorageClass.getInstance(this).getUserCity();
+				AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setTitle("Select City");
+				alert.setSingleChoiceItems(mCities, pos,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								StorageClass.getInstance(BaseActivity.this)
+										.setUserCity(mCities[which]);
+								dialog.dismiss();
+								setLocation();
+							}
+						});
+				alert.show();
+			}
+		}
+
 	}
 
 }

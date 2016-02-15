@@ -14,7 +14,7 @@ public class RegisterActivity extends BaseActivity {
 
 	private EditText mEditEmail, mEditPassword, mEditConfirmEmail,
 			mEditDisplayName, mEditMobileNumber;
-	private TextView mbtnLogin;
+	private TextView mbtnGenerateOtp;
 	private CheckBox mCheckTerms;
 
 	@Override
@@ -32,6 +32,8 @@ public class RegisterActivity extends BaseActivity {
 		mEditDisplayName = (EditText) findViewById(R.id.displayName);
 		mEditMobileNumber = (EditText) findViewById(R.id.mobileNumber);
 		mCheckTerms = (CheckBox) findViewById(R.id.checkTerms);
+		mbtnGenerateOtp = (TextView) findViewById(R.id.btnGenerateOtp);
+		mbtnGenerateOtp.setOnClickListener(this);
 
 		StaticUtils.setEditTextHintFont(mEditEmail, this);
 		StaticUtils.setEditTextHintFont(mEditConfirmEmail, this);
@@ -44,6 +46,13 @@ public class RegisterActivity extends BaseActivity {
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		if (v.getId() == R.id.btnGenerateOtp) {
+			btnGenerateOtpClicked();
+		}
+	}
+
+	private void btnGenerateOtpClicked() {
+
 	}
 
 }
