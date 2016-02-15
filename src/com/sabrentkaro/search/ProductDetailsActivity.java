@@ -288,7 +288,14 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtBrand.setText(mBrand);
 		mtxtModel.setText(mModel);
 		mtxtType.setText(mType);
-		mtxtCapacity.setText(mCapacity);
+
+		if (mCapacity == null || mCapacity.length() == 0) {
+			mtxtCapacity.setText(mCapacity);
+			mtxtCapacity.setVisibility(View.GONE);
+		} else {
+			mtxtCapacity.setText(mCapacity);
+			mtxtCapacity.setVisibility(View.VISIBLE);
+		}
 		mtxtLocation.setText(locationValue);
 		mtxtSecurityDeposit.setText(mStrSecurityDeposit);
 
