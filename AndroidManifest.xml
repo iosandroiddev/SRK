@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -69,6 +70,14 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.sabrentkaro.postad.PostAdActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostAdDocumentActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostDatesActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
     </application>

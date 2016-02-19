@@ -3,17 +3,499 @@
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:padding="5dp" >
 
-  <com.utils.CustomTextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:background="#55000000"
-      android:padding="5dp"
-      android:text="@string/post_ad"
-      android:textColor="@color/white"
-      android:textSize="14sp"
-      custom:fonttype="trebuchet_ms" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:text="@string/post_my_ad"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="3dp"
+                    android:text="@string/what_would_you_like_to_post_an_ad_for_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectProductCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_product_category"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectSubProductCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_product_sub_category"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/title_for_your_ad_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editTitleAd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_title"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnUploadPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_custom_button_selector"
+                    android:drawableEnd="@drawable/btn_camera_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/btn_camera_selector"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="@string/upload_photos_of_your_product"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:id="@+id/imgLayout"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:background="#55000000"
+                    android:visibility="gone" >
+
+                    <com.utils.SquareImageView
+                        android:id="@+id/imgProduct"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_loading" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:text="@string/product_details"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/short_descrption_of_your_product"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editShortDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_short_description"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/rate_your_product_condition"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp" >
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="@style/CustomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:stepSize="0.01" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:text="@string/additional_details"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/any_instructions_to_be_followed_while_using_your_product_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editInstructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_instructions"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/any_other_stuff_in_the_package_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editStuff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_stuff"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:text="@string/control_type_and_capacity"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectControl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_control"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_type"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_capacity"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:text="@string/rent_value_details"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/how_much_did_you_get_it_for_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editPricePurchased"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_purchased_cost"
+                    android:inputType="number"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/how_much_do_you_want_to_rent_it_for_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/editPricePerDayRent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_daily_rent_cost"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/editPricePerWeekRent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_weekly_rent_cost"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/editPricePerMonthRent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_monthly_rent_cost"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/how_much_quantity_do_you_want_to_put_for_rent_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_quantity"
+                    android:inputType="number"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/how_much_security_deposit_would_you_like_to_collect_per_product_"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <EditText
+                    android:id="@+id/editSecurityDeposit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:hint="@string/enter_security_deposit"
+                    android:inputType="number"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/next"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

@@ -41,9 +41,7 @@ public class SplashActivity extends FragmentActivity implements
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_splash);
 		initProductsApi();
-		initSubCategoriesApi();
-		initCityListApi();
-		initiateHandler();
+
 	}
 
 	private void initiateHandler() {
@@ -62,7 +60,7 @@ public class SplashActivity extends FragmentActivity implements
 		Bundle mBundle = new Bundle();
 		mBundle.putSerializable("productsArray", mProductsArray);
 		mBundle.putSerializable("categories", mCategoriesArray);
-		mBundle.putSerializable("categoriesMapping", mCategoriesArray);
+		mBundle.putSerializable("categoriesMapping", mCateogoryMappingsArray);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 		finish();
@@ -100,7 +98,7 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void ErrorResponse(VolleyError error, int requestCode) {
-		
+
 	}
 
 	@Override
@@ -136,6 +134,7 @@ public class SplashActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		}
+		initSubCategoriesApi();
 	}
 
 	@Override
@@ -167,6 +166,7 @@ public class SplashActivity extends FragmentActivity implements
 			}
 		}
 		StorageClass.getInstance(this).setCityList(mCityArray);
+		initiateHandler();
 	}
 
 	private void responseForAllSubCategoriesApi(JSONArray response) {
@@ -189,5 +189,6 @@ public class SplashActivity extends FragmentActivity implements
 			}
 
 		}
+		initCityListApi();
 	}
 }

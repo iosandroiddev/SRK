@@ -9,6 +9,7 @@ public class StaticData {
 	public final static int FETCHSEARCHRESULTS_RESPONSE_CODE = 104;
 	public final static int LOADADDETAILS_RESPONSE_CODE = 105;
 	public final static int POSTUSERINFORMATION_RESPONSE_CODE = 106;
+	public final static int GETADTEMPLATEFORCATEGORY_RESPONSE_CODE = 107;
 
 	public final static float SCALE = 1.5f;
 

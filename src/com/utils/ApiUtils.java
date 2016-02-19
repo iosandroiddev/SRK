@@ -27,4 +27,7 @@ public class ApiUtils {
 	public static final String CALCULATERENTALPRICING = BASE_URL
 			+ "Rental/CalculateRentalPricing";
 
+	public static final String GETADTEMPLATEFORCATEGORY = BASE_URL
+			+ "Ad/GetAdTemplateForCategory";
+
 }

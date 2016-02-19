@@ -54,6 +54,8 @@ import android.widget.TextView.OnEditorActionListener;
 @SuppressLint("SimpleDateFormat")
 public class StaticUtils {
 
+	public static boolean isProfilePic = false;
+
 	public static <T extends ImageView> void setTabButtonState(T imageView,
 			int selected, int normal) {
 		Context ctx = imageView.getContext();

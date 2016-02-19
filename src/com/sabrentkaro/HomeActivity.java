@@ -207,8 +207,12 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void btnPostAdClicked() {
-		btnMenuClicked();
 		Intent mIntent = new Intent(this, PostAdActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putSerializable("productsArray", mProductsArray);
+		mBundle.putSerializable("categories", mCategoriesArray);
+		mBundle.putSerializable("categoriesMapping", mCateogoryMappingsArray);
+		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
 
