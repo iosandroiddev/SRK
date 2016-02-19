@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.adapters.HomeAdapter;
 import com.models.CategoryModel;
@@ -105,6 +102,11 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 					.getSerializable("categories");
 			mCateogoryMappingsArray = (ArrayList<CategoryModel>) mBundle
 					.getSerializable("categoriesMapping");
+		}
+
+		if (mProductsArray != null && mProductsArray.size() == 0) {
+			InternalApp mApp = (InternalApp) getApplication();
+			mProductsArray = mApp.getProductsArray();
 		}
 
 		setImages();

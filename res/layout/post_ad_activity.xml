@@ -200,11 +200,10 @@
 
                     <RatingBar
                         android:id="@+id/ratingBar"
-                        style="@style/CustomRatingBar"
+                        style="@style/foodRatingBar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="18dp"
                         android:layout_gravity="start"
-                        android:isIndicator="true"
                         android:numStars="5"
                         android:stepSize="0.01" />
                 </LinearLayout>
@@ -480,21 +479,44 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <com.utils.CustomTextView
-                android:id="@+id/btnNext"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp"
-                android:background="@drawable/blue_custom_button_selector"
                 android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:text="@string/next"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                custom:fonttype="trebuchet_ms" />
+                android:orientation="horizontal" >
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/blue_custom_button_selector"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/next"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/blue_custom_button_selector"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/clear"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

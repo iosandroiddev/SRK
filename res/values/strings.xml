@@ -134,5 +134,7 @@
     <string name="enter_state">Enter State</string>
     <string name="enter_pincode">Enter Pincode</string>
     <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="home">Home</string>
+    <string name="loading_">Loading...</string>
 
 </resources>

@@ -62,6 +62,12 @@ public class SplashActivity extends FragmentActivity implements
 		mBundle.putSerializable("categories", mCategoriesArray);
 		mBundle.putSerializable("categoriesMapping", mCateogoryMappingsArray);
 		mIntent.putExtras(mBundle);
+		InternalApp mApp = (InternalApp) getApplication();
+		if (mApp != null) {
+			mApp.setProductsArray(mProductsArray);
+			mApp.setCateogoriesArray(mCategoriesArray);
+			mApp.setCategoryMappingArray(mCateogoryMappingsArray);
+		}
 		startActivity(mIntent);
 		finish();
 	}

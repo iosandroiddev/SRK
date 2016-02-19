@@ -97,26 +97,56 @@ public class PostAdDocumentActivity extends BaseActivity {
 
 	private void btnNextClicked() {
 
-		if (!isPanCardSelected && !isAadharCardSelected) {
-			showToast("Please Select Documents");
-		} else if (isPanCardSelected) {
-			if (TextUtils.isEmpty(meditPanCardNumber.getText().toString())) {
-				showToast("Please Enter Pan Card Number");
+		if (meditAdress.getText().toString().length() == 0) {
+			showToast("Please Enter Address");
+		} else {
+			if (meditCity.getText().toString().length() == 0) {
+				showToast("Please Enter City");
 			} else {
+				if (meditState.getText().toString().length() == 0) {
+					showToast("Please Enter State");
+				} else {
+					if (mEditPinCode.getText().toString().length() == 0) {
+						showToast("Please Enter Pincode");
+					} else {
+						if (mEditPhone.getText().toString().length() == 0) {
+							showToast("Please Enter Phone Number");
+						} else {
+							if (!isPanCardSelected && !isAadharCardSelected) {
+								showToast("Please Select Documents");
+							} else if (isPanCardSelected) {
+								if (TextUtils.isEmpty(meditPanCardNumber
+										.getText().toString())) {
+									showToast("Please Enter Pan Card Number");
+								} else {
+									navigateToPostDates();
+								}
+							} else if (isAadharCardSelected) {
+								if (TextUtils.isEmpty(mEditAadharCardName
+										.getText().toString())) {
+									showToast("Please Enter AadharCard Name");
+								} else if (TextUtils
+										.isEmpty(mEditAadharCardNumber
+												.getText().toString())) {
+									showToast("Please Enter AadharCard Number");
+								} else {
+									navigateToPostDates();
+								}
+							}
+						}
+					}
+
+				}
+
 			}
-		} else if (isAadharCardSelected) {
-			if (TextUtils.isEmpty(mEditAadharCardName.getText().toString())) {
-				showToast("Please Enter AadharCard Name");
-			} else if (TextUtils.isEmpty(mEditAadharCardNumber.getText()
-					.toString())) {
-				showToast("Please Enter AadharCard Number");
-			} else {
-			}
+
 		}
 
+	}
+
+	private void navigateToPostDates() {
 		Intent mIntent = new Intent(this, PostDatesActivity.class);
 		startActivity(mIntent);
-
 	}
 
 	private void btnPanCardClicked() {

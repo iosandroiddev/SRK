@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -46,11 +47,12 @@ import com.utils.ApiUtils;
 import com.utils.StaticUtils;
 import com.utils.UploadPicture;
 
-public class PostAdActivity extends BaseActivity {
+public class PostAdActivity extends BaseActivity implements
+		OnRatingBarChangeListener {
 
 	private TextView mbtnProductCategory, mbtnSubProductCategory,
 			mbtnUploadPhotos, mbtnSelectControl, mbtnSelectType,
-			mbtnSelectCapacity, mbtnNext;
+			mbtnSelectCapacity, mbtnNext, mbtnClear;
 	private EditText mEditTitle, mEditShortDesc, mEditInstructions, mEditStuff,
 			mEditPurchasedCost, mEditDailyCost, mEditWeeklyCost,
 			mEditMonthlyCost, mEditQuantity, mEditSecurityDeposit;
@@ -90,6 +92,7 @@ public class PostAdActivity extends BaseActivity {
 		mbtnSelectType.setOnClickListener(this);
 		mbtnSelectCapacity.setOnClickListener(this);
 		mbtnNext.setOnClickListener(this);
+		mbtnClear.setOnClickListener(this);
 
 	}
 
@@ -121,7 +124,7 @@ public class PostAdActivity extends BaseActivity {
 		mEditSecurityDeposit = (EditText) findViewById(R.id.editSecurityDeposit);
 
 		mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-		mRatingBar.setRating(3.5f);
+		mRatingBar.setOnRatingBarChangeListener(this);
 
 		mbtnProductCategory = (TextView) findViewById(R.id.btnSelectProductCategory);
 		mbtnSubProductCategory = (TextView) findViewById(R.id.btnSelectSubProductCategory);
@@ -132,6 +135,7 @@ public class PostAdActivity extends BaseActivity {
 		mbtnNext = (TextView) findViewById(R.id.btnNext);
 		mImgLayout = (LinearLayout) findViewById(R.id.imgLayout);
 		mImgProduct = (ImageView) findViewById(R.id.imgProduct);
+		mbtnClear = (TextView) findViewById(R.id.btnClear);
 
 		StaticUtils.setEditTextHintFont(mEditTitle, this);
 		StaticUtils.setEditTextHintFont(mEditShortDesc, this);
@@ -170,9 +174,32 @@ public class PostAdActivity extends BaseActivity {
 		case R.id.btnSelectCapacity:
 			btnSelectCapacityClicked();
 			break;
+		case R.id.btnClear:
+			btnClearClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnClearClicked() {
+		mEditTitle.setText("");
+		mEditShortDesc.setText("");
+		mEditInstructions.setText("");
+		mEditStuff.setText("");
+		mEditPurchasedCost.setText("");
+		mEditDailyCost.setText("");
+		mEditWeeklyCost.setText("");
+		mEditMonthlyCost.setText("");
+		mEditQuantity.setText("");
+		mEditSecurityDeposit.setText("");
+
+		mbtnProductCategory.setText("Select Prodcut Category");
+		mbtnSubProductCategory.setText("Select Sub Product Category");
+		mbtnSelectControl.setText("Select Control");
+		mbtnSelectType.setText("Select Type");
+		mbtnSelectCapacity.setText("Select Capacity");
+
 	}
 
 	private void btnSelectCapacityClicked() {
@@ -314,6 +341,94 @@ public class PostAdActivity extends BaseActivity {
 	}
 
 	private void btnNextClicked() {
+		if (mbtnProductCategory.getText().toString()
+				.equalsIgnoreCase("Select Category")) {
+			showToast("Please Select Category");
+		} else {
+			if (mbtnSubProductCategory.getText().toString()
+					.equalsIgnoreCase("Select Product Sub Category")) {
+				showToast("Please Select Product Sub Category");
+			} else {
+				if (mEditTitle.getText().toString().length() == 0) {
+					showToast("Please Enter Title");
+				} else {
+					if (mEditShortDesc.getText().toString().length() == 0) {
+						showToast("Please Enter Short Description");
+					} else {
+						if (mEditInstructions.getText().toString().length() == 0) {
+							showToast("Please Enter Instructions");
+						} else {
+							if (mEditStuff.getText().toString().length() == 0) {
+								showToast("Please Enter Product Stuff");
+							} else {
+								if (mbtnSelectControl.getText().toString()
+										.equalsIgnoreCase("Select Control")) {
+									showToast("Please Select Control");
+								} else {
+									if (mbtnSelectType.getText().toString()
+											.equalsIgnoreCase("Select Type")) {
+										showToast("Please Select Type");
+									} else {
+										if (mbtnSelectCapacity
+												.getText()
+												.toString()
+												.equalsIgnoreCase(
+														"Select Capcacity")) {
+											showToast("Please Select Capacity");
+										} else {
+											if (mEditPurchasedCost.getText()
+													.toString().length() == 0) {
+												showToast("Please Enter Purchased Cost");
+											} else {
+												if (mEditDailyCost.getText()
+														.toString().length() == 0) {
+													showToast("Please Enter Daily Cost");
+												} else {
+													if (mEditWeeklyCost
+															.getText()
+															.toString()
+															.length() == 0) {
+														showToast("Please Enter Weekly Cost");
+													} else {
+														if (mEditMonthlyCost
+																.getText()
+																.toString()
+																.length() == 0) {
+															showToast("Please Enter Monhtly Cost");
+														} else {
+															if (mEditQuantity
+																	.getText()
+																	.toString()
+																	.length() == 0) {
+																showToast("Please Enter Quantity");
+															} else {
+																if (mEditSecurityDeposit
+																		.getText()
+																		.toString()
+																		.length() == 0) {
+																	showToast("Please Enter Security Deposit");
+																} else {
+																	navigateToPostDocuments();
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	private void navigateToPostDocuments() {
 		Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
 		startActivity(mIntent);
 	}
@@ -576,74 +691,9 @@ public class PostAdActivity extends BaseActivity {
 		}
 	}
 
-	private Bitmap getResizedBitmap(Uri file, Point size) {
-		// First decode with inJustDecodeBounds=true to check dimensions
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		if ("file".equalsIgnoreCase(file.getScheme())) {
-			BitmapFactory.decodeFile(file.getPath(), options);
-		} else {
-			InputStream stream = null;
-			try {
-				stream = getContentResolver().openInputStream(file);
-			} catch (IOException e) {
-				Log.e(this.getClass().getName(), e.getMessage());
-			}
-			if (stream != null) {
-				BitmapFactory.decodeStream(stream, null, options);
-			}
-		}
-		Bitmap bmp = null;
-		if (options.outHeight > 0 && options.outWidth > 0) {
-			// Calculate inSampleSize
-			options.inSampleSize = calculateInSampleSize(options, size.x,
-					size.y);
-			// Decode bitmap with inSampleSize set
-			options.inJustDecodeBounds = false;
-			try {
-				if ("file".equalsIgnoreCase(file.getScheme())) {
-					bmp = BitmapFactory.decodeFile(file.getPath(), options);
-				} else {
-					InputStream stream = null;
-					try {
-						stream = getContentResolver().openInputStream(file);
-					} catch (IOException e) {
-						Log.e(this.getClass().getName(), e.getMessage());
-					}
-					if (stream != null) {
-						bmp = BitmapFactory.decodeStream(stream, null, options);
-					}
-				}
-			} catch (OutOfMemoryError oome) {
-				Log.e("Out Of Mem",
-						oome.getMessage() == null ? "OutOfMemory error: size "
-								+ size.x + "x" + size.y : oome.getMessage());
-			}
-		}
-		return bmp;
-	}
+	@Override
+	public void onRatingChanged(RatingBar ratingBar, float rating,
+			boolean fromUser) {
 
-	public static int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-
-			// Calculate the largest inSampleSize value that is a power of 2 and
-			// keeps both
-			// height and width larger than the requested height and width.
-			while ((halfHeight / inSampleSize) > reqHeight
-					&& (halfWidth / inSampleSize) > reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-
-		return inSampleSize;
 	}
 }

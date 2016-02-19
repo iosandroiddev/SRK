@@ -27,7 +27,6 @@ import com.models.CityModel;
 import com.sabrentkaro.login.LoginActivity;
 import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchActivity;
-import com.sabrentkaro.search.SearchResultsActivity;
 import com.utils.StorageClass;
 import com.utils.slidingmenu.SlidingMenu;
 import com.utils.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -41,7 +40,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
 	private TextView mbtnLogin;
-	private TextView mbtnPostAd, mbtnSearchProducts;
+	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +57,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mtxtLocation.setOnClickListener(this);
 		mbtnPostAd.setOnClickListener(this);
 		mbtnSearchProducts.setOnClickListener(this);
+		mbtnHome.setOnClickListener(this);
 	}
 
 	private void getLayoutReferences() {
@@ -68,6 +68,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearchProducts);
+		mbtnHome = (TextView) findViewById(R.id.btnHome);
 	}
 
 	private void setSlidingMenu() {
@@ -106,6 +107,9 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		case R.id.btnSearchProducts:
 			btnSearchProductsClicked();
 			break;
+		case R.id.btnHome:
+			btnHomeClicked();
+			break;
 		default:
 			break;
 		}
@@ -114,12 +118,21 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	private void btnPostAdClicked() {
 		btnMenuClicked();
 		Intent mIntent = new Intent(this, PostAdActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);
 	}
 
 	private void btnSearchProductsClicked() {
 		btnMenuClicked();
 		Intent mIntent = new Intent(this, SearchActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(mIntent);
+	}
+
+	private void btnHomeClicked() {
+		btnMenuClicked();
+		Intent mIntent = new Intent(this, HomeActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);
 	}
 
