@@ -50,37 +50,29 @@
                     custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnSelectProductCategory"
+                    android:id="@+id/productCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:background="@drawable/blue_button_selector"
-                    android:drawableEnd="@drawable/ic_arrow_down_"
-                    android:drawableRight="@drawable/ic_arrow_down_"
                     android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="8dp"
                     android:singleLine="true"
-                    android:text="@string/select_product_category"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnSelectSubProductCategory"
+                    android:id="@+id/subProductCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:background="@drawable/blue_button_selector"
-                    android:drawableEnd="@drawable/ic_arrow_down_"
-                    android:drawableRight="@drawable/ic_arrow_down_"
                     android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="8dp"
                     android:singleLine="true"
-                    android:text="@string/select_product_sub_category"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
@@ -97,30 +89,17 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editTitleAd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_title"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textSize="14sp" />
-
                 <com.utils.CustomTextView
-                    android:id="@+id/btnUploadPhoto"
+                    android:id="@+id/productTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:background="@drawable/blue_custom_button_selector"
-                    android:drawableEnd="@drawable/btn_camera_selector"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/btn_camera_selector"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="@string/upload_photos_of_your_product"
-                    android:textColor="@color/white"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
@@ -128,9 +107,9 @@
                     android:id="@+id/imgLayout"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@color/transparent"
                     android:padding="10dp"
-                    android:visibility="gone" >
+                    android:background="@color/transparent"
+                    android:visibility="visible" >
 
                     <LinearLayout
                         android:layout_width="200dp"
@@ -148,22 +127,6 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/default_loading" />
                     </LinearLayout>
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnUpload"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/blue_custom_button_selector"
-                        android:drawablePadding="5dp"
-                        android:gravity="center_vertical"
-                        android:padding="10dp"
-                        android:text="@string/upload"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        custom:fonttype="trebuchet_ms" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -198,15 +161,19 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editShortDesc"
+                <com.utils.CustomTextView
+                    android:id="@+id/productDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_short_description"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textSize="14sp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"
@@ -221,19 +188,15 @@
                     custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnSelectRating"
+                    android:id="@+id/rating"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:background="@drawable/blue_button_selector"
-                    android:drawableEnd="@drawable/ic_arrow_down_"
-                    android:drawableRight="@drawable/ic_arrow_down_"
                     android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="8dp"
                     android:singleLine="true"
-                    android:text="@string/select_rating"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
@@ -270,14 +233,19 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editInstructions"
+                <com.utils.CustomTextView
+                    android:id="@+id/instructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_instructions"
-                    android:inputType="text"
-                    android:textSize="14sp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"
@@ -291,15 +259,19 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editStuff"
+                <com.utils.CustomTextView
+                    android:id="@+id/stuff"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_stuff"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textSize="14sp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
             </LinearLayout>
 
             <LinearLayout
@@ -363,14 +335,19 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editPricePurchased"
+                <com.utils.CustomTextView
+                    android:id="@+id/purchasedCost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_purchased_cost"
-                    android:inputType="number"
-                    android:textSize="14sp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"
@@ -389,41 +366,50 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <EditText
-                        android:id="@+id/editPricePerDayRent"
+                    <com.utils.CustomTextView
+                        android:id="@+id/dailyCost"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:layout_weight="1"
-                        android:hint="@string/enter_daily_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
                         android:singleLine="true"
-                        android:textSize="14sp" />
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
 
-                    <EditText
-                        android:id="@+id/editPricePerWeekRent"
+                    <com.utils.CustomTextView
+                        android:id="@+id/weekCost"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:layout_weight="1"
-                        android:hint="@string/enter_weekly_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
                         android:singleLine="true"
-                        android:textSize="14sp" />
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
 
-                    <EditText
-                        android:id="@+id/editPricePerMonthRent"
+                    <com.utils.CustomTextView
+                        android:id="@+id/monthCost"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
                         android:layout_weight="1"
-                        android:hint="@string/enter_monthly_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
                         android:singleLine="true"
-                        android:textSize="14sp" />
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
                 </LinearLayout>
 
                 <com.utils.CustomTextView
@@ -438,14 +424,19 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editQuantity"
+                <com.utils.CustomTextView
+                    android:id="@+id/quantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_quantity"
-                    android:inputType="number"
-                    android:textSize="14sp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"
@@ -459,14 +450,219 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/editSecurityDeposit"
+                <com.utils.CustomTextView
+                    android:id="@+id/securityDeposit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:hint="@string/enter_security_deposit"
-                    android:inputType="number"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="#55000000"
+                    android:padding="5dp"
+                    android:text="@string/documents_address"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/addresslayout" />
+
+                <CheckBox
+                    android:id="@+id/checkAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:checked="true"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/product_address_is_same_as_current_address_"
                     android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutUserAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:background="#55000000"
+                        android:padding="5dp"
+                        android:text="@string/current_address"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <include
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        layout="@layout/addressuserlayout" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="#55000000"
+                    android:padding="5dp"
+                    android:text="@string/document_type"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnPanCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_margin="5dp"
+                    android:drawableLeft="@drawable/btn_unselect"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/btn_unselect"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/pan_card"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:id="@+id/layoutPanCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/blue_button_selector"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/pan_card_number"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/panCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnAadharCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_margin="5dp"
+                    android:drawableLeft="@drawable/btn_unselect"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/btn_unselect"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/aadhar_card"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAadharCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/blue_button_selector"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/aadhar_card_name"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/aadharName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/aadhar_card_number"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/aadharNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -476,7 +672,7 @@
                 android:orientation="horizontal" >
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnNext"
+                    android:id="@+id/btnSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -486,13 +682,13 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="10dp"
                     android:singleLine="true"
-                    android:text="@string/next"
+                    android:text="@string/submit"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnClear"
+                    android:id="@+id/btnEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -502,7 +698,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="10dp"
                     android:singleLine="true"
-                    android:text="@string/clear"
+                    android:text="@string/edit"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />

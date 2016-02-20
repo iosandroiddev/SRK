@@ -49,6 +49,15 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		getLayoutReferences();
 		setClickListeners();
 		setLocation();
+		hideOrShowLogin();
+	}
+
+	private void hideOrShowLogin() {
+		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
+			mbtnLogin.setVisibility(View.VISIBLE);
+		} else {
+			mbtnLogin.setVisibility(View.GONE);
+		}
 	}
 
 	private void setClickListeners() {
@@ -246,7 +255,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 				alert.show();
 			}
 		}
-
 	}
 
 }

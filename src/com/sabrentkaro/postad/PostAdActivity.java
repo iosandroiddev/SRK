@@ -1,7 +1,6 @@
 package com.sabrentkaro.postad;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -14,23 +13,34 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
-import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
+import com.android.jsonclasses.IArrayParseListener;
+import com.android.jsonclasses.IObjectParseListener;
+import com.android.jsonclasses.JSONObjectRequestResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -43,16 +53,19 @@ import com.models.ProductModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
+import com.sabrentkaro.login.LoginActivity;
 import com.utils.ApiUtils;
+import com.utils.MiscUtils;
+import com.utils.StaticData;
 import com.utils.StaticUtils;
+import com.utils.StorageClass;
 import com.utils.UploadPicture;
 
 public class PostAdActivity extends BaseActivity implements
-		OnRatingBarChangeListener {
+		IObjectParseListener, IArrayParseListener {
 
 	private TextView mbtnProductCategory, mbtnSubProductCategory,
-			mbtnUploadPhotos, mbtnSelectControl, mbtnSelectType,
-			mbtnSelectCapacity, mbtnNext, mbtnClear;
+			mbtnUploadPhotos, mbtnNext, mbtnClear, mtxtFields;
 	private EditText mEditTitle, mEditShortDesc, mEditInstructions, mEditStuff,
 			mEditPurchasedCost, mEditDailyCost, mEditWeeklyCost,
 			mEditMonthlyCost, mEditQuantity, mEditSecurityDeposit;
@@ -62,10 +75,10 @@ public class PostAdActivity extends BaseActivity implements
 	private ArrayList<String> mCategoriesArray = new ArrayList<String>();
 	private ArrayList<CityModel> mCityArray = new ArrayList<CityModel>();
 
-	private LinearLayout mImgLayout;
+	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
+	private LinearLayout mSelectLayout, mlayoutFields;
+	private FrameLayout mImgLayout;
 	private ImageView mImgProduct;
-
-	private PostAdModel mObjModel;
 
 	final static int PICK_IMAGE = 1;
 	final static int CAPTURE_IMAGE = 2;
@@ -73,7 +86,14 @@ public class PostAdActivity extends BaseActivity implements
 	public static UploadPicture uploadPicture;
 	private Bitmap mProfilePicBitmap;
 	private RatingBar mRatingBar;
-	private String mImageProfilePicPath;
+	private String mImageProfilePicPath = "";
+	private String[] mStringSelectValues;
+	private TextView mbtnSelectRating;
+
+	private TextView mbtnUpload;
+	private String productAdId;
+	private String mtxtRating;
+	private String productCode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,15 +102,25 @@ public class PostAdActivity extends BaseActivity implements
 		getDatafromIntent();
 		loadReferences();
 		addClickListeners();
+		initProdcutAdId();
+
+	}
+
+	private void initProdcutAdId() {
+		showProgressLayout();
+		JSONObjectRequestResponse mJsonRequestResponse = new JSONObjectRequestResponse(
+				this);
+		mJsonRequestResponse.setPostMethod(true);
+		Bundle params = new Bundle();
+		mJsonRequestResponse.getResponse(
+				MiscUtils.encodeUrl(ApiUtils.INITIATEAD, params),
+				StaticData.INITIATE_RESPONSE_CODE, this);
 	}
 
 	private void addClickListeners() {
 		mbtnProductCategory.setOnClickListener(this);
 		mbtnSubProductCategory.setOnClickListener(this);
 		mbtnUploadPhotos.setOnClickListener(this);
-		mbtnSelectControl.setOnClickListener(this);
-		mbtnSelectType.setOnClickListener(this);
-		mbtnSelectCapacity.setOnClickListener(this);
 		mbtnNext.setOnClickListener(this);
 		mbtnClear.setOnClickListener(this);
 
@@ -122,20 +152,63 @@ public class PostAdActivity extends BaseActivity implements
 		mEditMonthlyCost = (EditText) findViewById(R.id.editPricePerMonthRent);
 		mEditQuantity = (EditText) findViewById(R.id.editQuantity);
 		mEditSecurityDeposit = (EditText) findViewById(R.id.editSecurityDeposit);
+		mbtnUpload = (TextView) findViewById(R.id.btnUpload);
+		mbtnUpload.setOnClickListener(this);
 
-		mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-		mRatingBar.setOnRatingBarChangeListener(this);
+		mEditDailyCost.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_NEXT) {
+					mEditWeeklyCost.requestFocus();
+					return true;
+				}
+				return false;
+			}
+		});
+
+		mEditWeeklyCost.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_NEXT) {
+					mEditMonthlyCost.requestFocus();
+					return true;
+				}
+				return false;
+			}
+		});
+
+		mEditMonthlyCost
+				.setOnEditorActionListener(new OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if (actionId == EditorInfo.IME_ACTION_NEXT) {
+							mEditQuantity.requestFocus();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		mbtnSelectRating = (TextView) findViewById(R.id.btnSelectRating);
+		mbtnSelectRating.setOnClickListener(this);
 
 		mbtnProductCategory = (TextView) findViewById(R.id.btnSelectProductCategory);
 		mbtnSubProductCategory = (TextView) findViewById(R.id.btnSelectSubProductCategory);
 		mbtnUploadPhotos = (TextView) findViewById(R.id.btnUploadPhoto);
-		mbtnSelectControl = (TextView) findViewById(R.id.btnSelectControl);
-		mbtnSelectType = (TextView) findViewById(R.id.btnSelectType);
-		mbtnSelectCapacity = (TextView) findViewById(R.id.btnSelectCapacity);
 		mbtnNext = (TextView) findViewById(R.id.btnNext);
-		mImgLayout = (LinearLayout) findViewById(R.id.imgLayout);
+		mImgLayout = (FrameLayout) findViewById(R.id.imgLayout);
 		mImgProduct = (ImageView) findViewById(R.id.imgProduct);
 		mbtnClear = (TextView) findViewById(R.id.btnClear);
+
+		mSelectLayout = (LinearLayout) findViewById(R.id.selectControls);
+		mlayoutFields = (LinearLayout) findViewById(R.id.layoutControlTypeCapacity);
+		mtxtFields = (TextView) findViewById(R.id.txtFields);
 
 		StaticUtils.setEditTextHintFont(mEditTitle, this);
 		StaticUtils.setEditTextHintFont(mEditShortDesc, this);
@@ -165,21 +238,30 @@ public class PostAdActivity extends BaseActivity implements
 		case R.id.btnUploadPhoto:
 			btnUploadPhotoClicked();
 			break;
-		case R.id.btnSelectControl:
-			btnSelectControlClicked();
-			break;
-		case R.id.btnSelectType:
-			btnSelectTypeClicked();
-			break;
-		case R.id.btnSelectCapacity:
-			btnSelectCapacityClicked();
-			break;
 		case R.id.btnClear:
 			btnClearClicked();
+			break;
+		case R.id.btnSelectRating:
+			btnSelectRatingClicked();
+			break;
+		case R.id.btnUpload:
+			btnUploadClicked();
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnUploadClicked() {
+		showProgressLayout();
+	}
+
+	public String getStringImage(Bitmap bmp) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		byte[] imageBytes = baos.toByteArray();
+		String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+		return encodedImage;
 	}
 
 	private void btnClearClicked() {
@@ -196,123 +278,7 @@ public class PostAdActivity extends BaseActivity implements
 
 		mbtnProductCategory.setText("Select Prodcut Category");
 		mbtnSubProductCategory.setText("Select Sub Product Category");
-		mbtnSelectControl.setText("Select Control");
-		mbtnSelectType.setText("Select Type");
-		mbtnSelectCapacity.setText("Select Capacity");
 
-	}
-
-	private void btnSelectCapacityClicked() {
-		if (mObjModel.getCapacityValues() != null
-				&& mObjModel.getCapacityValues().size() > 0) {
-			int pos = -1;
-			final String[] mCapcacityValues = new String[mObjModel
-					.getCapacityValues().size()];
-			for (int i = 0; i < mObjModel.getCapacityValues().size(); i++) {
-				String mValue = mObjModel.getCapacityValues().get(i);
-				if (mbtnSelectCapacity.getText().toString()
-						.equalsIgnoreCase("Select Capacity")) {
-					pos = -1;
-				} else {
-					if (mValue.equalsIgnoreCase(mbtnSelectCapacity.getText()
-							.toString())) {
-						pos = i;
-					}
-				}
-				mCapcacityValues[i] = mValue;
-			}
-			if (mCapcacityValues != null) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle("Select Capacity");
-				alert.setSingleChoiceItems(mCapcacityValues, pos,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								mbtnSelectCapacity
-										.setText(mCapcacityValues[which]);
-								dialog.dismiss();
-							}
-
-						});
-				alert.show();
-			}
-		}
-	}
-
-	private void btnSelectTypeClicked() {
-		if (mObjModel.getTypeValues() != null
-				&& mObjModel.getTypeValues().size() > 0) {
-			int pos = -1;
-			final String[] mTypeValues = new String[mObjModel.getTypeValues()
-					.size()];
-			for (int i = 0; i < mObjModel.getTypeValues().size(); i++) {
-				String mValue = mObjModel.getTypeValues().get(i);
-				if (mbtnSelectType.getText().toString()
-						.equalsIgnoreCase("Select Type")) {
-					pos = -1;
-				} else {
-					if (mValue.equalsIgnoreCase(mbtnSelectType.getText()
-							.toString())) {
-						pos = i;
-					}
-				}
-				mTypeValues[i] = mValue;
-			}
-			if (mTypeValues != null) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle("Select Type");
-				alert.setSingleChoiceItems(mTypeValues, pos,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								mbtnSelectType.setText(mTypeValues[which]);
-								dialog.dismiss();
-							}
-
-						});
-				alert.show();
-			}
-		}
-	}
-
-	private void btnSelectControlClicked() {
-		if (mObjModel.getControlValues() != null
-				&& mObjModel.getControlValues().size() > 0) {
-			int pos = -1;
-			final String[] mControlValues = new String[mObjModel
-					.getControlValues().size()];
-			for (int i = 0; i < mObjModel.getControlValues().size(); i++) {
-				String mValue = mObjModel.getControlValues().get(i);
-				if (mbtnSelectControl.getText().toString()
-						.equalsIgnoreCase("Select Control")) {
-					pos = -1;
-				} else {
-					if (mValue.equalsIgnoreCase(mbtnSelectControl.getText()
-							.toString())) {
-						pos = i;
-					}
-				}
-				mControlValues[i] = mValue;
-			}
-			if (mControlValues != null) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle("Select Control");
-				alert.setSingleChoiceItems(mControlValues, pos,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								mbtnSelectControl
-										.setText(mControlValues[which]);
-								dialog.dismiss();
-							}
-
-						});
-				alert.show();
-			}
-		}
 	}
 
 	private void btnUploadPhotoClicked() {
@@ -352,29 +318,26 @@ public class PostAdActivity extends BaseActivity implements
 				if (mEditTitle.getText().toString().length() == 0) {
 					showToast("Please Enter Title");
 				} else {
-					if (mEditShortDesc.getText().toString().length() == 0) {
-						showToast("Please Enter Short Description");
+					if (mImageProfilePicPath == null
+							|| mImageProfilePicPath.length() == 0) {
+						showToast("Please Select Photo");
 					} else {
-						if (mEditInstructions.getText().toString().length() == 0) {
-							showToast("Please Enter Instructions");
+						if (mEditShortDesc.getText().toString().length() == 0) {
+							showToast("Please Enter Short Description");
 						} else {
-							if (mEditStuff.getText().toString().length() == 0) {
-								showToast("Please Enter Product Stuff");
+							if (mtxtRating == null || mtxtRating.length() == 0) {
+								showToast("Please Select Rating");
 							} else {
-								if (mbtnSelectControl.getText().toString()
-										.equalsIgnoreCase("Select Control")) {
-									showToast("Please Select Control");
+								if (mEditInstructions.getText().toString()
+										.length() == 0) {
+									showToast("Please Enter Instructions");
 								} else {
-									if (mbtnSelectType.getText().toString()
-											.equalsIgnoreCase("Select Type")) {
-										showToast("Please Select Type");
+									if (mEditStuff.getText().toString()
+											.length() == 0) {
+										showToast("Please Enter Product Stuff");
 									} else {
-										if (mbtnSelectCapacity
-												.getText()
-												.toString()
-												.equalsIgnoreCase(
-														"Select Capcacity")) {
-											showToast("Please Select Capacity");
+										if (!areFieldsValidated()) {
+
 										} else {
 											if (mEditPurchasedCost.getText()
 													.toString().length() == 0) {
@@ -418,7 +381,6 @@ public class PostAdActivity extends BaseActivity implements
 										}
 									}
 								}
-
 							}
 						}
 					}
@@ -428,51 +390,120 @@ public class PostAdActivity extends BaseActivity implements
 
 	}
 
+	private boolean areFieldsValidated() {
+		String mtxtTitle = "";
+		ArrayList<String> mFieldName = new ArrayList<String>();
+		if (mSelectLayout != null && mSelectLayout.getChildCount() > 0) {
+			for (int i = 0; i < mSelectLayout.getChildCount(); i++) {
+				View mView = mSelectLayout.getChildAt(i);
+				if (mView != null && mView instanceof TextView) {
+					TextView mtxtView = (TextView) mView;
+					String mTitle = mtxtView.getText().toString();
+					if (mTitle.contains("Select")) {
+						mtxtTitle = mTitle;
+						break;
+					}
+				}
+			}
+		}
+		if (mtxtTitle == null || mtxtTitle.length() == 0) {
+			return true;
+		} else {
+			showToast("Please " + mtxtTitle);
+			return false;
+		}
+	}
+
 	private void navigateToPostDocuments() {
-		Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
+		InternalApp mApp = (InternalApp) getApplication();
+		Bitmap bitmap = ((BitmapDrawable) mImgProduct.getDrawable())
+				.getBitmap();
+		mApp.setImage(bitmap);
+		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
+			startLoginActivity();
+		} else {
+			Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
+			Bundle mBundle = new Bundle();
+			mBundle.putString("category", mbtnProductCategory.getText()
+					.toString());
+			mBundle.putString("subCategory", mbtnSubProductCategory.getText()
+					.toString());
+			mBundle.putString("adTitle", mEditTitle.getText().toString());
+			mBundle.putString("productDescription", mEditShortDesc.getText()
+					.toString());
+			mBundle.putString("productCondition", mtxtRating);
+			mBundle.putString("productConditionName", mbtnSelectRating
+					.getText().toString());
+			mBundle.putString("userInstructions", mEditInstructions.getText()
+					.toString());
+			mBundle.putString("additionalStuff", mEditStuff.getText()
+					.toString());
+			mBundle.putString("productPurchasedPrice", mEditPurchasedCost
+					.getText().toString());
+			mBundle.putString("dailyCost", mEditDailyCost.getText().toString());
+			mBundle.putString("weekCost", mEditWeeklyCost.getText().toString());
+			mBundle.putString("monthlyCost", mEditMonthlyCost.getText()
+					.toString());
+			mBundle.putString("quantity", mEditQuantity.getText().toString());
+			mBundle.putString("securityDeposit", mEditSecurityDeposit.getText()
+					.toString());
+			mBundle.putString("filePath", mImageProfilePicPath);
+			mBundle.putString("productAdId", productAdId);
+			
+			mIntent.putExtras(mBundle);
+			startActivity(mIntent);
+		}
+	}
+
+	private void startLoginActivity() {
+		Intent mIntent = new Intent(this, LoginActivity.class);
 		startActivity(mIntent);
 	}
 
+	int pos = -1;
+	private ArrayList<String> mSubCategories = new ArrayList<String>();
+	private JSONArray mFieldsArray;
+
 	private void btnSelectSubProductCategoryClicked() {
+		showProgressLayout();
 		if (mbtnProductCategory.getText().toString()
 				.equalsIgnoreCase("Select Category")) {
 			showToast("Please Select Category");
 		} else {
-			int pos = -1;
-			if (mCateogoryMappingsArray != null) {
-				final String[] mSubCategories = new String[mCateogoryMappingsArray
-						.size()];
-				for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {
-					CategoryModel mModel = mCateogoryMappingsArray.get(i);
-					if (mbtnSubProductCategory.getText().toString()
-							.equalsIgnoreCase("Select Product Sub Category")) {
-						pos = -1;
-					} else {
-						if (mModel.getTitle().equalsIgnoreCase(
-								mbtnSubProductCategory.getText().toString())) {
-							pos = i;
-						}
-					}
-					mSubCategories[i] = mModel.getTitle().toString();
-				}
-				if (mSubCategories != null) {
-					AlertDialog.Builder alert = new AlertDialog.Builder(this);
-					alert.setTitle("Select Sub Category");
-					alert.setSingleChoiceItems(mSubCategories, pos,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									mbtnSubProductCategory
-											.setText(mSubCategories[which]);
-									dialog.dismiss();
-									initTemplateForCategoryApi();
-								}
+			if (mSubCategories != null && mSubCategories.size() > 0) {
+				new Handler().postDelayed(new Runnable() {
 
-							});
-					alert.show();
-				}
+					@Override
+					public void run() {
+						showaAlert(pos, mSubCategories);
+					}
+
+				}, 1000);
 			}
+		}
+	}
+
+	private void showaAlert(int pos, ArrayList<String> mSubCategories) {
+		hideProgressLayout();
+		if (mSubCategories != null) {
+			final String[] mSubCat = new String[mSubCategories.size()];
+			for (int i = 0; i < mSubCategories.size(); i++) {
+				mSubCat[i] = mSubCategories.get(i);
+			}
+			AlertDialog.Builder alert = new AlertDialog.Builder(
+					PostAdActivity.this);
+			alert.setTitle("Select Sub Category");
+			alert.setSingleChoiceItems(mSubCat, pos,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mbtnSubProductCategory.setText(mSubCat[which]);
+							dialog.dismiss();
+							initTemplateForCategoryApi();
+						}
+
+					});
+			alert.show();
 		}
 	}
 
@@ -522,61 +553,113 @@ public class PostAdActivity extends BaseActivity implements
 
 	private void responseForTemplateCategory(JSONObject response) {
 		if (response != null) {
-			mObjModel = new PostAdModel();
-			JSONArray mFieldsArray = response.optJSONArray("Fields");
+			mArrayFields = new ArrayList<PostAdModel>();
+			mFieldsArray = response.optJSONArray("Fields");
 			if (mFieldsArray != null) {
 				for (int i = 0; i < mFieldsArray.length(); i++) {
 					JSONObject mFieldsObj = mFieldsArray.optJSONObject(i);
+
 					if (mFieldsObj != null) {
-						JSONArray mValuesArray = mFieldsObj
-								.optJSONArray("Values");
-						String mFieldName = mFieldsObj.optString("FieldName");
-						if (mFieldName.equalsIgnoreCase("Brand")
-								|| mFieldName.equalsIgnoreCase("Model")) {
-
-						} else {
-							ArrayList<String> mValues = new ArrayList<String>();
-							if (mFieldName.equalsIgnoreCase("Text")) {
-
-							} else {
-								for (int j = 0; j < mValuesArray.length(); j++) {
-									JSONObject mValueObj = mValuesArray
-											.optJSONObject(j);
-									if (mValueObj != null
-											&& !mValueObj.optString("Value")
-													.trim()
-													.equalsIgnoreCase("")) {
-										mValues.add(mValueObj
-												.optString("Value"));
-									}
-								}
-
-								if (mObjModel.getTypeValues() == null
-										|| mObjModel.getTypeValues().isEmpty()) {
-									mObjModel.setTypeValues(mValues);
-									continue;
-								}
-								if (mObjModel.getControlValues() == null
-										|| mObjModel.getControlValues()
-												.isEmpty()) {
-									mObjModel.setControlValues(mValues);
-									continue;
-								}
-
-								if (mObjModel.getCapacityValues() == null
-										|| mObjModel.getCapacityValues()
-												.isEmpty()) {
-									mObjModel.setCapacityValues(mValues);
-									continue;
-								}
-
-							}
-						}
-
+						PostAdModel mModel = new PostAdModel();
+						mModel.setFieldName(mFieldsObj.optString("FieldName"));
+						mModel.setFieldTitle(mFieldsObj.optString("FieldTitle"));
+						mModel.setValues(mFieldsObj.optJSONArray("Values"));
+						mArrayFields.add(mModel);
 					}
 				}
 			}
 		}
+
+		loadControlsLayout();
+	}
+
+	@SuppressLint("NewApi")
+	private void loadControlsLayout() {
+		ArrayList<String> mFieldName = new ArrayList<String>();
+		if (mArrayFields != null && mArrayFields.size() > 0) {
+			mSelectLayout.removeAllViews();
+			for (int i = 0; i < mArrayFields.size(); i++) {
+				final PostAdModel mModel = mArrayFields.get(i);
+				if (mModel != null) {
+					if (mModel.getFieldTitle().equalsIgnoreCase("Brand")
+							|| mModel.getFieldTitle().equalsIgnoreCase("Model")) {
+
+					} else {
+						final TextView mtxtView = (TextView) LayoutInflater
+								.from(this).inflate(R.layout.selectcontrol,
+										null);
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+								new LayoutParams(LayoutParams.MATCH_PARENT,
+										LayoutParams.WRAP_CONTENT));
+						params.setMargins(10, 10, 10, 10);
+						mtxtView.setLayoutParams(params);
+						mtxtView.setText("Select " + mModel.getFieldTitle());
+						mFieldName.add(mModel.getFieldTitle());
+						mtxtView.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								showSelectAlert(mModel, mtxtView);
+							}
+						});
+						mSelectLayout.addView(mtxtView);
+					}
+				}
+			}
+		}
+
+		if (mFieldName != null && mFieldName.size() > 0) {
+			String mTitles = "";
+			for (int i = 0; i < mFieldName.size(); i++) {
+				if (mTitles.length() == 0) {
+					mTitles = mFieldName.get(i);
+				} else {
+					mTitles = mTitles + ", " + mFieldName.get(i);
+				}
+			}
+			mtxtFields.setText(mTitles);
+		}
+
+		// StaticUtils.expandCollapse(mlayoutFields, true);
+		StaticUtils.expandCollapse(mlayoutFields, true);
+	}
+
+	private void showSelectAlert(PostAdModel mModel, final TextView mtxtView) {
+
+		ArrayList<String> mStringValues = new ArrayList<String>();
+		if (mModel.getValues() != null) {
+			JSONArray mValuesArray = mModel.getValues();
+			for (int j = 0; j < mValuesArray.length(); j++) {
+
+				JSONObject mValueObj = mValuesArray.optJSONObject(j);
+				if (mValueObj != null
+						&& !mValueObj.optString("Value").trim()
+								.equalsIgnoreCase("")) {
+					mStringValues.add(mValueObj.optString("Value"));
+				}
+			}
+
+		}
+
+		if (mStringValues != null && mStringValues.size() > 0) {
+			mStringSelectValues = new String[mStringValues.size()];
+			for (int i = 0; i < mStringValues.size(); i++) {
+				mStringSelectValues[i] = mStringValues.get(i);
+			}
+		}
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Select " + mModel.getFieldTitle());
+		alert.setSingleChoiceItems(mStringSelectValues, -1,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						mtxtView.setText(mStringSelectValues[which]);
+						dialog.dismiss();
+					}
+
+				});
+		alert.show();
 	}
 
 	private void btnSelectProductCategoryClicked() {
@@ -608,9 +691,66 @@ public class PostAdActivity extends BaseActivity implements
 									int which) {
 								mbtnProductCategory.setText(mCategories[which]);
 								dialog.dismiss();
+								setSubProductsArray();
 							}
 						});
 				alert.show();
+			}
+		}
+	}
+
+	private void btnSelectRatingClicked() {
+		final String[] mRartings = { "Like New", "Very Good", "Good",
+				"Average", "Working" };
+		if (mRartings != null) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle("Select Rating");
+			alert.setSingleChoiceItems(mRartings, pos,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mbtnSelectRating.setText(mRartings[which]);
+							if (mRartings[which].equalsIgnoreCase("Like New")) {
+								mtxtRating = "5";
+							} else if (mRartings[which]
+									.equalsIgnoreCase("Very Good")) {
+								mtxtRating = "4";
+							} else if (mRartings[which]
+									.equalsIgnoreCase("Good")) {
+								mtxtRating = "3";
+							} else if (mRartings[which]
+									.equalsIgnoreCase("Average")) {
+								mtxtRating = "2";
+							} else if (mRartings[which]
+									.equalsIgnoreCase("Working")) {
+								mtxtRating = "1";
+							}
+							dialog.dismiss();
+							setSubProductsArray();
+						}
+					});
+			alert.show();
+		}
+	}
+
+	private void setSubProductsArray() {
+		if (mCateogoryMappingsArray != null) {
+			mSubCategories = new ArrayList<String>();
+			for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {
+				CategoryModel mModel = mCateogoryMappingsArray.get(i);
+				if (mbtnSubProductCategory.getText().toString()
+						.equalsIgnoreCase("Select Product Sub Category")) {
+					pos = -1;
+				} else {
+					if (mModel.getTitle().equalsIgnoreCase(
+							mbtnSubProductCategory.getText().toString())) {
+						pos = i;
+					}
+				}
+				if (mModel.getCategory().equalsIgnoreCase(
+						mbtnProductCategory.getText().toString())) {
+					mSubCategories.add(mModel.getTitle().toString());
+				}
 			}
 		}
 	}
@@ -650,6 +790,7 @@ public class PostAdActivity extends BaseActivity implements
 					if (uri != null) {
 						try {
 							mImgProduct.setImageURI(uri);
+							mImageProfilePicPath = getRealPathFromURI(uri);
 							mImgLayout.setVisibility(View.VISIBLE);
 						} catch (Exception e) {
 							e.getStackTrace();
@@ -691,9 +832,43 @@ public class PostAdActivity extends BaseActivity implements
 		}
 	}
 
+	public String getRealPathFromURI(Uri uri) {
+		String[] projection = { MediaStore.Images.Media.DATA };
+		@SuppressWarnings("deprecation")
+		Cursor cursor = managedQuery(uri, projection, null, null, null);
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		return cursor.getString(column_index);
+	}
+
 	@Override
-	public void onRatingChanged(RatingBar ratingBar, float rating,
-			boolean fromUser) {
+	public void ErrorResponse(VolleyError error, int requestCode) {
+		hideProgressLayout();
+	}
+
+	@Override
+	public void SuccessResponse(JSONObject response, int requestCode) {
+		hideProgressLayout();
+		switch (requestCode) {
+		case StaticData.INITIATE_RESPONSE_CODE:
+			responseForInitiateProductAdId(response);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void responseForInitiateProductAdId(JSONObject response) {
+		if (response != null) {
+			productAdId = response.optString("Id");
+		}
+	}
+
+	@Override
+	public void SuccessResponse(JSONArray response, int requestCode) {
 
 	}
+
 }

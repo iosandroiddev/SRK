@@ -2,8 +2,11 @@ package com.sabrentkaro;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 import android.app.Application;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.examples.toolbox.MyVolley;
@@ -17,6 +20,8 @@ public class InternalApp extends Application {
 	private ArrayList<ProductModel> mProductsArray;
 	private ArrayList<String> mCategoriesArray;
 	private ArrayList<CategoryModel> mCateogoryMappingsArray;
+	private Bitmap mBitmap;
+	private JSONArray jsonArray;
 
 	@Override
 	public void onCreate() {
@@ -48,7 +53,14 @@ public class InternalApp extends Application {
 
 	public void setCateogoriesArray(ArrayList<String> mCatArray) {
 		this.mCategoriesArray = mCatArray;
+	}
 
+	public void setImage(Bitmap mBitmap) {
+		this.mBitmap = mBitmap;
+	}
+
+	public Bitmap getImage() {
+		return this.mBitmap;
 	}
 
 	public ArrayList<String> getCateogoriesArray() {
@@ -67,4 +79,11 @@ public class InternalApp extends Application {
 
 	}
 
+	public void setPhotoUpload(JSONArray jsonArray) {
+		this.jsonArray = jsonArray;
+	}
+
+	public JSONArray getPhotoUpload() {
+		return this.jsonArray;
+	}
 }

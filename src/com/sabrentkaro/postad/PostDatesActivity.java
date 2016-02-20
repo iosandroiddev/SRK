@@ -22,6 +22,20 @@ public class PostDatesActivity extends BaseActivity {
 
 	private TextView mtxtStartDate, mtxtEndDate, mbtnPostMyAd, mbtnCancel;
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
+	private String mCategory;
+	private String mSubCategory;
+	private String mAdTitle;
+	private String mProductDesc;
+	private String mProductCondition;
+	private String mProductPurchasedPrice;
+	private String mUserInstructions;
+	private String mAdditionalStuff;
+	private String mDailyCost;
+	private String mMonthCost;
+	private String mProductAdId;
+	private String mSecurityDeposit;
+	private String mFilePath;
+	private String mWeekCost;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +66,24 @@ public class PostDatesActivity extends BaseActivity {
 				mPrice = mBundle.getString("productPrice");
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
+
+				mCategory = mBundle.getString("category");
+				mSubCategory = mBundle.getString("subCategory");
+				mAdTitle = mBundle.getString("adTitle");
+				mProductDesc = mBundle.getString("productDescription");
+				mProductCondition = mBundle.getString("productCondition");
+				mAdditionalStuff = mBundle.getString("additionalStuff");
+				mUserInstructions = mBundle.getString("userInstructions");
+				mProductPurchasedPrice = mBundle
+						.getString("productPurchasedPrice");
+				mDailyCost = mBundle.getString("dailyCost");
+				mMonthCost = mBundle.getString("monthlyCost");
+				mWeekCost = mBundle.getString("weekCost");
+				mQuantity = mBundle.getString("quantity");
+				mFilePath = mBundle.getString("filePath");
+				mSecurityDeposit = mBundle.getString("securityDeposit");
+				mProductAdId = mBundle.getString("productAdId");
+
 			}
 		}
 	}

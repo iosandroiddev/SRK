@@ -1,7 +1,8 @@
 package com.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+
+import org.json.JSONArray;
 
 public class PostAdModel implements Serializable {
 
@@ -9,33 +10,41 @@ public class PostAdModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String fieldName;
+	private String fieldTitle;
+	private String fieldType;
+	private JSONArray values;
 
-	public ArrayList<String> getCapacityValues() {
-		return capacityValues;
+	public String getFieldName() {
+		return fieldName;
 	}
 
-	public void setCapacityValues(ArrayList<String> capacityValues) {
-		this.capacityValues = capacityValues;
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
 	}
 
-	public ArrayList<String> getControlValues() {
-		return controlValues;
+	public String getFieldTitle() {
+		return fieldTitle;
 	}
 
-	public void setControlValues(ArrayList<String> controlValues) {
-		this.controlValues = controlValues;
+	public void setFieldTitle(String fieldTitle) {
+		this.fieldTitle = fieldTitle;
 	}
 
-	public ArrayList<String> getTypeValues() {
-		return typeValues;
+	public JSONArray getValues() {
+		return values;
 	}
 
-	public void setTypeValues(ArrayList<String> typeValues) {
-		this.typeValues = typeValues;
+	public void setValues(JSONArray values) {
+		this.values = values;
 	}
 
-	private ArrayList<String> capacityValues;
-	private ArrayList<String> controlValues;
-	private ArrayList<String> typeValues;
+	public String getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(String fieldType) {
+		this.fieldType = fieldType;
+	}
 
 }

@@ -1,19 +1,22 @@
 package com.sabrentkaro;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
+import android.widget.Toast;
 
 import com.android.jsonclasses.IArrayParseListener;
 import com.android.jsonclasses.IObjectParseListener;
@@ -104,7 +107,22 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void ErrorResponse(VolleyError error, int requestCode) {
-
+		switch (requestCode) {
+		case StaticData.GETALLPRODUCTS_RESPONSE_CODE:
+			showToast("Something went Wrong at Initiating Products Api");
+			finish();
+			break;
+		case StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE:
+			showToast("Something went Wrong at Category Mappings  Api");
+			finish();
+			break;
+		case StaticData.GETCITY_RESPONSE_CODE:
+			showToast("Something went Wrong at Initiating Cities Api");
+			finish();
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -185,6 +203,7 @@ public class SplashActivity extends FragmentActivity implements
 					mModel.setCategory(mCatObj.optString("Category"));
 					mModel.setTitle(mCatObj.optString("Title"));
 					mCateogoryMappingsArray.add(mModel);
+					
 					if (!(mCategoriesArray.contains(mCatObj
 							.optString("Category")))) {
 						mCategoriesArray.add(mCatObj.optString("Category"));
@@ -197,4 +216,34 @@ public class SplashActivity extends FragmentActivity implements
 		}
 		initCityListApi();
 	}
+
+	private void showToast(String mString) {
+		Typeface font = Typeface.createFromAsset(getAssets(),
+				"fonts/Trebuchet_MS.ttf");
+		SpannableString efr = new SpannableString(mString);
+		efr.setSpan(new TypefaceSpan(font), 0, efr.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
+	}
+
+	private class TypefaceSpan extends MetricAffectingSpan {
+		private Typeface mTypeface;
+
+		public TypefaceSpan(Typeface typeface) {
+			mTypeface = typeface;
+		}
+
+		@Override
+		public void updateMeasureState(TextPaint p) {
+			p.setTypeface(mTypeface);
+			p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+		}
+
+		@Override
+		public void updateDrawState(TextPaint tp) {
+			tp.setTypeface(mTypeface);
+			tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+		}
+	}
+
 }

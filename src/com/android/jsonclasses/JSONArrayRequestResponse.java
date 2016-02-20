@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,10 +11,8 @@ import android.os.Bundle;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.examples.toolbox.MultipartRequest;
 import com.android.volley.examples.toolbox.MyVolley;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 @SuppressWarnings("unused")
 public class JSONArrayRequestResponse {
@@ -78,7 +75,8 @@ public class JSONArrayRequestResponse {
 			// String[] mary = file_path.split(",");
 			// if (mary.length > 1) {
 			// File mFile = new File(mary[0]);
-			// MultipartRequest multipartRequest = new MultipartRequest(
+			// ArrayMultipartRequest multipartRequest = new
+			// ArrayMultipartRequest(
 			// url, eListener, sListener, key, mary, mFile,
 			// params, mAttachFileList);
 			//
@@ -87,7 +85,8 @@ public class JSONArrayRequestResponse {
 			//
 			// } else {
 			// File mFile = new File(mary[0]);
-			// MultipartRequest multipartRequest = new MultipartRequest(
+			// ArrayMultipartRequest multipartRequest = new
+			// ArrayMultipartRequest(
 			// url, eListener, sListener, key, mFile, params,
 			// mAttachFileList);
 			// multipartRequest.setAttachFileList(mAttachFileList);

@@ -80,6 +80,10 @@
             android:name="com.sabrentkaro.postad.PostDatesActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostAdPreview"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

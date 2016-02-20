@@ -29,70 +29,47 @@
                 android:textSize="14sp"
                 custom:fonttype="trebuchet_ms" />
 
-            <EditText
-                android:id="@+id/editAddress"
+            <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_address"
-                android:inputType="text"
-                android:padding="3dp"
-                android:textSize="15sp" >
-            </EditText>
-
-            <EditText
-                android:id="@+id/editCityTown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/enter_city"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                android:textSize="15sp" >
-            </EditText>
-
-            <EditText
-                android:id="@+id/editState"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/enter_state"
-                android:padding="3dp"
-                android:layout_margin="3dp"
-                android:textSize="15sp" >
-            </EditText>
-
-            <EditText
-                android:id="@+id/editPincode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="@string/enter_pincode"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                android:textSize="15sp" >
-            </EditText>
-
-            <EditText
-                android:id="@+id/editPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="@string/enter_phone_number"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                android:textSize="15sp" >
-            </EditText>
+                layout="@layout/addresslayout" />
 
             <CheckBox
                 android:id="@+id/checkAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
-                android:checked="false"
+                android:checked="true"
                 android:clickable="true"
                 android:gravity="center_vertical"
                 android:text="@string/product_address_is_same_as_current_address_"
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/layoutUserAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="#55000000"
+                    android:padding="5dp"
+                    android:text="@string/current_address"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/addressuserlayout" />
+            </LinearLayout>
 
             <com.utils.CustomTextView
                 android:layout_width="match_parent"

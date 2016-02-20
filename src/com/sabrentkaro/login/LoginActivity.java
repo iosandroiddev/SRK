@@ -3,11 +3,14 @@ package com.sabrentkaro.login;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.VoiceInteractor.Prompt;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
+import com.sabrentkaro.postad.PostAdDocumentActivity;
 import com.sabrentkaro.search.RentDatesActivity;
 import com.utils.ApiUtils;
 import com.utils.StaticUtils;
@@ -27,8 +31,9 @@ import com.utils.StorageClass;
 public class LoginActivity extends BaseActivity {
 
 	private EditText mEditEmail, mEditPassword;
-	private TextView mbtnLogin, mbtnRegister;
+	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword;
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
+	private Dialog mForgotPasswordDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,14 +61,17 @@ public class LoginActivity extends BaseActivity {
 		mEditPassword = (EditText) findViewById(R.id.password);
 		mbtnLogin = (TextView) findViewById(R.id.btnLoginUser);
 		mbtnRegister = (TextView) findViewById(R.id.btnRegister);
+		mbtnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 		StaticUtils.setEditTextHintFont(mEditEmail, this);
 		StaticUtils.setEditTextHintFont(mEditPassword, this);
+		mbtnForgotPassword.setOnClickListener(this);
 
+		mEditPassword.setHintTextColor(getResources().getColor(R.color.black));
 		mbtnLogin.setOnClickListener(this);
 		mbtnRegister.setOnClickListener(this);
 
-		// mEditEmail.setText("harathithippaluru@sabrentkaro.com");
-		// mEditPassword.setText("harathi@raj1");
+		 mEditEmail.setText("harathithippaluru@sabrentkaro.com");
+		 mEditPassword.setText("harathi@raj1");
 	}
 
 	@Override
@@ -75,6 +83,9 @@ public class LoginActivity extends BaseActivity {
 			break;
 		case R.id.btnRegister:
 			btnRegisterClicked();
+			break;
+		case R.id.btnForgotPassword:
+			showForgotPasswordPopup();
 			break;
 		default:
 			break;
@@ -204,7 +215,12 @@ public class LoginActivity extends BaseActivity {
 						StorageClass.getInstance(this).setMobileNumber(
 								mobileNumber);
 						StorageClass.getInstance(this).setAddress(addressLine);
-						navigateToRentDates();
+						if (selectedProductAdId == null
+								|| selectedProductAdId.length() == 0) {
+							navigateToPostAdDocuments();
+						} else {
+							navigateToRentDates();
+						}
 
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -218,6 +234,12 @@ public class LoginActivity extends BaseActivity {
 		}
 	}
 
+	private void navigateToPostAdDocuments() {
+		Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
+		startActivity(mIntent);
+		finish();
+	}
+
 	private void navigateToRentDates() {
 		Intent intent = new Intent(this, RentDatesActivity.class);
 		Bundle mBundle = new Bundle();
@@ -227,6 +249,49 @@ public class LoginActivity extends BaseActivity {
 		mBundle.putString("productDescription", mProductDescription);
 		intent.putExtras(mBundle);
 		startActivity(intent);
+		finish();
+	}
+
+	private void showForgotPasswordPopup() {
+		mForgotPasswordDialog = new Dialog(this);
+		mForgotPasswordDialog.setCancelable(false);
+		mForgotPasswordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mForgotPasswordDialog.setContentView(R.layout.forgot_password_popup);
+		mForgotPasswordDialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+		TextView mbtnCancel = (TextView) mForgotPasswordDialog
+				.findViewById(R.id.btn_cancel);
+		TextView mbtnSubmit = (TextView) mForgotPasswordDialog
+				.findViewById(R.id.btn_submit);
+
+		final EditText meditFrgtEmail = (EditText) mForgotPasswordDialog
+				.findViewById(R.id.edit_email);
+		StaticUtils.setEditTextHintFont(meditFrgtEmail, this);
+
+		mForgotPasswordDialog.show();
+
+		mbtnCancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mForgotPasswordDialog.dismiss();
+			}
+		});
+
+		mbtnSubmit.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (TextUtils.isEmpty(meditFrgtEmail.getText().toString())) {
+					showToast("Please Enter Email Id");
+				} else if (!StaticUtils.isValidEmail(meditFrgtEmail.getText()
+						.toString())) {
+					showToast("Please Enter Valid Email Id");
+				} else {
+				}
+			}
+		});
 	}
 
 }
