@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,6 +86,9 @@ public class AddressDocumentsActivity extends BaseActivity {
 		StaticUtils.setEditTextHintFont(meditPanCardNumber, this);
 		StaticUtils.setEditTextHintFont(mEditAadharCardName, this);
 		StaticUtils.setEditTextHintFont(mEditAadharCardNumber, this);
+		
+		mEditAadharCardName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		mEditAadharCardNumber.setImeOptions(EditorInfo.IME_ACTION_DONE);
 	}
 
 	@Override
