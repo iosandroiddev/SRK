@@ -1,21 +1,21 @@
 package com.sabrentkaro.postad;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -73,16 +73,29 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private String mCode = "";
 
 	private String mtxtCondName;
-
 	private TextView mtxtAddress;
-
 	private TextView mtxtState;
-
 	private TextView mtxtCity;
-
 	private TextView mtxtMobile;
-
 	private TextView mtxtPincode;
+
+	private TextView mtxtUserAddress;
+	private TextView mtxtUserState;
+	private TextView mtxtUserCity;
+	private TextView mtxtUserMobile;
+	private TextView mtxtUserPincode;
+
+	private String mPinCodeUser = "";
+	private String mStateUser = "";
+	private String mCityUser = "";
+	private String mAddressUser = "";
+	private String mMobileNubmerUser = "";
+
+	private boolean showCurrentAdrees = false;
+
+	private LinearLayout mLayoutCurrentAddress;
+
+	private String mAuthHeader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,11 +128,24 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtPincode.setText(mPinCode);
 		mtxtMobile.setText(mMobileNubmer);
 
+		mtxtUserAddress.setText(mAddressUser);
+		mtxtUserCity.setText(mCityUser);
+		mtxtUserState.setText(mStateUser);
+		mtxtUserPincode.setText(mPinCodeUser);
+		mtxtUserMobile.setText(mMobileNubmerUser);
+
 		InternalApp mApp = (InternalApp) getApplication();
 		mImgProduct.setImageBitmap(mApp.getImage());
+
+		if (showCurrentAdrees) {
+			mLayoutCurrentAddress.setVisibility(View.VISIBLE);
+		} else {
+			mLayoutCurrentAddress.setVisibility(View.GONE);
+		}
 	}
 
 	private void getDetails() {
+		mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
 			if (mBundle != null) {
@@ -149,6 +175,19 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mAadthrNumber = mBundle.getString("aadharCardNumber");
 				mMobileNubmer = mBundle.getString("mobileNumber");
 				mtxtCondName = mBundle.getString("productConditionName");
+
+				if (mBundle.getString("displayCurrent").equalsIgnoreCase(
+						"false")) {
+					showCurrentAdrees = false;
+				} else {
+					showCurrentAdrees = true;
+				}
+
+				mAddressUser = mBundle.getString("addressUser");
+				mCityUser = mBundle.getString("cityUser");
+				mStateUser = mBundle.getString("stateValueUser");
+				mPinCodeUser = mBundle.getString("pincodeUser");
+				mMobileNubmerUser = mBundle.getString("mobileNumberUser");
 
 			}
 		}
@@ -184,11 +223,19 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
 
+		mLayoutCurrentAddress = (LinearLayout) findViewById(R.id.layoutCurrentAddress);
+
 		mtxtAddress = (TextView) findViewById(R.id.address);
 		mtxtState = (TextView) findViewById(R.id.state);
 		mtxtCity = (TextView) findViewById(R.id.city);
 		mtxtMobile = (TextView) findViewById(R.id.mobile);
 		mtxtPincode = (TextView) findViewById(R.id.pincode);
+
+		mtxtUserAddress = (TextView) findViewById(R.id.addressUser);
+		mtxtUserState = (TextView) findViewById(R.id.stateUser);
+		mtxtUserCity = (TextView) findViewById(R.id.cityUser);
+		mtxtUserMobile = (TextView) findViewById(R.id.mobileUser);
+		mtxtUserPincode = (TextView) findViewById(R.id.pincodeUser);
 	}
 
 	@Override
@@ -198,10 +245,18 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		case R.id.btnSubmit:
 			btnSubmitClicked();
 			break;
-
+		case R.id.btnEdit:
+			btnEditClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnEditClicked() {
+		Intent mIntent = new Intent(this, PostAdActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(mIntent);
 	}
 
 	private void btnSubmitClicked() {
@@ -337,8 +392,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mItemDeatilsObj.put("Value", "");
 			mItemDeatilsArray.put(mItemDeatilsObj);
 
-			mProdcutsObj.put("ItemDetails",
-					"" + String.valueOf(mItemDeatilsArray) + "");
+			mProdcutsObj.put("ItemDetails", mItemDeatilsArray);
 			JSONArray mProdcutsArray = new JSONArray();
 			mProdcutsArray.put(mProdcutsObj);
 
@@ -361,8 +415,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 			JSONArray mCalenders = new JSONArray();
 			JSONObject mCalendarsObj = new JSONObject();
-			mCalendarsObj.put("DateFrom", "01/01/1900");
-			mCalendarsObj.put("DateTo", "12/31/2999");
+			mCalendarsObj.put("DateFrom", "01-01-1900");
+			mCalendarsObj.put("DateTo", "12-31-2999");
 			mCalendarsObj.put("IsBlocked", "false");
 			mCalendarsObj.put("RentalValuePerDay", mDailyCost);
 			mCalendarsObj.put("IsOpenCalendar", "true");
@@ -432,114 +486,133 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			e.printStackTrace();
 		}
 
-		String ent = "{\"Id\":\""
-				+ mProductAdId
-				+ "\",\"Status\":null,\"Title\":\""
-				+ mAdTitle
-				+ "\",\"Description\":\""
-				+ mProductDesc
-				+ "\","
-				+ "\"IsLogisticsShared\":false,\"IsInsuredByOwner\":false,\"InsuranceCost\":null,\"LogisticsCost\":null,"
-				+ "\"SecurityDeposit\":\""
-				+ mSecurityDeposit
-				+ "\",\"History\":null,\"CreatedDate\":"
-				+ "01/01/1900"
-				+ ",\"Owners\":[{\"IsPrimary\":null,"
-				+ "\"IsBusiness\":null,\"LastName\":\" \",\"DateOfBirth\":null,\"MiddleName\":null,\"Location\":{\"Longitude\":\" "
-				+ "\",\"Latitude\":\" \"},\"Role\":null,\"Addresses\":[{\"AddressLine1\":\""
-				+ mAddress
-				+ "\",\"AddressLine2\":\"\","
-				+ "\"State\":\""
-				+ mState
-				+ "\",\"City\":\""
-				+ mCity
-				+ "\",\"Postcode\":\""
-				+ mPinCode
-				+ "\",\"ContactNumber\":\""
-				+ mMobileNubmer
-				+ "\"}],"
-				+ "\"AddressType\":null}],\"Products\":[{\"Id\":\""
-				+ mProductAdId
-				+ "\",\"ProductCategory\":{\"Code\":\""
-				+ mCode
-				+ "\",\"Title\":\""
-				+ mSubCategory
-				+ "\"},"
-				+ "\"Title\":\""
-				+ mAdTitle
-				+ "\",\"Description\":\""
-				+ mProductDesc
-				+ "\",\"Quantity\":\""
-				+ mQuantity
-				+ "\","
-				+ "\"ProductCondition\":{\"Code\":\""
-				+ mRating
-				+ "\",\"Title\":\""
-				+ mtxtCondName
-				+ "\"},\"PriceWhenPurchased\":\""
-				+ mProductPurchasedPrice
-				+ "\","
-				+ "\"ItemDetails\":\"[{\"Title\":\"Brand\",\"Type\":\"\",\"Value\":\""
-				+ mProductDesc
-				+ "\"},"
-				+ "{\"Title\":\"Model\",\"Type\":\"\",\"Value\":\""
-				+ mProductDesc
-				+ "\"},{\"Title\":\"Control\","
-				+ "\"Type\":\"select\",\"Value\":\"\"},{\"Title\":\"Type\",\"Type\":\"select\",\"Value\":\"\"},"
-				+ "{\"Title\":\"Washing Capacity\",\"Type\":\"select\",\"Value\":\"\"}]\",\"ItemMedia\":[{\"Filepath\":"
-				+ "\"http://www.allrental.co.in/BusinessServices/ImageStore/AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\","
-				+ "\"FileAbsolutePath\":\"AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\",\"FileName\":null,\"IsThumbNail\":null,"
-				+ "\"IsCoverImage\":null,\"AdItemId\":"
-				+ mAdTitle
-				+ ",\"Size\":null}],"
-				+ "\"Pricing\":[{\"Price\":\""
-				+ mDailyCost
-				+ "\",\"UnitCode\":\"PerWeekDay\",\"UnitTitle\":\"Per WeekDay\"},"
-				+ "{\"Price\":\""
-				+ mWeekCost
-				+ "\",\"UnitCode\":\"PerWeek\",\"UnitTitle\":\"Per Week\"},{\"Price\":\""
-				+ mMonthCost
-				+ "\",\"UnitCode\":"
-				+ "\"PerMonth\",\"UnitTitle\":\"Per Month\"}]}],\"AdAddress\":{\"AddressLine1\":\""
-				+ mAddress
-				+ "\","
-				+ "\"AddressLine2\":\"\",\"City\":\""
-				+ mCity
-				+ "\",\"State\":\""
-				+ mState
-				+ "\",\"Postcode\":\""
-				+ mPinCode
-				+ "\","
-				+ "\"ContactNumber\":\""
-				+ mMobileNubmer
-				+ "\"},\"Pricing\":null,\"AdOtp\":{\"Code\":\"\",\"ExpiryDate\":null,\"GeneratedDate\":null,"
-				+ "\"ConsumedDate\":null,\"OtpStatus\":null},\"Tags\":[],\"Business\":null,"
-				+ "\"AdSettings\":[{\"ProductCategorySpecification\":{\"Code\":\"RULES\",\"Title\":\"Rules of usage\"},"
-				+ "\"Value\":\""
-				+ mProductDesc
-				+ "\",\"Id\":\"2\"},{\"ProductCategorySpecification\":{\"Code\":\"INTHEBOX\",\"Title\":\"In the box\"},"
-				+ "\"Value\":\""
-				+ mProductDesc
-				+ "\",\"Id\":\"1\"},"
-				+ "{\"ProductCategorySpecification\":{\"Code\":\"location\",\"Title\":\"Location Preferences\"},\"Value\":\""
-				+ StorageClass.getInstance(this).getUserCity()
-				+ "\",\"Id\":\"5\"},"
-				+ "{\"ProductCategorySpecification\":{\"Code\":\"LOGISTICS\",\"Title\":\"Logistics Preferences\"},"
-				+ "\"Value\":\"\",\"Id\":3},"
-				+ "{\"ProductCategorySpecification\":{\"Code\":\"INSURANCE\",\"Title\":\"Insurance Preferences\"},\"Value\":,\"Id\":4},"
-				+ "{\"ProductCategorySpecification\":{\"Code\":\"CALENDAR\",\"Title\":\"Calendar Preferences\"},\"Value\":\"\",\"Id\":\"6\"}],"
-				+ "\"AdCalendars\":[{\"DateFrom\":\""
-				+ "01/01/1900"
-				+ "\",\"DateTo\":\""
-				+ "12/31/2999"
-				+ "\",\"IsBlocked\":false,\"RentalValuePerDay\":\""
-				+ mDailyCost
-				+ "\",\"IsOpenCalendar\":}],"
-				+ "\"AdTpServiceInputs\":[{\"AdId\":null,\"TpFieldJson\":\"{\"panId\":\""
-				+ mPanCard
-				+ "\"}\",\"TpProviderService\":{\"Code\":\"PAN\",\"Title\":null}}]}";
+		// String ent = "{\"Id\":\""
+		// + mProductAdId
+		// + "\",\"Status\":null,\"Title\":\""
+		// + mAdTitle
+		// + "\",\"Description\":\""
+		// + mProductDesc
+		// + "\","
+		// +
+		// "\"IsLogisticsShared\":false,\"IsInsuredByOwner\":false,\"InsuranceCost\":null,\"LogisticsCost\":null,"
+		// + "\"SecurityDeposit\":\""
+		// + mSecurityDeposit
+		// + "\",\"History\":null,\"CreatedDate\":"
+		// + "01/01/1900"
+		// + ",\"Owners\":[{\"IsPrimary\":null,"
+		// +
+		// "\"IsBusiness\":null,\"LastName\":\" \",\"DateOfBirth\":null,\"MiddleName\":null,\"Location\":{\"Longitude\":\" "
+		// +
+		// "\",\"Latitude\":\" \"},\"Role\":null,\"Addresses\":[{\"AddressLine1\":\""
+		// + mAddress
+		// + "\",\"AddressLine2\":\"\","
+		// + "\"State\":\""
+		// + mState
+		// + "\",\"City\":\""
+		// + mCity
+		// + "\",\"Postcode\":\""
+		// + mPinCode
+		// + "\",\"ContactNumber\":\""
+		// + mMobileNubmer
+		// + "\"}],"
+		// + "\"AddressType\":null}],\"Products\":[{\"Id\":\""
+		// + mProductAdId
+		// + "\",\"ProductCategory\":{\"Code\":\""
+		// + mCode
+		// + "\",\"Title\":\""
+		// + mSubCategory
+		// + "\"},"
+		// + "\"Title\":\""
+		// + mAdTitle
+		// + "\",\"Description\":\""
+		// + mProductDesc
+		// + "\",\"Quantity\":\""
+		// + mQuantity
+		// + "\","
+		// + "\"ProductCondition\":{\"Code\":\""
+		// + mRating
+		// + "\",\"Title\":\""
+		// + mtxtCondName
+		// + "\"},\"PriceWhenPurchased\":\""
+		// + mProductPurchasedPrice
+		// + "\","
+		// +
+		// "\"ItemDetails\":\"[{\"Title\":\"Brand\",\"Type\":\"\",\"Value\":\""
+		// + mProductDesc
+		// + "\"},"
+		// + "{\"Title\":\"Model\",\"Type\":\"\",\"Value\":\""
+		// + mProductDesc
+		// + "\"},{\"Title\":\"Control\","
+		// +
+		// "\"Type\":\"select\",\"Value\":\"\"},{\"Title\":\"Type\",\"Type\":\"select\",\"Value\":\"\"},"
+		// +
+		// "{\"Title\":\"Washing Capacity\",\"Type\":\"select\",\"Value\":\"\"}]\",\"ItemMedia\":[{\"Filepath\":"
+		// +
+		// "\"http://www.allrental.co.in/BusinessServices/ImageStore/AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\","
+		// +
+		// "\"FileAbsolutePath\":\"AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\",\"FileName\":null,\"IsThumbNail\":null,"
+		// + "\"IsCoverImage\":null,\"AdItemId\":"
+		// + mAdTitle
+		// + ",\"Size\":null}],"
+		// + "\"Pricing\":[{\"Price\":\""
+		// + mDailyCost
+		// + "\",\"UnitCode\":\"PerWeekDay\",\"UnitTitle\":\"Per WeekDay\"},"
+		// + "{\"Price\":\""
+		// + mWeekCost
+		// +
+		// "\",\"UnitCode\":\"PerWeek\",\"UnitTitle\":\"Per Week\"},{\"Price\":\""
+		// + mMonthCost
+		// + "\",\"UnitCode\":"
+		// +
+		// "\"PerMonth\",\"UnitTitle\":\"Per Month\"}]}],\"AdAddress\":{\"AddressLine1\":\""
+		// + mAddress
+		// + "\","
+		// + "\"AddressLine2\":\"\",\"City\":\""
+		// + mCity
+		// + "\",\"State\":\""
+		// + mState
+		// + "\",\"Postcode\":\""
+		// + mPinCode
+		// + "\","
+		// + "\"ContactNumber\":\""
+		// + mMobileNubmer
+		// +
+		// "\"},\"Pricing\":null,\"AdOtp\":{\"Code\":\"\",\"ExpiryDate\":null,\"GeneratedDate\":null,"
+		// +
+		// "\"ConsumedDate\":null,\"OtpStatus\":null},\"Tags\":[],\"Business\":null,"
+		// +
+		// "\"AdSettings\":[{\"ProductCategorySpecification\":{\"Code\":\"RULES\",\"Title\":\"Rules of usage\"},"
+		// + "\"Value\":\""
+		// + mProductDesc
+		// +
+		// "\",\"Id\":\"2\"},{\"ProductCategorySpecification\":{\"Code\":\"INTHEBOX\",\"Title\":\"In the box\"},"
+		// + "\"Value\":\""
+		// + mProductDesc
+		// + "\",\"Id\":\"1\"},"
+		// +
+		// "{\"ProductCategorySpecification\":{\"Code\":\"location\",\"Title\":\"Location Preferences\"},\"Value\":\""
+		// + StorageClass.getInstance(this).getUserCity()
+		// + "\",\"Id\":\"5\"},"
+		// +
+		// "{\"ProductCategorySpecification\":{\"Code\":\"LOGISTICS\",\"Title\":\"Logistics Preferences\"},"
+		// + "\"Value\":\"\",\"Id\":3},"
+		// +
+		// "{\"ProductCategorySpecification\":{\"Code\":\"INSURANCE\",\"Title\":\"Insurance Preferences\"},\"Value\":,\"Id\":4},"
+		// +
+		// "{\"ProductCategorySpecification\":{\"Code\":\"CALENDAR\",\"Title\":\"Calendar Preferences\"},\"Value\":\"\",\"Id\":\"6\"}],"
+		// + "\"AdCalendars\":[{\"DateFrom\":\""
+		// + "01/01/1900"
+		// + "\",\"DateTo\":\""
+		// + "12/31/2999"
+		// + "\",\"IsBlocked\":false,\"RentalValuePerDay\":\""
+		// + mDailyCost
+		// + "\",\"IsOpenCalendar\":}],"
+		// +
+		// "\"AdTpServiceInputs\":[{\"AdId\":null,\"TpFieldJson\":\"{\"panId\":\""
+		// + mPanCard
+		// + "\"}\",\"TpProviderService\":{\"Code\":\"PAN\",\"Title\":null}}]}";
 
-		callPostAdApi(ent);
+		// callPostAdApi(ent);
 
 		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTANAD,
 				params, new Listener<JSONObject>() {
@@ -557,7 +630,23 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 						hideProgressLayout();
 						showToast("Failure");
 					}
-				});
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+
+				return map;
+			}
+
+		};
 
 		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
 		mQueue.add(mObjReq);

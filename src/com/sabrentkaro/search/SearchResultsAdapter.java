@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.models.SearchModel;
@@ -136,6 +137,8 @@ public class SearchResultsAdapter extends BaseAdapter {
 				mtxtView.setText(mCatTonObj.optString("title") + ": "
 						+ mCatTonObj.optString("value"));
 				mtxtView.setSelected(true);
+				mtxtView.setEllipsize(TruncateAt.MARQUEE);
+				mtxtView.setSingleLine(true);
 				mHolder.mRootFiedlsLayout.addView(mtxtView);
 			}
 

@@ -11,6 +11,43 @@
         android:background="@color/transparent"
         android:orientation="vertical" >
 
+        <LinearLayout
+            android:id="@+id/layouLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <com.utils.CircleImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/missing_avatar"
+                custom:border_color="@color/white"
+                custom:border_width="2dp" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/txtLoginUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+        </LinearLayout>
+
         <com.utils.CustomTextView
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"

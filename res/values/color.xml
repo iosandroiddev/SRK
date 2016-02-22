@@ -28,6 +28,7 @@
     <color name="blockbutton">#db1718</color>
     <color name="blockbutton_h">#a90e0f</color>
     <color name="blacktopbar">#2B2828</color>
+    <color name="drawer_delimiter">#0DFFFFFF</color>
     <color name="app_color">#0089ad</color>
     <color name="bottom_color">#efefef</color>
     <color name="line_color">#EBEBEB</color>

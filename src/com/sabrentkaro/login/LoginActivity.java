@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.jsonclasses.JSONObjectRequestResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -101,7 +102,6 @@ public class LoginActivity extends BaseActivity {
 		StaticUtils.setEditTextHintFont(mEditPassword, this);
 		mbtnForgotPassword.setOnClickListener(this);
 
-		mEditPassword.setHintTextColor(getResources().getColor(R.color.black));
 		mbtnLogin.setOnClickListener(this);
 		mbtnRegister.setOnClickListener(this);
 
@@ -206,6 +206,7 @@ public class LoginActivity extends BaseActivity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						showToast("Something went wrong. Please try again Later");
 						hideProgressLayout();
 					}
 				});
@@ -218,53 +219,64 @@ public class LoginActivity extends BaseActivity {
 	private void responseForLoginApi(JSONObject response) {
 		String userName = "";
 		if (response != null) {
-			JSONObject mObjUser = response.optJSONObject("User");
-			if (mObjUser != null) {
-				String authenticationHeader = mObjUser.optJSONObject(
-						"UserTransactions").optString("AuthenticationHeader");
-				JSONObject mObjUserProfile = mObjUser
-						.optJSONObject("UserProfile");
-				if (mObjUserProfile != null) {
-					userName = mObjUserProfile.optString("Name");
-				}
-				JSONObject mObjUserAdress = (JSONObject) mObjUser.optJSONArray(
-						"Addresses").opt(0);
-				if (mObjUserAdress != null) {
-					try {
-						String addressLine = mObjUserAdress
-								.getString("AddressLine1")
-								+ " "
-								+ mObjUserAdress.getString("AddressLine2");
-						String city = mObjUserAdress.getString("City");
-						String state = mObjUserAdress.getString("State");
-						String country = mObjUserAdress.getString("Country");
-						String pincode = mObjUserAdress.getString("PinCode");
-						String mobileNumber = mObjUserAdress
-								.getString("MobileNo");
+			if (response.optString("Information") == null
+					|| response.optString("Information").length() == 0) {
+				JSONObject mObjUser = response.optJSONObject("User");
+				if (mObjUser != null) {
+					String authenticationHeader = mObjUser.optJSONObject(
+							"UserTransactions").optString(
+							"AuthenticationHeader");
+					JSONObject mObjUserProfile = mObjUser
+							.optJSONObject("UserProfile");
+					if (mObjUserProfile != null) {
+						userName = mObjUserProfile.optString("Name");
+					}
+					JSONObject mObjUserAdress = (JSONObject) mObjUser
+							.optJSONArray("Addresses").opt(0);
+					if (mObjUserAdress != null) {
+						try {
+							String addressLine = mObjUserAdress
+									.getString("AddressLine1")
+									+ " "
+									+ mObjUserAdress.getString("AddressLine2");
+							String city = mObjUserAdress.getString("City");
+							String state = mObjUserAdress.getString("State");
+							String country = mObjUserAdress
+									.getString("Country");
+							String pincode = mObjUserAdress
+									.getString("PinCode");
+							String mobileNumber = mObjUserAdress
+									.getString("MobileNo");
 
-						StorageClass.getInstance(this).setUserCity(city);
+							StorageClass.getInstance(this).setUserCity(city);
 
-						StorageClass.getInstance(this).setUserState(state);
-						StorageClass.getInstance(this).setUserCountry(country);
-						StorageClass.getInstance(this).setPinCode(pincode);
-						StorageClass.getInstance(this).setMobileNumber(
-								mobileNumber);
-						StorageClass.getInstance(this).setAddress(addressLine);
-						if (selectedProductAdId == null
-								|| selectedProductAdId.length() == 0) {
-							navigateToPostAdDocuments();
-						} else {
-							navigateToRentDates();
+							StorageClass.getInstance(this).setUserState(state);
+							StorageClass.getInstance(this).setUserCountry(
+									country);
+							StorageClass.getInstance(this).setPinCode(pincode);
+							StorageClass.getInstance(this).setMobileNumber(
+									mobileNumber);
+							showToast("User Logged In Successfully!");
+							StorageClass.getInstance(this).setAddress(
+									addressLine);
+							if (selectedProductAdId == null
+									|| selectedProductAdId.length() == 0) {
+								navigateToPostAdDocuments();
+							} else {
+								navigateToRentDates();
+							}
+
+						} catch (JSONException e) {
+							e.printStackTrace();
 						}
 
-					} catch (JSONException e) {
-						e.printStackTrace();
 					}
-
+					StorageClass.getInstance(this).setUserName(userName);
+					StorageClass.getInstance(this).setAuthHeader(
+							authenticationHeader);
+				} else {
+					showToast(response.optString("Information"));
 				}
-				StorageClass.getInstance(this).setUserName(userName);
-				StorageClass.getInstance(this).setAuthHeader(
-						authenticationHeader);
 			}
 		}
 	}
@@ -320,7 +332,7 @@ public class LoginActivity extends BaseActivity {
 				.findViewById(R.id.btn_submit);
 
 		final EditText meditFrgtEmail = (EditText) mForgotPasswordDialog
-				.findViewById(R.id.edit_email);
+				.findViewById(R.id.editMobileNumber);
 		StaticUtils.setEditTextHintFont(meditFrgtEmail, this);
 
 		mForgotPasswordDialog.show();
@@ -338,14 +350,51 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				if (TextUtils.isEmpty(meditFrgtEmail.getText().toString())) {
-					showToast("Please Enter Email Id");
-				} else if (!StaticUtils.isValidEmail(meditFrgtEmail.getText()
-						.toString())) {
-					showToast("Please Enter Valid Email Id");
+					showToast("Please Enter Mobile Number");
 				} else {
+					initiateForgotPassswordApi(meditFrgtEmail.getText()
+							.toString());
 				}
 			}
 		});
 	}
 
+	private void initiateForgotPassswordApi(String string) {
+		showProgressLayout();
+
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.GETEMAILFROMMOBILE + "" + string, null,
+				new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						responseForForgotPassAPi(response);
+						if (mForgotPasswordDialog != null)
+							mForgotPasswordDialog.dismiss();
+						hideProgressLayout();
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						showToast("Something went wrong. Please try again Later");
+						hideProgressLayout();
+					}
+				});
+
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mObjReq);
+	}
+
+	private void responseForForgotPassAPi(JSONObject response) {
+		if (response != null) {
+			if (response.optString("Information") == null
+					|| response.optString("Information").length() == 0) {
+				showToast("Password Sent to your respective Mobile Number");
+			} else {
+				showToast(response.optString("Information"));
+			}
+		}
+	}
 }

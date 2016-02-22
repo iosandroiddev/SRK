@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
-    <string name="post_an_ad">Post an Ad</string>
+    <string name="post_an_ad">Post a Product</string>
     <string name="search_products">Search Products</string>
     <string name="post">Post</string>
     <string name="search">Search</string>
@@ -88,7 +88,7 @@
     <string name="month_cost">Month Cost</string>
     <string name="post_ad">Post Ad</string>
     <string name="tonnage">Tonnage</string>
-    <string name="post_my_ad">Post My Ad</string>
+    <string name="post_my_ad">Post My Product</string>
     <string name="what_would_you_like_to_post_an_ad_for_">What is your Product?</string>
     <string name="select_product_category">Select Product Category</string>
     <string name="select_product_sub_category">Select Product Sub Category</string>

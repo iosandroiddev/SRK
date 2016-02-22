@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +41,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
 	private TextView mbtnLogin;
-	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome;
+	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName;
+	private LinearLayout mLoginLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,11 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	private void hideOrShowLogin() {
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			mbtnLogin.setVisibility(View.VISIBLE);
+			mLoginLayout.setVisibility(View.GONE);
 		} else {
 			mbtnLogin.setVisibility(View.GONE);
+			mLoginLayout.setVisibility(View.VISIBLE);
+			mtxtUserName.setText(StorageClass.getInstance(this).getUserName());
 		}
 	}
 
@@ -78,6 +83,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearchProducts);
 		mbtnHome = (TextView) findViewById(R.id.btnHome);
+		mLoginLayout = (LinearLayout) findViewById(R.id.layouLogin);
+		mtxtUserName = (TextView) findViewById(R.id.txtLoginUserName);
 	}
 
 	private void setSlidingMenu() {

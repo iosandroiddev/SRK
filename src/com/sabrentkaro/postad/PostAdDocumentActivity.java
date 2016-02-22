@@ -127,6 +127,11 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mbtnSelectCity.setOnClickListener(this);
 		mbtnSelectUserCity.setOnClickListener(this);
 
+		StaticUtils.setEditTextHintFont(meditUserAdress, this);
+		StaticUtils.setEditTextHintFont(meditUserState, this);
+		StaticUtils.setEditTextHintFont(mEditUserPinCode, this);
+		StaticUtils.setEditTextHintFont(mEditUserPhone, this);
+
 		StaticUtils.setEditTextHintFont(meditAdress, this);
 		StaticUtils.setEditTextHintFont(mEditPinCode, this);
 		StaticUtils.setEditTextHintFont(meditState, this);
@@ -293,6 +298,19 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mBundle.putString("city", mbtnSelectCity.getText().toString());
 		mBundle.putString("stateValue", meditState.getText().toString());
 		mBundle.putString("pincode", mEditPinCode.getText().toString());
+		
+		if(mCheckAddress.isChecked()){
+			mBundle.putString("displayCurrent", "false");
+		}else {
+			mBundle.putString("displayCurrent", "true");
+		}
+		
+		mBundle.putString("addressUser", meditUserAdress.getText().toString());
+		mBundle.putString("cityUser", mbtnSelectUserCity.getText().toString());
+		mBundle.putString("stateValueUser", meditUserState.getText().toString());
+		mBundle.putString("pincodeUser", mEditUserPinCode.getText().toString());
+		mBundle.putString("mobileNumberUser", mEditUserPhone.getText().toString());
+		
 		mBundle.putString("panCard", meditPanCardNumber.getText().toString());
 		mBundle.putString("aadharCardName", mEditAadharCardName.getText()
 				.toString());

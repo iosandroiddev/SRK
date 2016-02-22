@@ -387,6 +387,7 @@
                     android:id="@+id/editAadharName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
                     android:inputType="text"
                     android:textSize="15sp" />
 
@@ -402,6 +403,7 @@
                 <EditText
                     android:id="@+id/editAadharNumber"
                     android:layout_width="match_parent"
+                    android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:padding="3dp"

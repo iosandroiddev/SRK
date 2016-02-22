@@ -749,6 +749,96 @@
                 custom:fonttype="trebuchet_ms" />
 
             <LinearLayout
+                android:id="@+id/layoutCurrentAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="#55000000"
+                    android:padding="5dp"
+                    android:text="@string/current_address"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/addressUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/cityUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:text="@string/select_city"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/stateUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/pincodeUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/mobileUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

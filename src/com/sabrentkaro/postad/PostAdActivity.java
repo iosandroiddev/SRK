@@ -458,26 +458,23 @@ public class PostAdActivity extends BaseActivity implements
 		Intent mIntent = new Intent(this, LoginActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("isPostAd", "yes");
-		mBundle.putString("category", mbtnProductCategory.getText()
-				.toString());
+		mBundle.putString("category", mbtnProductCategory.getText().toString());
 		mBundle.putString("subCategory", mbtnSubProductCategory.getText()
 				.toString());
 		mBundle.putString("adTitle", mEditTitle.getText().toString());
 		mBundle.putString("productDescription", mEditShortDesc.getText()
 				.toString());
 		mBundle.putString("productCondition", mtxtRating);
-		mBundle.putString("productConditionName", mbtnSelectRating
-				.getText().toString());
+		mBundle.putString("productConditionName", mbtnSelectRating.getText()
+				.toString());
 		mBundle.putString("userInstructions", mEditInstructions.getText()
 				.toString());
-		mBundle.putString("additionalStuff", mEditStuff.getText()
+		mBundle.putString("additionalStuff", mEditStuff.getText().toString());
+		mBundle.putString("productPurchasedPrice", mEditPurchasedCost.getText()
 				.toString());
-		mBundle.putString("productPurchasedPrice", mEditPurchasedCost
-				.getText().toString());
 		mBundle.putString("dailyCost", mEditDailyCost.getText().toString());
 		mBundle.putString("weekCost", mEditWeeklyCost.getText().toString());
-		mBundle.putString("monthlyCost", mEditMonthlyCost.getText()
-				.toString());
+		mBundle.putString("monthlyCost", mEditMonthlyCost.getText().toString());
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("securityDeposit", mEditSecurityDeposit.getText()
 				.toString());
@@ -494,8 +491,8 @@ public class PostAdActivity extends BaseActivity implements
 	private void btnSelectSubProductCategoryClicked() {
 		showProgressLayout();
 		if (mbtnProductCategory.getText().toString()
-				.equalsIgnoreCase("Select Category")) {
-			showToast("Please Select Category");
+				.equalsIgnoreCase("Select Product Category")) {
+			showToast("Please Select Product Category");
 		} else {
 			if (mSubCategories != null && mSubCategories.size() > 0) {
 				new Handler().postDelayed(new Runnable() {
@@ -527,11 +524,31 @@ public class PostAdActivity extends BaseActivity implements
 							mbtnSubProductCategory.setText(mSubCat[which]);
 							dialog.dismiss();
 							initTemplateForCategoryApi();
+							clearAllFields();
 						}
 
 					});
 			alert.show();
 		}
+	}
+
+	private void clearAllFields() {
+		mEditDailyCost.setText("");
+		mEditInstructions.setText("");
+		mEditMonthlyCost.setText("");
+		mEditPurchasedCost.setText("");
+		mEditQuantity.setText("");
+		mEditSecurityDeposit.setText("");
+		mEditShortDesc.setText("");
+		mEditStuff.setText("");
+		mEditTitle.setText("");
+		mEditWeeklyCost.setText("");
+		mImgProduct.setImageDrawable(null);
+		mImageProfilePicPath = "";
+		mbtnSelectRating.setText("Select Rating");
+		mImgProduct.setImageResource(R.drawable.default_loading);
+		mImgLayout.setVisibility(View.GONE);
+
 	}
 
 	private void initTemplateForCategoryApi() {
@@ -719,6 +736,7 @@ public class PostAdActivity extends BaseActivity implements
 								mbtnProductCategory.setText(mCategories[which]);
 								dialog.dismiss();
 								setSubProductsArray();
+								clearAllFields();
 							}
 						});
 				alert.show();
