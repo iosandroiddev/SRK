@@ -11,7 +11,8 @@ public class StaticData {
 	public final static int POSTUSERINFORMATION_RESPONSE_CODE = 106;
 	public final static int GETADTEMPLATEFORCATEGORY_RESPONSE_CODE = 107;
 	public final static int INITIATE_RESPONSE_CODE = 108;
-	public final static int UPLOADCONTENT_RESPONSE_CODE = 108;
+	public final static int UPLOADCONTENT_RESPONSE_CODE = 109;
 	public final static float SCALE = 1.5f;
+	public final static int POSTREGISTERUSER_RESPONSE_CODE = 110;
 
 }

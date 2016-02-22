@@ -107,8 +107,8 @@
                     android:id="@+id/imgLayout"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:padding="10dp"
                     android:background="@color/transparent"
+                    android:padding="10dp"
                     android:visibility="visible" >
 
                     <LinearLayout
@@ -467,9 +467,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"
@@ -664,6 +664,89 @@
                         custom:fonttype="trebuchet_ms" />
                 </LinearLayout>
             </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="#55000000"
+                android:padding="5dp"
+                android:text="@string/documents_address"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:text="@string/select_city"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/pincode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
 
             <LinearLayout
                 android:layout_width="match_parent"

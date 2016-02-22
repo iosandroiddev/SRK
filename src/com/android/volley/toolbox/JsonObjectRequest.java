@@ -122,7 +122,7 @@ public class JsonObjectRequest extends JsonRequest<JSONObject> {
 	public JsonObjectRequest(int method, String url, JSONObject jsonRequest,
 			Listener<JSONObject> listener, ErrorListener errorListener) {
 		super(method, url, (jsonRequest == null) ? null : jsonRequest
-				.toString(), listener, errorListener);
+				.toString().replaceAll("\\\\", ""), listener, errorListener);
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class JsonObjectRequest extends JsonRequest<JSONObject> {
 				listener, errorListener);
 	}
 
-	@Override
+	@Override	
 	protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
 		try {
 			String jsonString = new String(response.data,

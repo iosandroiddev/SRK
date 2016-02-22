@@ -6,8 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,12 +21,14 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.models.CityModel;
 import com.models.SearchModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.sabrentkaro.search.SearchResultsAdapter.IRentClick;
 import com.utils.ApiUtils;
+import com.utils.StorageClass;
 
 public class SearchResultsActivity extends BaseActivity implements IRentClick {
 
@@ -50,6 +57,15 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		mListView = (ListView) findViewById(R.id.listView);
 		mtxtProductTitle.setText(selectedCategory);
 		mAdapter = new SearchResultsAdapter(this);
+
+		((TextView) (findViewById(R.id.txtLocation)))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						showCityAlert();
+					}
+				});
 	}
 
 	private void initSearchResultsApi() {
@@ -67,7 +83,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		minputs.put(mObj);
 		mObj = new JSONObject();
 		try {
-			mObj.put("SearchText", "HYDERABAD Anywhere");
+			String mlocation = StorageClass.getInstance(this).getUserCity();
+			mObj.put("SearchText", mlocation + " Anywhere");
 			mObj.put("SearchType", "location");
 			mObj.put("SearchCondition", "AND");
 		} catch (JSONException e) {
@@ -145,6 +162,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 								.optString("adDescription"));
 						mModel.setCoverImagePath(resultObj
 								.optString("coverImagePath"));
+						mModel.setPostedBy(resultObj.optString("postedBy"));
 						mModel.setProductCategory(resultObj
 								.optString("productcategory"));
 						mModel.setLocation(resultObj.optString("location"));
@@ -164,6 +182,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 						JSONArray mCatTonArray = resultObj
 								.optJSONArray("itemJsonobject");
 						if (mCatTonArray != null) {
+							mModel.setItemsArray(mCatTonArray);
 							for (int k = 0; k < mCatTonArray.length(); k++) {
 								JSONObject mCatTonObj = mCatTonArray
 										.optJSONObject(k);
@@ -202,5 +221,49 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		mBundle.putString("selectedProductAdId", mModel.getAdId());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
+	}
+
+	private void showCityAlert() {
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
+		int pos = -1;
+		if (mCityArray != null) {
+			final String[] mCities = new String[mCityArray.size()];
+			for (int i = 0; i < mCityArray.size(); i++) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this)
+						.getUserCity())) {
+					pos = -1;
+				} else {
+					if (mCityArray
+							.get(i)
+							.getName()
+							.equalsIgnoreCase(
+									StorageClass.getInstance(this)
+											.getUserCity())) {
+						pos = i;
+					}
+				}
+				mCities[i] = mCityArray.get(i).getName();
+			}
+			if (mCities != null) {
+				StorageClass.getInstance(this).getUserCity();
+				AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setTitle("Select City");
+				alert.setSingleChoiceItems(mCities, pos,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								StorageClass.getInstance(
+										SearchResultsActivity.this)
+										.setUserCity(mCities[which]);
+								dialog.dismiss();
+								setLocation();
+								initSearchResultsApi();
+							}
+						});
+				alert.show();
+			}
+		}
 	}
 }

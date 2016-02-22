@@ -37,5 +37,4 @@ public class ApiUtils {
 	public static final String INITIATEAD = BASE_URL + "Product/InitiateAd";
 
 	public static final String POSTANAD = BASE_URL + "Product/PostAnAd";
-
 }

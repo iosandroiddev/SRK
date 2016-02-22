@@ -50,7 +50,6 @@ public class OrderDetailsActivity extends BaseActivity {
 	private String fromDate;
 	private String toDate;
 	private String mSecurityValue;
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,14 +127,19 @@ public class OrderDetailsActivity extends BaseActivity {
 						String mTitle = mObject.optString("Code");
 						if (mTitle.equalsIgnoreCase("PRODRENTALVALUE")) {
 							mProdRentValue = mobj.optString("Amount");
+							mProdRentValue = String.valueOf(mProdRentValue).split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("COMMISSION")) {
 							mFaciliValue = mobj.optString("Amount");
+							mFaciliValue = String.valueOf(mFaciliValue).split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("SERVICETAX")) {
 							mServiceValue = mobj.optString("Amount");
+							mServiceValue = String.valueOf(mServiceValue).split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("LOGISTICS")) {
 							mLogisticsValue = mobj.optString("Amount");
+							mLogisticsValue = String.valueOf(mLogisticsValue).split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("SECURITY")) {
 							mSecurityValue = mobj.optString("Amount");
+							mSecurityValue = String.valueOf(mSecurityValue).split("\\.")[0];
 						}
 					}
 				}
@@ -165,8 +169,6 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtLogistics = (TextView) findViewById(R.id.txtLogisticsTax);
 		mtxtLogisticsCost = (TextView) findViewById(R.id.txtLogisticsTaxCost);
 
-		
-
 		mbtnContinue.setOnClickListener(this);
 	}
 
@@ -175,7 +177,12 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtFacilitaionCharges.setText("Total Amount: " + mFaciliValue);
 		mtxtServiceTax.setText("Total Amount: " + mServiceValue);
 		mtxtLogistics.setText("Total Amount: " + mLogisticsValue);
-		mtxtTotalCost.setText(mProdRentValue);
+
+		int totalCost = Integer.parseInt(mProdRentValue)
+				+ Integer.parseInt(mFaciliValue)
+				+ Integer.parseInt(mServiceValue)
+				+ Integer.parseInt(mLogisticsValue);
+		mtxtTotalCost.setText(String.valueOf(totalCost));
 	}
 
 	private void loadDetails() {

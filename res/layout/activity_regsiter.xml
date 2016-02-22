@@ -63,7 +63,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:padding="10dp"
                 android:singleLine="true"
-                android:text="@string/select_country"
+                android:text="@string/select_city"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />

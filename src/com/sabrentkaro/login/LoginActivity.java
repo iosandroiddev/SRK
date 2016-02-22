@@ -35,6 +35,23 @@ public class LoginActivity extends BaseActivity {
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
 	private Dialog mForgotPasswordDialog;
 
+	private String mCategory;
+	private String mSubCategory;
+	private String mAdTitle;
+	private String mProductDesc;
+	private String mProductCondition;
+	private String mProductPurchasedPrice;
+	private String mUserInstructions;
+	private String mAdditionalStuff;
+	private String mDailyCost;
+	private String mMonthCost;
+	private String mProductAdId;
+	private String mSecurityDeposit;
+	private String mFilePath;
+	private String mWeekCost;
+	private String mtxtRating;
+	private String mtxtCondName;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,7 +64,25 @@ public class LoginActivity extends BaseActivity {
 	private void getDetails() {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
-			if (mBundle != null) {
+			if (mBundle != null && mBundle.containsKey("isPostAd")) {
+				mCategory = mBundle.getString("category");
+				mSubCategory = mBundle.getString("subCategory");
+				mAdTitle = mBundle.getString("adTitle");
+				mProductDesc = mBundle.getString("productDescription");
+				mAdditionalStuff = mBundle.getString("additionalStuff");
+				mUserInstructions = mBundle.getString("userInstructions");
+				mProductPurchasedPrice = mBundle
+						.getString("productPurchasedPrice");
+				mDailyCost = mBundle.getString("dailyCost");
+				mMonthCost = mBundle.getString("monthlyCost");
+				mWeekCost = mBundle.getString("weekCost");
+				mQuantity = mBundle.getString("quantity");
+				mFilePath = mBundle.getString("filePath");
+				mSecurityDeposit = mBundle.getString("securityDeposit");
+				mProductAdId = mBundle.getString("productAdId");
+				mtxtRating = mBundle.getString("productCondition");
+				mtxtCondName = mBundle.getString("productConditionName");
+			} else {
 				selectedProductAdId = mBundle.getString("selectedAdId");
 				mPrice = mBundle.getString("productPrice");
 				mProductDescription = mBundle.getString("productDescription");
@@ -70,8 +105,8 @@ public class LoginActivity extends BaseActivity {
 		mbtnLogin.setOnClickListener(this);
 		mbtnRegister.setOnClickListener(this);
 
-		 mEditEmail.setText("harathithippaluru@sabrentkaro.com");
-		 mEditPassword.setText("harathi@raj1");
+		// mEditEmail.setText("harathithippaluru@sabrentkaro.com");
+		// mEditPassword.setText("harathi@raj1");
 	}
 
 	@Override
@@ -236,6 +271,25 @@ public class LoginActivity extends BaseActivity {
 
 	private void navigateToPostAdDocuments() {
 		Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("category", mCategory);
+		mBundle.putString("subCategory", mSubCategory);
+		mBundle.putString("adTitle", mAdTitle);
+		mBundle.putString("productDescription", mProductDesc);
+		mBundle.putString("productCondition", "");
+		mBundle.putString("userInstructions", mUserInstructions);
+		mBundle.putString("additionalStuff", mAdditionalStuff);
+		mBundle.putString("productPurchasedPrice", mProductPurchasedPrice);
+		mBundle.putString("dailyCost", mDailyCost);
+		mBundle.putString("productAdId", mProductAdId);
+		mBundle.putString("weekCost", mWeekCost);
+		mBundle.putString("monthlyCost", mMonthCost);
+		mBundle.putString("productCondition", mtxtRating);
+		mBundle.putString("filePath", mFilePath);
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("securityDeposit", mSecurityDeposit);
+		mBundle.putString("productConditionName", mtxtCondName);
+		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 		finish();
 	}

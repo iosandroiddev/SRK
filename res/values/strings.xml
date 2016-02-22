@@ -10,7 +10,7 @@
     <string name="post">Post</string>
     <string name="search">Search</string>
     <string name="search_product">Search Product</string>
-    <string name="products_of_your_choice_are_just_a_click_away_">Products of your choice are just a click away.</string>
+    <string name="products_of_your_choice_are_just_a_click_away_">Products of your choice are just a step away.</string>
     <string name="rent">Rent</string>
     <string name="brand">Brand</string>
     <string name="location">Location</string>
@@ -143,5 +143,8 @@
     <string name="forgot_password">Forgot Password ?</string>
     <string name="submit">Submit</string>
     <string name="edit">Edit</string>
+    <string name="price_per_day">Price per Day:</string>
+    <string name="title_">Title:</string>
+    <string name="posted_by_">Posted By:</string>
 
 </resources>

@@ -2,6 +2,8 @@ package com.models;
 
 import java.io.Serializable;
 
+import org.json.JSONArray;
+
 public class SearchModel implements Serializable {
 
 	/**
@@ -25,6 +27,10 @@ public class SearchModel implements Serializable {
 
 	private String tonnage;
 	private String capacity;
+
+	private JSONArray mCatTonArray;
+
+	private String postedBy;
 
 	public String getAdId() {
 		return adId;
@@ -95,7 +101,7 @@ public class SearchModel implements Serializable {
 	}
 
 	public void setPricePerDay(String pricePerDay) {
-		this.pricePerDay = pricePerDay;
+		this.pricePerDay = String.valueOf(pricePerDay).split("\\.")[0];
 	}
 
 	public String getPricePerWeek() {
@@ -144,6 +150,25 @@ public class SearchModel implements Serializable {
 
 	public void setCapacity(String capacity) {
 		this.capacity = capacity;
+	}
+
+	public void setItemsArray(JSONArray mCatTonArray) {
+		this.mCatTonArray = mCatTonArray;
+
+	}
+
+	public JSONArray getItemsArray() {
+		return mCatTonArray;
+	}
+
+	public void setPostedBy(String optString) {
+		this.postedBy = optString;
+
+	}
+
+	public String getPostedBy() {
+		return this.postedBy;
+
 	}
 
 }

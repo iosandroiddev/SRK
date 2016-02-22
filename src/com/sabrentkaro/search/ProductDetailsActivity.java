@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,10 +31,9 @@ import com.utils.StorageClass;
 public class ProductDetailsActivity extends BaseActivity {
 
 	private ImageView mImageProduct, mImageRating;
-	private TextView mtxtProductName, mtxtBrand, mtxtType, mtxtModel,
-			mtxtCategory, mtxtLocation, mtxtDailyCost, mtxtMonthCost,
-			mtxtWeekCost, mtxtSecurityDeposit, mtxtYearOfPurchase,
-			mtxtMonthOfPurchase, mtxtCapacity, mtxtQuantity, mtxtTonnage;
+	private TextView mtxtProductName, mtxtCategory, mtxtLocation,
+			mtxtDailyCost, mtxtMonthCost, mtxtWeekCost, mtxtSecurityDeposit,
+			mtxtYearOfPurchase, mtxtMonthOfPurchase, mtxtQuantity;
 	private EditText mEditQuantity;
 	private TextView mbtnRent;
 	private String selectedProductAdId;
@@ -45,8 +45,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	private String mStrSecurityDeposit;
 	private LinearLayout mLayoutWeekCost, mLayoutMonthCost, mLayoutDailyCost;
 	private String mImageUrl;
-	private LinearLayout mLayoutTonnage;
-	private LinearLayout mLayoutCapacity;
+	private LinearLayout mLayoutFiedlsValues;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,9 +102,6 @@ public class ProductDetailsActivity extends BaseActivity {
 
 	private void loadLayoutReferences() {
 		mtxtProductName = (TextView) findViewById(R.id.txtProductName);
-		mtxtBrand = (TextView) findViewById(R.id.txtBrand);
-		mtxtType = (TextView) findViewById(R.id.txtType);
-		mtxtModel = (TextView) findViewById(R.id.txtModel);
 		mtxtCategory = (TextView) findViewById(R.id.txtCategoryName);
 		mtxtLocation = (TextView) findViewById(R.id.txtLocationName);
 		mtxtDailyCost = (TextView) findViewById(R.id.txtDailyCost);
@@ -114,8 +110,6 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.txtSecurityDeposit);
 		mtxtYearOfPurchase = (TextView) findViewById(R.id.txtYearOfPurchase);
 		mtxtMonthOfPurchase = (TextView) findViewById(R.id.txtMonthOfPurchase);
-		mtxtCapacity = (TextView) findViewById(R.id.txtCapacity);
-		mtxtTonnage = (TextView) findViewById(R.id.txtTonnage);
 		mImageRating = (ImageView) findViewById(R.id.imgProductRating);
 		mImageProduct = (ImageView) findViewById(R.id.itemProduct);
 		mEditQuantity = (EditText) findViewById(R.id.editTextQuantity);
@@ -124,9 +118,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		mLayoutMonthCost = (LinearLayout) findViewById(R.id.layoutMonthCost);
 		mLayoutWeekCost = (LinearLayout) findViewById(R.id.layoutWeekCost);
 		mLayoutDailyCost = (LinearLayout) findViewById(R.id.layoutDailyCost);
-
-		mLayoutTonnage = (LinearLayout) findViewById(R.id.layoutTonnage);
-		mLayoutCapacity = (LinearLayout) findViewById(R.id.layoutCapacity);
+		mLayoutFiedlsValues = (LinearLayout) findViewById(R.id.rootFieldsValues);
+		mLayoutFiedlsValues.setVisibility(View.GONE);
 		mbtnRent.setOnClickListener(this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
 	}
@@ -149,28 +142,7 @@ public class ProductDetailsActivity extends BaseActivity {
 							e.printStackTrace();
 						}
 						if (mItemDetailsArray != null) {
-							for (int j = 0; j < mItemDetailsArray.length(); j++) {
-								JSONObject mItemObj = mItemDetailsArray
-										.optJSONObject(j);
-								if (mItemObj != null) {
-									if (mItemObj.optString("Title")
-											.equalsIgnoreCase("Brand")) {
-										mBrand = mItemObj.optString("Value");
-									} else if (mItemObj.optString("Title")
-											.equalsIgnoreCase("Model")) {
-										mModel = mItemObj.optString("Value");
-									} else if (mItemObj.optString("Title")
-											.equalsIgnoreCase("Type")) {
-										mType = mItemObj.optString("Value");
-									} else if (mItemObj.optString("Title")
-											.equalsIgnoreCase("Storage Volume")) {
-										mCapacity = mItemObj.optString("Value");
-									} else if (mItemObj.optString("Title")
-											.equalsIgnoreCase("Tonnage")) {
-										mTonnage = mItemObj.optString("Value");
-									}
-								}
-							}
+							loadProductValues(mItemDetailsArray);
 						}
 						mQuantity = mObj.optString("Quantity");
 						mMonthOfPurchase = mObj.optString("MonthOfPurchase");
@@ -289,31 +261,49 @@ public class ProductDetailsActivity extends BaseActivity {
 		setData();
 	}
 
+	private void loadProductValues(JSONArray mItemDetailsArray) {
+		for (int j = 0; j < mItemDetailsArray.length(); j++) {
+			JSONObject mItemObj = mItemDetailsArray.optJSONObject(j);
+			if (mItemObj != null) {
+				View mView = LayoutInflater.from(this).inflate(
+						R.layout.customproducts, null);
+
+				TextView mtxtTitle = (TextView) mView
+						.findViewById(R.id.txtPTitle);
+				TextView mtxtValue = (TextView) mView
+						.findViewById(R.id.txtPValue);
+
+				mtxtTitle.setText(mItemObj.optString("Title"));
+				mtxtValue.setText(mItemObj.optString("Value"));
+
+				mLayoutFiedlsValues.addView(mView);
+
+				if (mItemObj.optString("Title").equalsIgnoreCase("Brand")) {
+					mBrand = mItemObj.optString("Value");
+				} else if (mItemObj.optString("Title")
+						.equalsIgnoreCase("Model")) {
+					mModel = mItemObj.optString("Value");
+				} else if (mItemObj.optString("Title").equalsIgnoreCase("Type")) {
+					mType = mItemObj.optString("Value");
+				} else if (mItemObj.optString("Title").equalsIgnoreCase(
+						"Storage Volume")) {
+					mCapacity = mItemObj.optString("Value");
+				} else if (mItemObj.optString("Title").equalsIgnoreCase(
+						"Tonnage")) {
+					mTonnage = mItemObj.optString("Value");
+				}
+			}
+		}
+
+		StaticUtils.expandCollapse(mLayoutFiedlsValues, true);
+	}
+
 	private void setData() {
 		mtxtProductName.setText(mProductCategory);
 		mtxtCategory.setText(mCategory);
 		mtxtYearOfPurchase.setText(mYearOfPurchase);
 		mtxtMonthOfPurchase.setText(mMonthOfPurchase);
 		mtxtQuantity.setText(mQuantity);
-		mtxtBrand.setText(mBrand);
-		mtxtModel.setText(mModel);
-		mtxtType.setText(mType);
-
-		if (mCapacity == null || mCapacity.length() == 0) {
-			mtxtCapacity.setText(mCapacity);
-			mLayoutCapacity.setVisibility(View.GONE);
-		} else {
-			mtxtCapacity.setText(mCapacity);
-			mLayoutCapacity.setVisibility(View.VISIBLE);
-		}
-
-		if (mTonnage == null || mTonnage.length() == 0) {
-			mtxtTonnage.setText(mTonnage);
-			mLayoutTonnage.setVisibility(View.GONE);
-		} else {
-			mtxtTonnage.setText(mTonnage);
-			mLayoutTonnage.setVisibility(View.VISIBLE);
-		}
 
 		mtxtLocation.setText(locationValue);
 		mtxtSecurityDeposit.setText(mStrSecurityDeposit);

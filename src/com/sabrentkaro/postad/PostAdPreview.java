@@ -1,5 +1,10 @@
 package com.sabrentkaro.postad;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -12,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.models.ProductModel;
 import com.sabrentkaro.BaseActivity;
@@ -23,8 +28,12 @@ import com.sabrentkaro.R;
 import com.utils.ApiUtils;
 import com.utils.PhotoUpload;
 import com.utils.PhotoUpload.IImageUpload;
+import com.utils.PostAd;
+import com.utils.PostAd.IPostAd;
+import com.utils.StorageClass;
 
-public class PostAdPreview extends BaseActivity implements IImageUpload {
+public class PostAdPreview extends BaseActivity implements IImageUpload,
+		IPostAd {
 
 	private TextView mtxtCategory, mtxtSubCategory, mtxtTitle, mtxtDesc,
 			mtxtRating, mtxtInstructions, mtxtStuff, mtxtQuanity,
@@ -65,6 +74,16 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 
 	private String mtxtCondName;
 
+	private TextView mtxtAddress;
+
+	private TextView mtxtState;
+
+	private TextView mtxtCity;
+
+	private TextView mtxtMobile;
+
+	private TextView mtxtPincode;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +108,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 		mtxtWeekCost.setText(mWeekCost);
 		mtxtSecurityDeposit.setText(mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
+
+		mtxtAddress.setText(mAddress);
+		mtxtCity.setText(mCity);
+		mtxtState.setText(mState);
+		mtxtPincode.setText(mPinCode);
+		mtxtMobile.setText(mMobileNubmer);
 
 		InternalApp mApp = (InternalApp) getApplication();
 		mImgProduct.setImageBitmap(mApp.getImage());
@@ -158,6 +183,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 		mbtnBack = (TextView) findViewById(R.id.btnEdit);
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
+
+		mtxtAddress = (TextView) findViewById(R.id.address);
+		mtxtState = (TextView) findViewById(R.id.state);
+		mtxtCity = (TextView) findViewById(R.id.city);
+		mtxtMobile = (TextView) findViewById(R.id.mobile);
+		mtxtPincode = (TextView) findViewById(R.id.pincode);
 	}
 
 	@Override
@@ -187,8 +218,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 			params.put("Id", mProductAdId);
 			params.put("Title", mAdTitle);
 			params.put("Description", mProductDesc);
-			params.put("IsLogisticsShared", false);
-			params.put("IsInsuredByOwner", false);
+			params.put("IsLogisticsShared", "true");
+			params.put("IsInsuredByOwner", "false");
 			params.put("InsuranceCost", "null");
 			params.put("LogisticsCost", "null");
 			params.put("SecurityDeposit", mSecurityDeposit);
@@ -248,7 +279,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 			mProdcutsObj.put("Title", mLocationObject);
 			mProdcutsObj.put("Description", "null");
 			mProdcutsObj.put("Quantity", "null");
-			mProdcutsObj.put("PriceWhenPurchased", "null");
+			mProdcutsObj.put("PriceWhenPurchased", mProductPurchasedPrice);
 			mProdcutsObj.put("ProductCategory", mProdcutCategoryObj);
 			mProdcutsObj.put("LastName", " ");
 			mProdcutsObj.put("IsBusiness", "null");
@@ -306,7 +337,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 			mItemDeatilsObj.put("Value", "");
 			mItemDeatilsArray.put(mItemDeatilsObj);
 
-			mProdcutsObj.put("ItemDetails", mItemDeatilsArray.toString());
+			mProdcutsObj.put("ItemDetails",
+					"" + String.valueOf(mItemDeatilsArray) + "");
 			JSONArray mProdcutsArray = new JSONArray();
 			mProdcutsArray.put(mProdcutsObj);
 
@@ -329,11 +361,11 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 
 			JSONArray mCalenders = new JSONArray();
 			JSONObject mCalendarsObj = new JSONObject();
-			mCalendarsObj.put("DateFrom", "");
-			mCalendarsObj.put("DateTo", "");
-			mCalendarsObj.put("IsBlocked", false);
+			mCalendarsObj.put("DateFrom", "01/01/1900");
+			mCalendarsObj.put("DateTo", "12/31/2999");
+			mCalendarsObj.put("IsBlocked", "false");
 			mCalendarsObj.put("RentalValuePerDay", mDailyCost);
-			mCalendarsObj.put("IsOpenCalendar", true);
+			mCalendarsObj.put("IsOpenCalendar", "true");
 			mCalenders.put(mCalendarsObj);
 
 			JSONArray mArrayAdSettings = new JSONArray();
@@ -370,7 +402,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 			mProducSpec.put("Code", "INSURANCE");
 			mProducSpec.put("Title", "Insurance Preferences");
 			mAdSetObj.put("ProductCategorySpecification", mProducSpec);
-			mAdSetObj.put("Value", true);
+			mAdSetObj.put("Value", "true");
 			mAdSetObj.put("Id", "4");
 			mArrayAdSettings.put(mAdSetObj);
 
@@ -387,7 +419,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 			mProducSpec = new JSONObject();
 			mProducSpec.put("Title", "Calendar  Preferences");
 			mAdSetObj.put("ProductCategorySpecification", mProducSpec);
-			mAdSetObj.put("Value", "Open calendar");
+			mAdSetObj.put("Value", "true");
 			mAdSetObj.put("Id", "6");
 			mArrayAdSettings.put(mAdSetObj);
 
@@ -399,6 +431,115 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+		String ent = "{\"Id\":\""
+				+ mProductAdId
+				+ "\",\"Status\":null,\"Title\":\""
+				+ mAdTitle
+				+ "\",\"Description\":\""
+				+ mProductDesc
+				+ "\","
+				+ "\"IsLogisticsShared\":false,\"IsInsuredByOwner\":false,\"InsuranceCost\":null,\"LogisticsCost\":null,"
+				+ "\"SecurityDeposit\":\""
+				+ mSecurityDeposit
+				+ "\",\"History\":null,\"CreatedDate\":"
+				+ "01/01/1900"
+				+ ",\"Owners\":[{\"IsPrimary\":null,"
+				+ "\"IsBusiness\":null,\"LastName\":\" \",\"DateOfBirth\":null,\"MiddleName\":null,\"Location\":{\"Longitude\":\" "
+				+ "\",\"Latitude\":\" \"},\"Role\":null,\"Addresses\":[{\"AddressLine1\":\""
+				+ mAddress
+				+ "\",\"AddressLine2\":\"\","
+				+ "\"State\":\""
+				+ mState
+				+ "\",\"City\":\""
+				+ mCity
+				+ "\",\"Postcode\":\""
+				+ mPinCode
+				+ "\",\"ContactNumber\":\""
+				+ mMobileNubmer
+				+ "\"}],"
+				+ "\"AddressType\":null}],\"Products\":[{\"Id\":\""
+				+ mProductAdId
+				+ "\",\"ProductCategory\":{\"Code\":\""
+				+ mCode
+				+ "\",\"Title\":\""
+				+ mSubCategory
+				+ "\"},"
+				+ "\"Title\":\""
+				+ mAdTitle
+				+ "\",\"Description\":\""
+				+ mProductDesc
+				+ "\",\"Quantity\":\""
+				+ mQuantity
+				+ "\","
+				+ "\"ProductCondition\":{\"Code\":\""
+				+ mRating
+				+ "\",\"Title\":\""
+				+ mtxtCondName
+				+ "\"},\"PriceWhenPurchased\":\""
+				+ mProductPurchasedPrice
+				+ "\","
+				+ "\"ItemDetails\":\"[{\"Title\":\"Brand\",\"Type\":\"\",\"Value\":\""
+				+ mProductDesc
+				+ "\"},"
+				+ "{\"Title\":\"Model\",\"Type\":\"\",\"Value\":\""
+				+ mProductDesc
+				+ "\"},{\"Title\":\"Control\","
+				+ "\"Type\":\"select\",\"Value\":\"\"},{\"Title\":\"Type\",\"Type\":\"select\",\"Value\":\"\"},"
+				+ "{\"Title\":\"Washing Capacity\",\"Type\":\"select\",\"Value\":\"\"}]\",\"ItemMedia\":[{\"Filepath\":"
+				+ "\"http://www.allrental.co.in/BusinessServices/ImageStore/AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\","
+				+ "\"FileAbsolutePath\":\"AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\",\"FileName\":null,\"IsThumbNail\":null,"
+				+ "\"IsCoverImage\":null,\"AdItemId\":"
+				+ mAdTitle
+				+ ",\"Size\":null}],"
+				+ "\"Pricing\":[{\"Price\":\""
+				+ mDailyCost
+				+ "\",\"UnitCode\":\"PerWeekDay\",\"UnitTitle\":\"Per WeekDay\"},"
+				+ "{\"Price\":\""
+				+ mWeekCost
+				+ "\",\"UnitCode\":\"PerWeek\",\"UnitTitle\":\"Per Week\"},{\"Price\":\""
+				+ mMonthCost
+				+ "\",\"UnitCode\":"
+				+ "\"PerMonth\",\"UnitTitle\":\"Per Month\"}]}],\"AdAddress\":{\"AddressLine1\":\""
+				+ mAddress
+				+ "\","
+				+ "\"AddressLine2\":\"\",\"City\":\""
+				+ mCity
+				+ "\",\"State\":\""
+				+ mState
+				+ "\",\"Postcode\":\""
+				+ mPinCode
+				+ "\","
+				+ "\"ContactNumber\":\""
+				+ mMobileNubmer
+				+ "\"},\"Pricing\":null,\"AdOtp\":{\"Code\":\"\",\"ExpiryDate\":null,\"GeneratedDate\":null,"
+				+ "\"ConsumedDate\":null,\"OtpStatus\":null},\"Tags\":[],\"Business\":null,"
+				+ "\"AdSettings\":[{\"ProductCategorySpecification\":{\"Code\":\"RULES\",\"Title\":\"Rules of usage\"},"
+				+ "\"Value\":\""
+				+ mProductDesc
+				+ "\",\"Id\":\"2\"},{\"ProductCategorySpecification\":{\"Code\":\"INTHEBOX\",\"Title\":\"In the box\"},"
+				+ "\"Value\":\""
+				+ mProductDesc
+				+ "\",\"Id\":\"1\"},"
+				+ "{\"ProductCategorySpecification\":{\"Code\":\"location\",\"Title\":\"Location Preferences\"},\"Value\":\""
+				+ StorageClass.getInstance(this).getUserCity()
+				+ "\",\"Id\":\"5\"},"
+				+ "{\"ProductCategorySpecification\":{\"Code\":\"LOGISTICS\",\"Title\":\"Logistics Preferences\"},"
+				+ "\"Value\":\"\",\"Id\":3},"
+				+ "{\"ProductCategorySpecification\":{\"Code\":\"INSURANCE\",\"Title\":\"Insurance Preferences\"},\"Value\":,\"Id\":4},"
+				+ "{\"ProductCategorySpecification\":{\"Code\":\"CALENDAR\",\"Title\":\"Calendar Preferences\"},\"Value\":\"\",\"Id\":\"6\"}],"
+				+ "\"AdCalendars\":[{\"DateFrom\":\""
+				+ "01/01/1900"
+				+ "\",\"DateTo\":\""
+				+ "12/31/2999"
+				+ "\",\"IsBlocked\":false,\"RentalValuePerDay\":\""
+				+ mDailyCost
+				+ "\",\"IsOpenCalendar\":}],"
+				+ "\"AdTpServiceInputs\":[{\"AdId\":null,\"TpFieldJson\":\"{\"panId\":\""
+				+ mPanCard
+				+ "\"}\",\"TpProviderService\":{\"Code\":\"PAN\",\"Title\":null}}]}";
+
+		callPostAdApi(ent);
 
 		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTANAD,
 				params, new Listener<JSONObject>() {
@@ -422,6 +563,11 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 		mQueue.add(mObjReq);
 	}
 
+	private void callPostAdApi(String ent) {
+		PostAd mObj = new PostAd(this, ent, this);
+		mObj.startExexcution();
+	}
+
 	@Override
 	public void onImageUpload(String message) {
 		if (message.equalsIgnoreCase("Image uploaded successfully.")) {
@@ -438,6 +584,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload {
 		} else {
 
 		}
+	}
+
+	@Override
+	public void onAdPosted(String message) {
+		showToast(message);
+		hideProgressLayout();
 	}
 
 }

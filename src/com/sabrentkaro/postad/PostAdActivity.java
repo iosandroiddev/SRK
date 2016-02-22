@@ -449,7 +449,6 @@ public class PostAdActivity extends BaseActivity implements
 					.toString());
 			mBundle.putString("filePath", mImageProfilePicPath);
 			mBundle.putString("productAdId", productAdId);
-			
 			mIntent.putExtras(mBundle);
 			startActivity(mIntent);
 		}
@@ -457,6 +456,34 @@ public class PostAdActivity extends BaseActivity implements
 
 	private void startLoginActivity() {
 		Intent mIntent = new Intent(this, LoginActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("isPostAd", "yes");
+		mBundle.putString("category", mbtnProductCategory.getText()
+				.toString());
+		mBundle.putString("subCategory", mbtnSubProductCategory.getText()
+				.toString());
+		mBundle.putString("adTitle", mEditTitle.getText().toString());
+		mBundle.putString("productDescription", mEditShortDesc.getText()
+				.toString());
+		mBundle.putString("productCondition", mtxtRating);
+		mBundle.putString("productConditionName", mbtnSelectRating
+				.getText().toString());
+		mBundle.putString("userInstructions", mEditInstructions.getText()
+				.toString());
+		mBundle.putString("additionalStuff", mEditStuff.getText()
+				.toString());
+		mBundle.putString("productPurchasedPrice", mEditPurchasedCost
+				.getText().toString());
+		mBundle.putString("dailyCost", mEditDailyCost.getText().toString());
+		mBundle.putString("weekCost", mEditWeeklyCost.getText().toString());
+		mBundle.putString("monthlyCost", mEditMonthlyCost.getText()
+				.toString());
+		mBundle.putString("quantity", mEditQuantity.getText().toString());
+		mBundle.putString("securityDeposit", mEditSecurityDeposit.getText()
+				.toString());
+		mBundle.putString("filePath", mImageProfilePicPath);
+		mBundle.putString("productAdId", productAdId);
+		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
 

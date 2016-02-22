@@ -2,6 +2,9 @@ package com.sabrentkaro.search;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.androidquery.AQuery;
 import com.models.SearchModel;
@@ -43,6 +47,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 	}
 
 	public void addItems(ArrayList<SearchModel> mArrayList) {
+		mArraySearchResult = new ArrayList<SearchModel>();
 		for (int i = 0; i < mArrayList.size(); i++) {
 			this.mArraySearchResult.add(mArrayList.get(i));
 		}
@@ -68,12 +73,12 @@ public class SearchResultsAdapter extends BaseAdapter {
 	}
 
 	private class Holder {
-		TextView mtxtBrand, mtxtCategory, mtxtLocation, mtxtType, mtxtCapacity,
-				mtxtPrice, mbtnRent, mtxtTonnage;
-		LinearLayout mLayoutCapacity, mLayoutTonnage;
+		TextView mtxtTitle, mtxtPostedBy, mbtnRent, mtxtLocation, mtxtPrice;
+		LinearLayout mRootFiedlsLayout;
 		ImageView mItemImg;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Holder mHolder;
@@ -81,65 +86,60 @@ public class SearchResultsAdapter extends BaseAdapter {
 			mHolder = new Holder();
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.search_result_item, null);
-			mHolder.mtxtBrand = (TextView) convertView
-					.findViewById(R.id.txtBrand);
-			mHolder.mtxtCategory = (TextView) convertView
-					.findViewById(R.id.txtCategory);
+			mHolder.mtxtTitle = (TextView) convertView
+					.findViewById(R.id.txtTitle);
+			mHolder.mtxtPostedBy = (TextView) convertView
+					.findViewById(R.id.txtPostedBy);
 			mHolder.mtxtLocation = (TextView) convertView
 					.findViewById(R.id.txtLocation);
-			mHolder.mtxtType = (TextView) convertView
-					.findViewById(R.id.txtType);
-			mHolder.mtxtCapacity = (TextView) convertView
-					.findViewById(R.id.txtCapacity);
-			mHolder.mtxtTonnage = (TextView) convertView
-					.findViewById(R.id.txtTonnage);
 			mHolder.mtxtPrice = (TextView) convertView
-					.findViewById(R.id.txtPrice);
+					.findViewById(R.id.txtPricePerDay);
 			mHolder.mItemImg = (ImageView) convertView
 					.findViewById(R.id.itemProduct);
-			mHolder.mLayoutTonnage = (LinearLayout) convertView
-					.findViewById(R.id.layoutTonange);
-			mHolder.mLayoutCapacity = (LinearLayout) convertView
-					.findViewById(R.id.layoutCapacity);
 			mHolder.mbtnRent = (TextView) convertView
 					.findViewById(R.id.btnRent);
-
+			mHolder.mRootFiedlsLayout = (LinearLayout) convertView
+					.findViewById(R.id.rootFields);
 			convertView.setTag(mHolder);
 		} else {
 			mHolder = (Holder) convertView.getTag();
 		}
 
 		SearchModel mModel = getItem(position);
-		mHolder.mtxtBrand.setText(mModel.getBrand());
-		mHolder.mtxtPrice.setText(mModel.getPricePerDay());
-
-		mHolder.mtxtType.setText(mModel.getProductCategory());
-		mHolder.mtxtCategory.setText(mModel.getCategory());
+		mHolder.mtxtTitle.setText(mModel.getAdTitle());
+		mHolder.mtxtPostedBy.setText(mModel.getPostedBy());
 		mHolder.mtxtLocation.setText(mModel.getLocation());
+		mHolder.mtxtPrice.setText(mModel.getPricePerDay());
 		mHolder.mtxtLocation.setSelected(true);
-		mHolder.mtxtType.setSelected(true);
-
-		if (mModel.getCapacity() == null || mModel.getCapacity().length() == 0) {
-			mHolder.mLayoutCapacity.setVisibility(View.GONE);
-			mHolder.mtxtCapacity.setText(mModel.getCapacity());
-		} else {
-			mHolder.mLayoutCapacity.setVisibility(View.VISIBLE);
-			mHolder.mtxtCapacity.setText(mModel.getCapacity());
-		}
-
-		if (mModel.getTonnage() == null || mModel.getTonnage().length() == 0) {
-			mHolder.mLayoutTonnage.setVisibility(View.GONE);
-			mHolder.mtxtTonnage.setText(mModel.getTonnage());
-		} else {
-			mHolder.mLayoutTonnage.setVisibility(View.VISIBLE);
-			mHolder.mtxtTonnage.setText(mModel.getTonnage());
-		}
 
 		Picasso.with(mContext).load(mModel.getCoverImagePath())
 				.placeholder(R.drawable.default_loading)
 				.error(R.drawable.default_loading).into(mHolder.mItemImg);
 
 		mHolder.mbtnRent.setOnClickListener(new onRentClick(position));
+
+		if (mModel.getItemsArray() == null
+				|| mModel.getItemsArray().length() == 0) {
+			mHolder.mRootFiedlsLayout.setVisibility(View.GONE);
+		} else {
+			mHolder.mRootFiedlsLayout.setVisibility(View.VISIBLE);
+			mHolder.mRootFiedlsLayout.removeAllViews();
+			for (int i = 0; i < mModel.getItemsArray().length(); i++) {
+				final TextView mtxtView = (TextView) LayoutInflater.from(
+						mContext).inflate(R.layout.itemtext, null);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+						new LayoutParams(LayoutParams.MATCH_PARENT,
+								LayoutParams.WRAP_CONTENT));
+				params.setMargins(2, 2, 2, 2);
+				JSONObject mCatTonObj = mModel.getItemsArray().optJSONObject(i);
+				mtxtView.setLayoutParams(params);
+				mtxtView.setText(mCatTonObj.optString("title") + ": "
+						+ mCatTonObj.optString("value"));
+				mtxtView.setSelected(true);
+				mHolder.mRootFiedlsLayout.addView(mtxtView);
+			}
+
+		}
 
 		return convertView;
 	}
