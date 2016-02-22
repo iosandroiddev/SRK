@@ -162,7 +162,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 								.optString("adDescription"));
 						mModel.setCoverImagePath(resultObj
 								.optString("coverImagePath"));
-						mModel.setPostedBy(resultObj.optString("postedBy"));
+						mModel.setPostedBy(resultObj.optString("postedByName"));
 						mModel.setProductCategory(resultObj
 								.optString("productcategory"));
 						mModel.setLocation(resultObj.optString("location"));
