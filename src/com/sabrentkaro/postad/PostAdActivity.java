@@ -279,32 +279,36 @@ public class PostAdActivity extends BaseActivity implements
 
 		mbtnProductCategory.setText("Select Prodcut Category");
 		mbtnSubProductCategory.setText("Select Sub Product Category");
+		
+		clearAllFields();
 
 	}
 
 	private void btnUploadPhotoClicked() {
-		final String[] mArray = { "Camera", "Gallery", "Cancel" };
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// final String[] mArray = { "Camera", "Cancel" };
+		// AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		//
+		// builder.setItems(mArray, new DialogInterface.OnClickListener() {
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// dialog.dismiss();
+		// if (mArray[which].toString().equalsIgnoreCase("Camera")) {
+		// StaticUtils.isProfilePic = true;
+		// initiateCameraActivity();
+		// } else if (mArray[which].toString().equalsIgnoreCase("Gallery")) {
+		// StaticUtils.isProfilePic = true;
+		// initiateGalleryActivity();
+		// } else {
+		//
+		// }
+		// }
+		// });
+		//
+		// builder.setCancelable(false);
+		// AlertDialog alert = builder.create();
+		// alert.show();
 
-		builder.setItems(mArray, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				if (mArray[which].toString().equalsIgnoreCase("Camera")) {
-					StaticUtils.isProfilePic = true;
-					initiateCameraActivity();
-				} else if (mArray[which].toString().equalsIgnoreCase("Gallery")) {
-					StaticUtils.isProfilePic = true;
-					initiateGalleryActivity();
-				} else {
-
-				}
-			}
-		});
-
-		builder.setCancelable(false);
-		AlertDialog alert = builder.create();
-		alert.show();
+		initiateCameraActivity();
 	}
 
 	private void btnNextClicked() {

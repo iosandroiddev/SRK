@@ -131,7 +131,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						new LayoutParams(LayoutParams.MATCH_PARENT,
 								LayoutParams.WRAP_CONTENT));
-				params.setMargins(2, 2, 2, 2);
+				params.setMargins(2, 5, 2, 5);
 				JSONObject mCatTonObj = mModel.getItemsArray().optJSONObject(i);
 				mtxtView.setLayoutParams(params);
 				mtxtView.setText(mCatTonObj.optString("title") + ": "

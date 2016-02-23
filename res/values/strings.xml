@@ -147,5 +147,8 @@
     <string name="title_">Title:</string>
     <string name="posted_by_">Posted By:</string>
     <string name="logged_user_">Logged User</string>
+    <string name="address_">Address:</string>
+    <string name="city_">City:</string>
+    <string name="state_">State:</string>
 
 </resources>

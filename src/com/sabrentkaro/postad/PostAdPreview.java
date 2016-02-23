@@ -122,17 +122,17 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtSecurityDeposit.setText(mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
-		mtxtAddress.setText(mAddress);
-		mtxtCity.setText(mCity);
-		mtxtState.setText(mState);
-		mtxtPincode.setText(mPinCode);
-		mtxtMobile.setText(mMobileNubmer);
+		mtxtAddress.setText("Address:" + " " + mAddress);
+		mtxtCity.setText("City:" + " " + mCity);
+		mtxtState.setText("State:" + " " + mState);
+		mtxtPincode.setText("Pincode:" + " " + mPinCode);
+		mtxtMobile.setText("Mobile Number:" + " " + mMobileNubmer);
 
-		mtxtUserAddress.setText(mAddressUser);
-		mtxtUserCity.setText(mCityUser);
-		mtxtUserState.setText(mStateUser);
-		mtxtUserPincode.setText(mPinCodeUser);
-		mtxtUserMobile.setText(mMobileNubmerUser);
+		mtxtUserAddress.setText("Address:" + " " + mAddressUser);
+		mtxtUserCity.setText("City:" + " " + mCityUser);
+		mtxtUserState.setText("State:" + " " + mStateUser);
+		mtxtUserPincode.setText("Pincode:" + " " + mPinCodeUser);
+		mtxtUserMobile.setText("Mobile Number:" + " " + mMobileNubmerUser);
 
 		InternalApp mApp = (InternalApp) getApplication();
 		mImgProduct.setImageBitmap(mApp.getImage());
