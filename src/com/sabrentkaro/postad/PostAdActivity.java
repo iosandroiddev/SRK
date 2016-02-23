@@ -1,6 +1,7 @@
 package com.sabrentkaro.postad;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -502,7 +503,7 @@ public class PostAdActivity extends BaseActivity implements
 						showaAlert(pos, mSubCategories);
 					}
 
-				}, 1000);
+				}, 200);
 			}
 		}
 	}
@@ -821,6 +822,8 @@ public class PostAdActivity extends BaseActivity implements
 	protected void initiateGalleryActivity() {
 		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
 		galleryIntent.setType("image/*");
+		galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+		galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
 		startActivityForResult(galleryIntent, PICK_IMAGE);
 	}
 
@@ -831,26 +834,29 @@ public class PostAdActivity extends BaseActivity implements
 			switch (requestCode) {
 			case PICK_IMAGE:
 				if (resultCode == Activity.RESULT_OK) {
-					Uri uri = data.getData();
-					if (uri != null) {
-						try {
-							mImgProduct.setImageURI(uri);
-							mImageProfilePicPath = getRealPathFromURI(uri);
-							mImgLayout.setVisibility(View.VISIBLE);
-						} catch (Exception e) {
-							e.getStackTrace();
-						}
-					} else {
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-							ClipData clipData = data.getClipData();
-							if (clipData != null) {
-								for (int i = 0; i < clipData.getItemCount(); i++) {
-									try {
-										mImgProduct.setImageURI(clipData
-												.getItemAt(i).getUri());
-										mImgLayout.setVisibility(View.VISIBLE);
-									} catch (Exception e) {
-										e.getStackTrace();
+					if (data != null) {
+						Uri uri = data.getData();
+						if (uri != null) {
+							try {
+								mImgProduct.setImageURI(uri);
+								mImageProfilePicPath = getRealPathFromURI(uri);
+								mImgLayout.setVisibility(View.VISIBLE);
+							} catch (Exception e) {
+								e.getStackTrace();
+							}
+						} else {
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								ClipData clipData = data.getClipData();
+								if (clipData != null) {
+									for (int i = 0; i < clipData.getItemCount(); i++) {
+										try {
+											mImgProduct.setImageURI(clipData
+													.getItemAt(i).getUri());
+											mImgLayout
+													.setVisibility(View.VISIBLE);
+										} catch (Exception e) {
+											e.getStackTrace();
+										}
 									}
 								}
 							}
@@ -875,6 +881,12 @@ public class PostAdActivity extends BaseActivity implements
 				break;
 			}
 		}
+	}
+
+	public String getPathfromUri(Uri mUri) {
+		File myFile = new File(mUri.getPath());
+		String mPath = myFile.getAbsolutePath();
+		return mPath;
 	}
 
 	public String getRealPathFromURI(Uri uri) {

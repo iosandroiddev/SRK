@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
         android:hint="@string/enter_address"
+        android:imeOptions="actionDone"
         android:inputType="text"
         android:padding="3dp"
         android:textSize="15sp" >

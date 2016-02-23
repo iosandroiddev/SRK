@@ -61,7 +61,9 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		} else {
 			mbtnLogin.setVisibility(View.GONE);
 			mLoginLayout.setVisibility(View.VISIBLE);
-			mtxtUserName.setText(StorageClass.getInstance(this).getUserName());
+			mtxtUserName.setText("Logged-In User: "
+					+ StorageClass.getInstance(this).getUserName());
+			mtxtUserName.setSelected(true);
 		}
 	}
 

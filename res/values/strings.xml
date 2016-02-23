@@ -146,5 +146,6 @@
     <string name="price_per_day">Price per Day:</string>
     <string name="title_">Title:</string>
     <string name="posted_by_">Posted By:</string>
+    <string name="logged_user_">Logged User</string>
 
 </resources>
