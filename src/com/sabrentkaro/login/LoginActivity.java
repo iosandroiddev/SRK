@@ -220,6 +220,8 @@ public class LoginActivity extends BaseActivity {
 		String userName = "";
 		if (response != null) {
 			if (response.optString("Information") == null
+					|| response.optString("Information").equalsIgnoreCase(
+							"null")
 					|| response.optString("Information").length() == 0) {
 				JSONObject mObjUser = response.optJSONObject("User");
 				if (mObjUser != null) {
@@ -277,6 +279,8 @@ public class LoginActivity extends BaseActivity {
 				} else {
 					showToast(response.optString("Information"));
 				}
+			} else {
+				showToast(response.optString("Information"));
 			}
 		}
 	}
@@ -390,6 +394,8 @@ public class LoginActivity extends BaseActivity {
 	private void responseForForgotPassAPi(JSONObject response) {
 		if (response != null) {
 			if (response.optString("Information") == null
+					|| response.optString("Information").equalsIgnoreCase(
+							"null")
 					|| response.optString("Information").length() == 0) {
 				showToast("Password Sent to your respective Mobile Number");
 			} else {
