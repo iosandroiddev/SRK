@@ -397,7 +397,7 @@ public class LoginActivity extends BaseActivity {
 					|| response.optString("Information").equalsIgnoreCase(
 							"null")
 					|| response.optString("Information").length() == 0) {
-				showToast("Password Sent to your respective Mobile Number");
+				showToast("UserName Sent to your respective Mobile Number");
 			} else {
 				showToast(response.optString("Information"));
 			}

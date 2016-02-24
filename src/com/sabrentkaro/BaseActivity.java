@@ -40,7 +40,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public ImageView mbtnMenu;
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
-	private TextView mbtnLogin;
+	private TextView mbtnLogin, mtxtTitle;
 	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName;
 	private LinearLayout mLoginLayout;
 
@@ -83,6 +83,14 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mtxtLocation = (TextView) findViewById(R.id.txtLocation);
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
+		mtxtTitle = (TextView) findViewById(R.id.txtTitle);
+		mtxtTitle.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				navigateToHome();
+			}
+		});
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearchProducts);
 		mbtnHome = (TextView) findViewById(R.id.btnHome);
 		mLoginLayout = (LinearLayout) findViewById(R.id.layouLogin);
@@ -149,6 +157,10 @@ public class BaseActivity extends SlidingFragmentActivity implements
 
 	private void btnHomeClicked() {
 		btnMenuClicked();
+		navigateToHome();
+	}
+
+	private void navigateToHome() {
 		Intent mIntent = new Intent(this, HomeActivity.class);
 		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);

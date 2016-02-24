@@ -150,5 +150,9 @@
     <string name="address_">Address:</string>
     <string name="city_">City:</string>
     <string name="state_">State:</string>
+    <string name="product_category">Product Category</string>
+    <string name="sub_product_category">Sub Product Category</string>
+    <string name="location_details">Location Details</string>
+    <string name="product_title">Product Title</string>
 
 </resources>

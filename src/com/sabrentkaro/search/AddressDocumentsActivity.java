@@ -1,14 +1,20 @@
 package com.sabrentkaro.search;
 
+import java.util.ArrayList;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.models.CityModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.R;
 import com.utils.StaticUtils;
@@ -16,13 +22,12 @@ import com.utils.StorageClass;
 
 public class AddressDocumentsActivity extends BaseActivity {
 
-	private EditText meditAdress, meditCity, meditState, mEditPinCode,
-			mEditPhone, meditPanCardNumber, mEditAadharCardName,
-			mEditAadharCardNumber;
+	private EditText meditAdress, meditState, mEditPinCode, mEditPhone,
+			meditPanCardNumber, mEditAadharCardName, mEditAadharCardNumber;
 	private TextView mbtnPanCard, mbtnAadharCard, mbtnContinue;
 	private boolean isPanCardSelected = false, isAadharCardSelected = false;
 	private LinearLayout mPanCardLayout, mAAadharCardLayout;
-
+	private TextView mbtnSelectCity;
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity,
 			mStartDate, mEndDate, mLocationId;
 
@@ -37,7 +42,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 
 	private void loadDetails() {
 		meditAdress.setText(StorageClass.getInstance(this).getAddress());
-		meditCity.setText(StorageClass.getInstance(this).getUserCity());
+		mbtnSelectCity.setText(StorageClass.getInstance(this).getUserCity());
 		meditState.setText(StorageClass.getInstance(this).getUserState());
 		mEditPinCode.setText(StorageClass.getInstance(this).getPinCode());
 		mEditPhone.setText(StorageClass.getInstance(this).getMobileNumber());
@@ -60,7 +65,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 
 	private void loadReferences() {
 		meditAdress = (EditText) findViewById(R.id.editAddress);
-		meditCity = (EditText) findViewById(R.id.editCityTown);
+		mbtnSelectCity = (TextView) findViewById(R.id.btnSelectCity);
 		meditState = (EditText) findViewById(R.id.editState);
 		mEditPinCode = (EditText) findViewById(R.id.editPincode);
 		mEditPhone = (EditText) findViewById(R.id.editPhone);
@@ -79,14 +84,21 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mbtnContinue.setOnClickListener(this);
 
 		StaticUtils.setEditTextHintFont(meditAdress, this);
-		StaticUtils.setEditTextHintFont(meditCity, this);
 		StaticUtils.setEditTextHintFont(mEditPinCode, this);
 		StaticUtils.setEditTextHintFont(meditState, this);
 		StaticUtils.setEditTextHintFont(mEditPhone, this);
 		StaticUtils.setEditTextHintFont(meditPanCardNumber, this);
 		StaticUtils.setEditTextHintFont(mEditAadharCardName, this);
 		StaticUtils.setEditTextHintFont(mEditAadharCardNumber, this);
-		
+
+		mbtnSelectCity.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showCityAlert(mbtnSelectCity);
+			}
+		});
+
 		mEditAadharCardName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		mEditAadharCardNumber.setImeOptions(EditorInfo.IME_ACTION_DONE);
 	}
@@ -111,22 +123,46 @@ public class AddressDocumentsActivity extends BaseActivity {
 
 	private void btnContinueClicked() {
 
-		if (!isPanCardSelected && !isAadharCardSelected) {
-			showToast("Please Select Documents");
-		} else if (isPanCardSelected) {
-			if (TextUtils.isEmpty(meditPanCardNumber.getText().toString())) {
-				showToast("Please Enter Pan Card Number");
+		if (meditAdress.getText().toString().length() == 0) {
+			showToast("Please Enter Address");
+		} else {
+			if (mbtnSelectCity.getText().toString()
+					.equalsIgnoreCase("Select City")) {
+				showToast("Please Select City");
 			} else {
-				startOrdersActivity();
-			}
-		} else if (isAadharCardSelected) {
-			if (TextUtils.isEmpty(mEditAadharCardName.getText().toString())) {
-				showToast("Please Enter AadharCard Name");
-			} else if (TextUtils.isEmpty(mEditAadharCardNumber.getText()
-					.toString())) {
-				showToast("Please Enter AadharCard Number");
-			} else {
-				startOrdersActivity();
+				if (meditState.getText().toString().length() == 0) {
+					showToast("Please Enter State");
+				} else {
+					if (mEditPinCode.getText().toString().length() == 0) {
+						showToast("Please Enter Pincode");
+					} else {
+						if (mEditPhone.getText().toString().length() == 0) {
+							showToast("Please Enter Mobile Number");
+						} else {
+							if (!isPanCardSelected && !isAadharCardSelected) {
+								showToast("Please Select Documents");
+							} else if (isPanCardSelected) {
+								if (TextUtils.isEmpty(meditPanCardNumber
+										.getText().toString())) {
+									showToast("Please Enter Pan Card Number");
+								} else {
+									startOrdersActivity();
+								}
+							} else if (isAadharCardSelected) {
+								if (TextUtils.isEmpty(mEditAadharCardName
+										.getText().toString())) {
+									showToast("Please Enter AadharCard Name");
+								} else if (TextUtils
+										.isEmpty(mEditAadharCardNumber
+												.getText().toString())) {
+									showToast("Please Enter AadharCard Number");
+								} else {
+									startOrdersActivity();
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -142,7 +178,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mBundle.putString("quantity", mQuantity);
 		mBundle.putString("productPrice", mPrice);
 		mBundle.putString("address", meditAdress.getText().toString());
-		mBundle.putString("city", meditCity.getText().toString());
+		mBundle.putString("city", mbtnSelectCity.getText().toString());
 		mBundle.putString("state", meditState.getText().toString());
 		mBundle.putString("pincode", mEditPinCode.getText().toString());
 		mBundle.putString("mobile", mEditPhone.getText().toString());
@@ -191,6 +227,46 @@ public class AddressDocumentsActivity extends BaseActivity {
 					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, true);
 
+		}
+	}
+
+	private void showCityAlert(final TextView mtxtView) {
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
+		int pos = -1;
+		if (mCityArray != null) {
+			final String[] mCities = new String[mCityArray.size()];
+			for (int i = 0; i < mCityArray.size(); i++) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this)
+						.getUserCity())) {
+					pos = -1;
+				} else {
+					if (mCityArray
+							.get(i)
+							.getName()
+							.equalsIgnoreCase(
+									StorageClass.getInstance(this)
+											.getUserCity())) {
+						pos = i;
+					}
+				}
+				mCities[i] = mCityArray.get(i).getName();
+			}
+			if (mCities != null) {
+				StorageClass.getInstance(this).getUserCity();
+				AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setTitle("Select City");
+				alert.setSingleChoiceItems(mCities, pos,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mtxtView.setText(mCities[which]);
+								dialog.dismiss();
+							}
+						});
+				alert.show();
+			}
 		}
 	}
 

@@ -76,6 +76,7 @@ public class HomeAdapter extends BaseAdapter {
 		}
 		final ProductModel mDataHolder = getItem(position);
 		mHolder.mItemName.setText(mDataHolder.getTitle());
+		mHolder.mItemName.setSelected(true);
 		mQuery.id(mHolder.mItemImg).image(mDataHolder.getImage());
 
 		return convertView;

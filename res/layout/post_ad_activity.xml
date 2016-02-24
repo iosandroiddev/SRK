@@ -67,23 +67,31 @@
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <com.utils.CustomTextView
-                    android:id="@+id/btnSelectSubProductCategory"
+                <LinearLayout
+                    android:id="@+id/layoutSubCat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/blue_button_selector"
-                    android:drawableEnd="@drawable/ic_arrow_down_"
-                    android:drawableRight="@drawable/ic_arrow_down_"
-                    android:gravity="center_vertical"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:text="@string/select_product_sub_category"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    custom:fonttype="trebuchet_ms" />
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnSelectSubProductCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/blue_button_selector"
+                        android:drawableEnd="@drawable/ic_arrow_down_"
+                        android:drawableRight="@drawable/ic_arrow_down_"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:text="@string/select_product_sub_category"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
 
                 <com.utils.CustomTextView
                     android:layout_width="match_parent"

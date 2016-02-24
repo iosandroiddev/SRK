@@ -108,6 +108,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 
 		SearchModel mModel = getItem(position);
 		mHolder.mtxtTitle.setText(mModel.getAdTitle());
+		mHolder.mtxtTitle.setSelected(true);
 		mHolder.mtxtPostedBy.setText(mModel.getPostedBy());
 		mHolder.mtxtLocation.setText(mModel.getLocation());
 		mHolder.mtxtPrice.setText(mModel.getPricePerDay());

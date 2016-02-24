@@ -86,6 +86,59 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 custom:fonttype="trebuchet_ms" />
+            
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/product_title"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtProductTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -642,7 +695,7 @@
                 android:layout_gravity="center_horizontal"
                 android:background="#55000000"
                 android:padding="5dp"
-                android:text="@string/rent_value_details"
+                android:text="@string/location_details"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 custom:fonttype="trebuchet_ms" />
@@ -692,7 +745,10 @@
                         android:id="@+id/txtLocationName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
                         android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:padding="3dp"
                         android:textColor="@color/black"
                         android:textSize="13sp"

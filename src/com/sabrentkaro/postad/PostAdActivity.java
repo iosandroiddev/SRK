@@ -96,6 +96,8 @@ public class PostAdActivity extends BaseActivity implements
 	private String mtxtRating;
 	private String productCode;
 
+	private LinearLayout mLayoutSubCat;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,6 +141,11 @@ public class PostAdActivity extends BaseActivity implements
 					.getSerializable("categoriesMapping");
 		}
 
+		if (mProductsArray != null && mProductsArray.size() == 0) {
+			InternalApp mApp = (InternalApp) getApplication();
+			mProductsArray = mApp.getProductsArray();
+		}
+
 	}
 
 	private void loadReferences() {
@@ -154,6 +161,7 @@ public class PostAdActivity extends BaseActivity implements
 		mEditQuantity = (EditText) findViewById(R.id.editQuantity);
 		mEditSecurityDeposit = (EditText) findViewById(R.id.editSecurityDeposit);
 		mbtnUpload = (TextView) findViewById(R.id.btnUpload);
+		mLayoutSubCat = (LinearLayout) findViewById(R.id.layoutSubCat);
 		mbtnUpload.setOnClickListener(this);
 
 		mEditDailyCost.setOnEditorActionListener(new OnEditorActionListener() {
@@ -276,10 +284,11 @@ public class PostAdActivity extends BaseActivity implements
 		mEditMonthlyCost.setText("");
 		mEditQuantity.setText("");
 		mEditSecurityDeposit.setText("");
-
 		mbtnProductCategory.setText("Select Prodcut Category");
 		mbtnSubProductCategory.setText("Select Sub Product Category");
-		
+
+		StaticUtils.expandCollapse(mLayoutSubCat, false);
+
 		clearAllFields();
 
 	}
@@ -313,7 +322,7 @@ public class PostAdActivity extends BaseActivity implements
 
 	private void btnNextClicked() {
 		if (mbtnProductCategory.getText().toString()
-				.equalsIgnoreCase("Select Category")) {
+				.equalsIgnoreCase("Select Product Category")) {
 			showToast("Please Select Category");
 		} else {
 			if (mbtnSubProductCategory.getText().toString()
@@ -553,6 +562,7 @@ public class PostAdActivity extends BaseActivity implements
 		mbtnSelectRating.setText("Select Rating");
 		mImgProduct.setImageResource(R.drawable.default_loading);
 		mImgLayout.setVisibility(View.GONE);
+		mSelectLayout.removeAllViews();
 
 	}
 
@@ -741,7 +751,6 @@ public class PostAdActivity extends BaseActivity implements
 								mbtnProductCategory.setText(mCategories[which]);
 								dialog.dismiss();
 								setSubProductsArray();
-								clearAllFields();
 							}
 						});
 				alert.show();
@@ -776,7 +785,6 @@ public class PostAdActivity extends BaseActivity implements
 								mtxtRating = "1";
 							}
 							dialog.dismiss();
-							setSubProductsArray();
 						}
 					});
 			alert.show();
@@ -784,6 +792,7 @@ public class PostAdActivity extends BaseActivity implements
 	}
 
 	private void setSubProductsArray() {
+		mbtnSubProductCategory.setText("Select Product Sub Category");
 		if (mCateogoryMappingsArray != null) {
 			mSubCategories = new ArrayList<String>();
 			for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {
@@ -803,6 +812,7 @@ public class PostAdActivity extends BaseActivity implements
 				}
 			}
 		}
+		StaticUtils.expandCollapse(mLayoutSubCat, true);
 	}
 
 	private boolean isDeviceSupportCamera() {

@@ -20,15 +20,11 @@ public class SearchAdapter extends BaseAdapter {
 	private AQuery mQuery;
 	private Context mContext;
 
-	
-
-
 	public SearchAdapter(Context context) {
 		this.mContext = context;
 		mQuery = new AQuery(mContext);
 	}
 
-	
 	@Override
 	public int getCount() {
 		return mArrayProducts.size();
@@ -81,12 +77,10 @@ public class SearchAdapter extends BaseAdapter {
 		}
 		final ProductModel mDataHolder = getItem(position);
 		mHolder.mItemName.setText(mDataHolder.getTitle());
+		mHolder.mItemName.setSelected(true);
 		mQuery.id(mHolder.mItemImg).image(mDataHolder.getImage());
-		
-		
 
 		return convertView;
 	}
 
-	
 }

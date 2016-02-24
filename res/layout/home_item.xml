@@ -25,7 +25,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:background="#55000000"
         android:padding="10dp"
-        android:singleLine="true"
+        android:singleLine="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         custom:fonttype="trebuchet_ms" />

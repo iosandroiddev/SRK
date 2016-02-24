@@ -36,4 +36,13 @@
             custom:fonttype="trebuchet_ms" />
     </LinearLayout>
 
+    <com.utils.CustomTextView
+        android:id="@+id/txtVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        custom:fonttype="trebuchet_ms" />
+
 </FrameLayout>

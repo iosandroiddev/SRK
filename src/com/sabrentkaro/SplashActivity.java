@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.jsonclasses.IArrayParseListener;
@@ -43,6 +47,14 @@ public class SplashActivity extends FragmentActivity implements
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_splash);
+		try {
+			PackageInfo pi = getPackageManager().getPackageInfo(
+					getPackageName(), 0);
+			((TextView) findViewById(R.id.txtVersion)).setText("Version:"
+					+ pi.versionName);
+		} catch (NameNotFoundException e) {
+			Log.w(this.getClass().getName(), e.getMessage());
+		}
 		initProductsApi();
 
 	}
@@ -203,7 +215,7 @@ public class SplashActivity extends FragmentActivity implements
 					mModel.setCategory(mCatObj.optString("Category"));
 					mModel.setTitle(mCatObj.optString("Title"));
 					mCateogoryMappingsArray.add(mModel);
-					
+
 					if (!(mCategoriesArray.contains(mCatObj
 							.optString("Category")))) {
 						mCategoriesArray.add(mCatObj.optString("Category"));

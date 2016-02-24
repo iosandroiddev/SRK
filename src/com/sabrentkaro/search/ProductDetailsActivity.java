@@ -33,15 +33,16 @@ public class ProductDetailsActivity extends BaseActivity {
 	private ImageView mImageProduct, mImageRating;
 	private TextView mtxtProductName, mtxtCategory, mtxtLocation,
 			mtxtDailyCost, mtxtMonthCost, mtxtWeekCost, mtxtSecurityDeposit,
-			mtxtYearOfPurchase, mtxtMonthOfPurchase, mtxtQuantity;
+			mtxtYearOfPurchase, mtxtMonthOfPurchase, mtxtQuantity,
+			mtxtProductTitle;
 	private EditText mEditQuantity;
 	private TextView mbtnRent;
 	private String selectedProductAdId;
 
 	private String mType, mModel, mBrand, mCapacity, mQuantity, mCategory,
 			mProductCategory, mYearOfPurchase, mMonthOfPurchase, mDailyCost,
-			locationValue, productConditionValue, mWeekCost, mMonthlyCost,
-			mTonnage;
+			locationValue = "", productConditionValue, mWeekCost, mMonthlyCost,
+			mTonnage, mPTitle = "";
 	private String mStrSecurityDeposit;
 	private LinearLayout mLayoutWeekCost, mLayoutMonthCost, mLayoutDailyCost;
 	private String mImageUrl;
@@ -119,6 +120,7 @@ public class ProductDetailsActivity extends BaseActivity {
 		mLayoutWeekCost = (LinearLayout) findViewById(R.id.layoutWeekCost);
 		mLayoutDailyCost = (LinearLayout) findViewById(R.id.layoutDailyCost);
 		mLayoutFiedlsValues = (LinearLayout) findViewById(R.id.rootFieldsValues);
+		mtxtProductTitle = (TextView) findViewById(R.id.txtProductTitle);
 		mLayoutFiedlsValues.setVisibility(View.GONE);
 		mbtnRent.setOnClickListener(this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
@@ -127,6 +129,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	private void responseForProductDetailsApi(JSONObject response) {
 		if (response != null) {
 			mStrSecurityDeposit = response.optString("SecurityDeposit");
+			mPTitle = response.optString("Title");
 			Double mSD = response.optDouble("SecurityDeposit");
 			mStrSecurityDeposit = String.valueOf((int) Math.round(mSD));
 			JSONArray productsArray = response.optJSONArray("Products");
@@ -246,8 +249,15 @@ public class ProductDetailsActivity extends BaseActivity {
 													"ProductCategorySpecification")
 											.optString("Code").toString()
 											.equalsIgnoreCase("LOCATION")) {
-										locationValue = mAdSettingsObj
-												.optString("Value");
+										if (locationValue.length() == 0)
+											locationValue = mAdSettingsObj
+													.optString("Value");
+										else {
+											locationValue = locationValue
+													+ ", "
+													+ mAdSettingsObj
+															.optString("Value");
+										}
 									}
 								}
 							}
@@ -304,8 +314,9 @@ public class ProductDetailsActivity extends BaseActivity {
 		mtxtYearOfPurchase.setText(mYearOfPurchase);
 		mtxtMonthOfPurchase.setText(mMonthOfPurchase);
 		mtxtQuantity.setText(mQuantity);
-
+		mtxtProductTitle.setText(mPTitle);
 		mtxtLocation.setText(locationValue);
+		mtxtLocation.setSelected(true);
 		mtxtSecurityDeposit.setText(mStrSecurityDeposit);
 
 		if (TextUtils.isEmpty(mDailyCost)) {

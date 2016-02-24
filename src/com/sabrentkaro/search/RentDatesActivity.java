@@ -123,22 +123,23 @@ public class RentDatesActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 		Date today = new Date();
-		if (startDate != null && endDate != null) {
-			if (startDate.before(today) || endDate.before(today)) {
-				showToast("Kindly ensure start date is greater than or equal to end date and start date is greater than system date");
-			} else if (endDate.before(startDate)) {
-				showToast("Kindly ensure start date is greater than or equal to end date and start date is greater than system date");
-			} else {
-				navigateToAdressDocuments();
-			}
+		if (mtxtStartDate.getText().toString().equalsIgnoreCase("Start Date")) {
+			showToast("Please Select Start Date");
+		} else if (mtxtEndDate.getText().toString()
+				.equalsIgnoreCase("End Date")) {
+			showToast("Please Select End Date");
 		} else {
-			if (mtxtStartDate.getText().toString()
-					.equalsIgnoreCase("Select Date")) {
-				showToast("Please Select Start Date");
+			if (startDate != null && endDate != null) {
+				if (startDate.before(today) || endDate.before(today)) {
+					showToast("Kindly ensure start date is greater than or equal to end date and start date is greater than system date");
+				} else if (endDate.before(startDate)) {
+					showToast("Kindly ensure start date is greater than or equal to end date and start date is greater than system date");
+				} else {
+					navigateToAdressDocuments();
+				}
 			} else {
-				showToast("Please Select End Date");
-			}
 
+			}
 		}
 	}
 

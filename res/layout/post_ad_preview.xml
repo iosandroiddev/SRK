@@ -48,6 +48,20 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
+                
+                 <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:text="@string/product_category"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
                     android:id="@+id/productCategory"
@@ -58,6 +72,20 @@
                     android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+                
+                 <com.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="8dp"
+                    android:text="@string/sub_product_category"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
