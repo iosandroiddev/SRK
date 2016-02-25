@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sabrentkaro"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.1" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -31,11 +32,58 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.sabrentkaro.HomeActivity" />
-        <activity android:name="com.sabrentkaro.search.SearchActivity" />
-        <activity android:name="com.sabrentkaro.search.SearchResultsActivity" />
-        <activity android:name="com.sabrentkaro.search.ProductDetailsActivity" />
-        <activity android:name="com.sabrentkaro.login.LoginActivity" />
+        <activity
+            android:name="com.sabrentkaro.HomeActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.SearchActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.SearchResultsActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.ProductDetailsActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.login.LoginActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.login.RegisterActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.RentDatesActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.AddressDocumentsActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.OrderDetailsActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostAdActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostAdDocumentActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostDatesActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.postad.PostAdPreview"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
