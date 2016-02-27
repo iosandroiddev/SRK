@@ -61,16 +61,16 @@
     <string name="pin_code">Pincode</string>
     <string name="phone">Phone</string>
     <string name="documents">Documents</string>
-    <string name="pan_card">Pan Card</string>
+    <string name="pan_card">PAN Card</string>
     <string name="aadhar_card">Aadhar Card</string>
-    <string name="pan_card_number">Pan Card Number</string>
+    <string name="pan_card_number">PAN Card Number</string>
     <string name="aadhar_card_name">Aadhar Card Name</string>
     <string name="aadhar_card_number">Aadhar Card Number</string>
     <string name="select_document">Select Document</string>
     <string name="btn_continue">Continue</string>
     <string name="summary">Summary</string>
     <string name="total_cost">Total Cost</string>
-    <string name="rental_period_in_days_">Rental Period(in Days)</string>
+    <string name="rental_period_in_days_">Rental Period (in Days)</string>
     <string name="description">Description</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
@@ -91,7 +91,7 @@
     <string name="post_my_ad">Post My Product</string>
     <string name="what_would_you_like_to_post_an_ad_for_">What is your Product?</string>
     <string name="select_product_category">Select Product Category</string>
-    <string name="select_product_sub_category">Select Product Sub Category</string>
+    <string name="select_product_sub_category">Select Product Name</string>
     <string name="title_for_your_ad_">Title for your Product*</string>
     <string name="enter_title">Enter Title</string>
     <string name="upload_photos_of_your_product">Select Photos of your Product</string>
@@ -154,5 +154,13 @@
     <string name="sub_product_category">Sub Product Category</string>
     <string name="location_details">Location Details</string>
     <string name="product_title">Product Title</string>
+    <string name="why_buy_when_you_can_rent_">Why buy when you can rent?</string>
+    <string name="rent_smart_earn_smart">Rent Smart, Earn Smart</string>
+    <string name="why_buy_rent_now_">Why buy? Rent now!</string>
+    <string name="done">Done</string>
+    <string name="rupeeone">\u20B9</string>
+    <string name="listing_images">Listing Images</string>
+    <string name="login_to_continue">Login to continue</string>
+    <string name="register_to_continue">Register to continue</string>
 
 </resources>

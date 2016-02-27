@@ -330,6 +330,9 @@ public class ProductDetailsActivity extends BaseActivity {
 			mLayoutWeekCost.setVisibility(View.GONE);
 		} else {
 			mtxtWeekCost.setText(mWeekCost);
+			int weekPrice = Integer.parseInt(mWeekCost);
+			int dayPrice = weekPrice / 7;
+			mDailyCost = String.valueOf(dayPrice);
 			mLayoutWeekCost.setVisibility(View.VISIBLE);
 		}
 
@@ -337,6 +340,9 @@ public class ProductDetailsActivity extends BaseActivity {
 			mLayoutMonthCost.setVisibility(View.GONE);
 		} else {
 			mtxtMonthCost.setText(mMonthlyCost);
+			int monthPrice = Integer.parseInt(mMonthlyCost);
+			int dayPrice = monthPrice / 30;
+			mDailyCost = String.valueOf(dayPrice);
 			mLayoutMonthCost.setVisibility(View.VISIBLE);
 		}
 

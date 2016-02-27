@@ -51,6 +51,10 @@ public class OrderDetailsActivity extends BaseActivity {
 	private String toDate;
 	private String mSecurityValue;
 
+	private String mPincode;
+
+	private String mMobile;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,19 +131,24 @@ public class OrderDetailsActivity extends BaseActivity {
 						String mTitle = mObject.optString("Code");
 						if (mTitle.equalsIgnoreCase("PRODRENTALVALUE")) {
 							mProdRentValue = mobj.optString("Amount");
-							mProdRentValue = String.valueOf(mProdRentValue).split("\\.")[0];
+							mProdRentValue = String.valueOf(mProdRentValue)
+									.split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("COMMISSION")) {
 							mFaciliValue = mobj.optString("Amount");
-							mFaciliValue = String.valueOf(mFaciliValue).split("\\.")[0];
+							mFaciliValue = String.valueOf(mFaciliValue).split(
+									"\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("SERVICETAX")) {
 							mServiceValue = mobj.optString("Amount");
-							mServiceValue = String.valueOf(mServiceValue).split("\\.")[0];
+							mServiceValue = String.valueOf(mServiceValue)
+									.split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("LOGISTICS")) {
 							mLogisticsValue = mobj.optString("Amount");
-							mLogisticsValue = String.valueOf(mLogisticsValue).split("\\.")[0];
+							mLogisticsValue = String.valueOf(mLogisticsValue)
+									.split("\\.")[0];
 						} else if (mTitle.equalsIgnoreCase("SECURITY")) {
 							mSecurityValue = mobj.optString("Amount");
-							mSecurityValue = String.valueOf(mSecurityValue).split("\\.")[0];
+							mSecurityValue = String.valueOf(mSecurityValue)
+									.split("\\.")[0];
 						}
 					}
 				}
@@ -199,12 +208,13 @@ public class OrderDetailsActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 
-		mtxtRentalPeriod.setText(String.valueOf(days));
+		mtxtRentalPeriod.setText(String.valueOf(days + 1));
 		mtxtShippingAddress.setText(txtAddress);
 		mtxtDescription.setText(mProductDescription);
 		mtxtQuantity.setText(mQuantity);
 		mtxtFromDate.setText(mStartDate);
 		mtxtToDate.setText(mEndDate);
+		mtxtPerDayCost.setText(mPrice);
 	}
 
 	private void getDetails() {
@@ -222,7 +232,10 @@ public class OrderDetailsActivity extends BaseActivity {
 				mAddress = mBundle.getString("address");
 				mCity = mBundle.getString("city");
 				mState = mBundle.getString("state");
-				txtAddress = mAddress + "\n" + mCity + "\n" + mState;
+				mPincode = mBundle.getString("pincode");
+				mMobile = mBundle.getString("mobile");
+				txtAddress = mAddress + "\n" + mCity + "\n" + mState + "\n"
+						+ mPincode + "\n" + mMobile;
 			}
 		}
 	}

@@ -84,7 +84,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		mObj = new JSONObject();
 		try {
 			String mlocation = StorageClass.getInstance(this).getUserCity();
-			mObj.put("SearchText", mlocation + " Anywhere");
+			mObj.put("SearchText", mlocation);
 			mObj.put("SearchType", "location");
 			mObj.put("SearchCondition", "AND");
 		} catch (JSONException e) {
@@ -152,6 +152,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		if (response != null) {
 			JSONArray resultsArray = (JSONArray) response.opt("Results");
 			if (resultsArray != null) {
+				mSearchResultsArray = new ArrayList<SearchModel>();
 				for (int i = 0; i < resultsArray.length(); i++) {
 					JSONObject resultObj = resultsArray.optJSONObject(i);
 					if (resultObj != null) {
@@ -177,6 +178,35 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 								.optString("Yearofpurchase"));
 						mModel.setProductCondition(resultObj
 								.optString("productcondition"));
+
+						if (mModel.getPricePerDay() == null
+								|| mModel.getPricePerDay()
+										.equalsIgnoreCase("0")
+								|| mModel.getPricePerDay().length() == 0) {
+							if (mModel.getPricePerWeek() == null
+									|| mModel.getPricePerWeek()
+											.equalsIgnoreCase("0")
+									|| mModel.getPricePerWeek().length() == 0) {
+								if (mModel.getPricePerMonth() == null
+										|| mModel.getPricePerMonth()
+												.equalsIgnoreCase("0")
+										|| mModel.getPricePerMonth().length() == 0) {
+								} else {
+									int monthPrice = Integer.parseInt(mModel
+											.getPricePerMonth());
+									int dayPrice = monthPrice / 30;
+									mModel.setPricePerDay(String
+											.valueOf(dayPrice));
+								}
+							} else {
+								int weekPrice = Integer.parseInt(mModel
+										.getPricePerWeek());
+								int dayPrice = weekPrice / 7;
+								mModel.setPricePerDay(String.valueOf(dayPrice));
+							}
+						} else {
+						}
+
 						mModel.setCategory(resultObj.optString("category"));
 
 						JSONArray mCatTonArray = resultObj
@@ -208,6 +238,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 
 	private void setAdapter() {
 		mAdapter.setCallback(this);
+		mAdapter.clearItems();
 		mAdapter.addItems(mSearchResultsArray);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();

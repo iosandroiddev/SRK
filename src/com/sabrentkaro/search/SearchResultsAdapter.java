@@ -111,7 +111,24 @@ public class SearchResultsAdapter extends BaseAdapter {
 		mHolder.mtxtTitle.setSelected(true);
 		mHolder.mtxtPostedBy.setText(mModel.getPostedBy());
 		mHolder.mtxtLocation.setText(mModel.getLocation());
-		mHolder.mtxtPrice.setText(mModel.getPricePerDay());
+
+		if (mModel.getPricePerDay().equalsIgnoreCase("0")
+				|| mModel.getPricePerDay().length() == 0) {
+			if (mModel.getPricePerWeek().equalsIgnoreCase("0")
+					|| mModel.getPricePerWeek().length() == 0) {
+				if (mModel.getPricePerMonth().equalsIgnoreCase("0")
+						|| mModel.getPricePerMonth().length() == 0) {
+					mHolder.mtxtPrice.setText("");
+				} else {
+					mHolder.mtxtPrice.setText(mModel.getPricePerMonth());
+				}
+			} else {
+				mHolder.mtxtPrice.setText(mModel.getPricePerWeek());
+			}
+		} else {
+			mHolder.mtxtPrice.setText(mModel.getPricePerDay());
+		}
+
 		mHolder.mtxtLocation.setSelected(true);
 
 		Picasso.with(mContext).load(mModel.getCoverImagePath())
@@ -142,7 +159,6 @@ public class SearchResultsAdapter extends BaseAdapter {
 				mtxtView.setSingleLine(true);
 				mHolder.mRootFiedlsLayout.addView(mtxtView);
 			}
-
 		}
 
 		return convertView;
@@ -162,5 +178,11 @@ public class SearchResultsAdapter extends BaseAdapter {
 			if (mRentClick != null)
 				mRentClick.onRentButtonClicked(pos);
 		}
+	}
+
+	public void clearItems() {
+		if (mArraySearchResult != null)
+			mArraySearchResult.clear();
+		notifyDataSetChanged();
 	}
 }

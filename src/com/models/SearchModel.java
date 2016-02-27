@@ -109,7 +109,7 @@ public class SearchModel implements Serializable {
 	}
 
 	public void setPricePerWeek(String pricePerWeek) {
-		this.pricePerWeek = pricePerWeek;
+		this.pricePerWeek = String.valueOf(pricePerWeek).split("\\.")[0];
 	}
 
 	public String getPricePerMonth() {
@@ -117,7 +117,7 @@ public class SearchModel implements Serializable {
 	}
 
 	public void setPricePerMonth(String pricePerMonth) {
-		this.pricePerMonth = pricePerMonth;
+		this.pricePerMonth = String.valueOf(pricePerMonth).split("\\.")[0];
 	}
 
 	public String getYearOfPurchase() {

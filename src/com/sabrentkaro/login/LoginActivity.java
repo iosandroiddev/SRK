@@ -1,5 +1,7 @@
 package com.sabrentkaro.login;
 
+import java.util.HashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +23,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.sabrentkaro.BaseActivity;
+import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.sabrentkaro.postad.PostAdDocumentActivity;
@@ -52,6 +55,9 @@ public class LoginActivity extends BaseActivity {
 	private String mWeekCost;
 	private String mtxtRating;
 	private String mtxtCondName;
+	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
+
+	private boolean hasBundle = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class LoginActivity extends BaseActivity {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
 			if (mBundle != null && mBundle.containsKey("isPostAd")) {
+				hasBundle = true;
 				mCategory = mBundle.getString("category");
 				mSubCategory = mBundle.getString("subCategory");
 				mAdTitle = mBundle.getString("adTitle");
@@ -83,7 +90,10 @@ public class LoginActivity extends BaseActivity {
 				mProductAdId = mBundle.getString("productAdId");
 				mtxtRating = mBundle.getString("productCondition");
 				mtxtCondName = mBundle.getString("productConditionName");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
 			} else {
+				hasBundle = true;
 				selectedProductAdId = mBundle.getString("selectedAdId");
 				mPrice = mBundle.getString("productPrice");
 				mProductDescription = mBundle.getString("productDescription");
@@ -261,13 +271,17 @@ public class LoginActivity extends BaseActivity {
 							showToast("User Logged In Successfully!");
 							StorageClass.getInstance(this).setAddress(
 									addressLine);
-							if (selectedProductAdId == null
-									|| selectedProductAdId.length() == 0) {
-								navigateToPostAdDocuments();
-							} else {
-								navigateToRentDates();
-							}
 
+							if (hasBundle) {
+								if (selectedProductAdId == null
+										|| selectedProductAdId.length() == 0) {
+									navigateToPostAdDocuments();
+								} else {
+									navigateToRentDates();
+								}
+							} else {
+								navigateToHome();
+							}
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -283,6 +297,12 @@ public class LoginActivity extends BaseActivity {
 				showToast(response.optString("Information"));
 			}
 		}
+	}
+
+	private void navigateToHome() {
+		Intent mIntent = new Intent(this, HomeActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(mIntent);
 	}
 
 	private void navigateToPostAdDocuments() {
@@ -305,6 +325,7 @@ public class LoginActivity extends BaseActivity {
 		mBundle.putString("quantity", mQuantity);
 		mBundle.putString("securityDeposit", mSecurityDeposit);
 		mBundle.putString("productConditionName", mtxtCondName);
+		mBundle.putSerializable("controlLayouts", controlLayouts);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 		finish();
@@ -397,7 +418,7 @@ public class LoginActivity extends BaseActivity {
 					|| response.optString("Information").equalsIgnoreCase(
 							"null")
 					|| response.optString("Information").length() == 0) {
-				showToast("UserName Sent to your respective Mobile Number");
+				showToast("Message was sent to your mobile");
 			} else {
 				showToast(response.optString("Information"));
 			}

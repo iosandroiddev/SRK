@@ -127,52 +127,30 @@
                     android:drawableRight="@drawable/btn_camera_selector"
                     android:gravity="center_vertical"
                     android:padding="10dp"
-                    android:text="@string/upload_photos_of_your_product"
+                    android:text="@string/listing_images"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <FrameLayout
-                    android:id="@+id/imgLayout"
+                <HorizontalScrollView
+                    android:id="@+id/scrollImages"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@color/transparent"
-                    android:padding="10dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:visibility="gone" >
 
                     <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_gravity="center"
-                        android:background="#55000000"
-                        android:gravity="center"
-                        android:orientation="vertical" >
-
-                        <com.utils.SquareImageView
-                            android:id="@+id/imgProduct"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            android:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/default_loading" />
-                    </LinearLayout>
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnUpload"
+                        android:id="@+id/layoutAttachments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/blue_custom_button_selector"
-                        android:drawablePadding="5dp"
-                        android:gravity="center_vertical"
-                        android:padding="10dp"
-                        android:text="@string/upload"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        custom:fonttype="trebuchet_ms" />
-                </FrameLayout>
+                        android:animateLayoutChanges="false"
+                        android:clickable="false"
+                        android:duplicateParentState="true"
+                        android:gravity="center"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
             </LinearLayout>
 
             <com.utils.CustomTextView

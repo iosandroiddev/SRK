@@ -20,66 +20,120 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" >
+            android:layout_margin="5dp"
+            android:background="@drawable/border_blue"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp" >
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnPost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/blue_oval_custom_button_selector"
+                        android:clickable="true"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:gravity="center"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="10dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="@string/post_an_ad"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:singleLine="false"
+                        android:text="@string/rent_smart_earn_smart"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="5dp" >
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1" >
 
-                <com.utils.CustomTextView
-                    android:id="@+id/btnPost"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/blue_custom_button_selector"
-                    android:clickable="true"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="10dp"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="@string/post_an_ad"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    custom:fonttype="trebuchet_ms" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="5dp" >
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="5dp" >
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/pink_oval_custom_button_selector"
+                        android:clickable="true"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:gravity="center"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="10dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="@string/search_product"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
 
-                <com.utils.CustomTextView
-                    android:id="@+id/btnSearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/blue_custom_button_selector"
-                    android:clickable="true"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="10dp"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="@string/search_product"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    custom:fonttype="trebuchet_ms" />
-            </LinearLayout>
+                    <com.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:singleLine="false"
+                        android:text="@string/why_buy_when_you_can_rent_"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
+
+        <com.utils.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/pink"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/why_buy_rent_now_"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            custom:fonttype="trebuchet_ms" />
 
         <GridView
             android:id="@+id/gridView"

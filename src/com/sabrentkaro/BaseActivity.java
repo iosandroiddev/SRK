@@ -61,8 +61,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		} else {
 			mbtnLogin.setVisibility(View.GONE);
 			mLoginLayout.setVisibility(View.VISIBLE);
-			mtxtUserName.setText("Logged-In User: "
-					+ StorageClass.getInstance(this).getUserName());
+			mtxtUserName.setText(StorageClass.getInstance(this).getUserName());
 			mtxtUserName.setSelected(true);
 		}
 	}
@@ -229,10 +228,11 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void hideSoftKeyboard() {
-		if (getCurrentFocus() != null) {
+		if (getCurrentFocus() != null && getWindow() != null
+				&& getWindow().getDecorView() != null) {
 			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-			inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
-					.getWindowToken(), 0);
+			inputMethodManager.hideSoftInputFromWindow(getWindow()
+					.getDecorView().getWindowToken(), 0);
 		}
 	}
 
@@ -276,6 +276,12 @@ public class BaseActivity extends SlidingFragmentActivity implements
 				alert.show();
 			}
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setLocation();
 	}
 
 }

@@ -44,6 +44,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		setAdapter();
 	}
 
+	
 	private void loadAlert() {
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserCity())) {
 			showCityAlert();
@@ -175,6 +176,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		mGridView.setOnItemClickListener(this);
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearch);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPost);
+		mbtnPostAd.setSelected(true);
+		mbtnSearchProducts.setSelected(true);
 	}
 
 	@Override

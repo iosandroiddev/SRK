@@ -175,16 +175,15 @@ public class RegisterActivity extends BaseActivity {
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (TextUtils.isEmpty(StorageClass.getInstance(this)
-						.getUserCity())) {
+				if (mbtnSelectCity.getText().toString()
+						.equalsIgnoreCase("Select City")) {
 					pos = -1;
 				} else {
 					if (mCityArray
 							.get(i)
 							.getName()
 							.equalsIgnoreCase(
-									StorageClass.getInstance(this)
-											.getUserCity())) {
+									mbtnSelectCity.getText().toString())) {
 						pos = i;
 					}
 				}

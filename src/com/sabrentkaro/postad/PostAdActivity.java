@@ -3,6 +3,7 @@ package com.sabrentkaro.postad;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,13 +11,15 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,10 +32,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
@@ -57,6 +62,8 @@ import com.sabrentkaro.R;
 import com.sabrentkaro.login.LoginActivity;
 import com.utils.ApiUtils;
 import com.utils.MiscUtils;
+import com.utils.RealPathUtil;
+import com.utils.SquareImageView;
 import com.utils.StaticData;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
@@ -78,9 +85,8 @@ public class PostAdActivity extends BaseActivity implements
 
 	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
 	private LinearLayout mSelectLayout, mlayoutFields;
-	private FrameLayout mImgLayout;
-	private ImageView mImgProduct;
 
+	private HashMap<String, String> mControlLayouts = new HashMap<String, String>();
 	final static int PICK_IMAGE = 1;
 	final static int CAPTURE_IMAGE = 2;
 
@@ -91,12 +97,17 @@ public class PostAdActivity extends BaseActivity implements
 	private String[] mStringSelectValues;
 	private TextView mbtnSelectRating;
 
-	private TextView mbtnUpload;
 	private String productAdId;
 	private String mtxtRating;
 	private String productCode;
-
+	private LinearLayout mLayoutAttachments;
 	private LinearLayout mLayoutSubCat;
+
+	private ArrayList<String> mImageArrayPaths = new ArrayList<String>();
+
+	private ArrayList<Uri> mUriArray = new ArrayList<Uri>();
+
+	private HorizontalScrollView mScrollimages;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,6 +157,16 @@ public class PostAdActivity extends BaseActivity implements
 			mProductsArray = mApp.getProductsArray();
 		}
 
+		if (mCategoriesArray != null && mCategoriesArray.size() == 0) {
+			InternalApp mApp = (InternalApp) getApplication();
+			mCategoriesArray = mApp.getCateogoriesArray();
+		}
+		if (mCateogoryMappingsArray != null
+				&& mCateogoryMappingsArray.size() == 0) {
+			InternalApp mApp = (InternalApp) getApplication();
+			mCateogoryMappingsArray = mApp.getCategoryMappingArray();
+		}
+
 	}
 
 	private void loadReferences() {
@@ -160,10 +181,9 @@ public class PostAdActivity extends BaseActivity implements
 		mEditMonthlyCost = (EditText) findViewById(R.id.editPricePerMonthRent);
 		mEditQuantity = (EditText) findViewById(R.id.editQuantity);
 		mEditSecurityDeposit = (EditText) findViewById(R.id.editSecurityDeposit);
-		mbtnUpload = (TextView) findViewById(R.id.btnUpload);
 		mLayoutSubCat = (LinearLayout) findViewById(R.id.layoutSubCat);
-		mbtnUpload.setOnClickListener(this);
-
+		mScrollimages = (HorizontalScrollView) findViewById(R.id.scrollImages);
+		mLayoutAttachments = (LinearLayout) findViewById(R.id.layoutAttachments);
 		mEditDailyCost.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
@@ -211,8 +231,7 @@ public class PostAdActivity extends BaseActivity implements
 		mbtnSubProductCategory = (TextView) findViewById(R.id.btnSelectSubProductCategory);
 		mbtnUploadPhotos = (TextView) findViewById(R.id.btnUploadPhoto);
 		mbtnNext = (TextView) findViewById(R.id.btnNext);
-		mImgLayout = (FrameLayout) findViewById(R.id.imgLayout);
-		mImgProduct = (ImageView) findViewById(R.id.imgProduct);
+		// mImgProduct = (ImageView) findViewById(R.id.imgProduct);
 		mbtnClear = (TextView) findViewById(R.id.btnClear);
 
 		mSelectLayout = (LinearLayout) findViewById(R.id.selectControls);
@@ -253,9 +272,6 @@ public class PostAdActivity extends BaseActivity implements
 		case R.id.btnSelectRating:
 			btnSelectRatingClicked();
 			break;
-		case R.id.btnUpload:
-			btnUploadClicked();
-			break;
 		default:
 			break;
 		}
@@ -285,39 +301,44 @@ public class PostAdActivity extends BaseActivity implements
 		mEditQuantity.setText("");
 		mEditSecurityDeposit.setText("");
 		mbtnProductCategory.setText("Select Prodcut Category");
-		mbtnSubProductCategory.setText("Select Sub Product Category");
+		mbtnSubProductCategory.setText("Select Product Name");
 
 		StaticUtils.expandCollapse(mLayoutSubCat, false);
-
+		StaticUtils.expandCollapse(mlayoutFields, false);
 		clearAllFields();
 
 	}
 
 	private void btnUploadPhotoClicked() {
-		// final String[] mArray = { "Camera", "Cancel" };
-		// AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		//
-		// builder.setItems(mArray, new DialogInterface.OnClickListener() {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// dialog.dismiss();
-		// if (mArray[which].toString().equalsIgnoreCase("Camera")) {
-		// StaticUtils.isProfilePic = true;
-		// initiateCameraActivity();
-		// } else if (mArray[which].toString().equalsIgnoreCase("Gallery")) {
-		// StaticUtils.isProfilePic = true;
-		// initiateGalleryActivity();
-		// } else {
-		//
-		// }
-		// }
-		// });
-		//
-		// builder.setCancelable(false);
-		// AlertDialog alert = builder.create();
-		// alert.show();
+		if (mUriArray != null && mUriArray.size() < 5) {
+			final String[] mArray = { "Camera", "Gallery", "Cancel" };
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		initiateCameraActivity();
+			builder.setItems(mArray, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					if (mArray[which].toString().equalsIgnoreCase("Camera")) {
+						StaticUtils.isProfilePic = true;
+						initiateCameraActivity();
+					} else if (mArray[which].toString().equalsIgnoreCase(
+							"Gallery")) {
+						StaticUtils.isProfilePic = true;
+						initiateGalleryActivity();
+					} else {
+
+					}
+				}
+			});
+
+			builder.setCancelable(false);
+			AlertDialog alert = builder.create();
+			alert.show();
+
+		} else {
+			showToast("You can select only 5 Images");
+		}
+
 	}
 
 	private void btnNextClicked() {
@@ -326,8 +347,8 @@ public class PostAdActivity extends BaseActivity implements
 			showToast("Please Select Category");
 		} else {
 			if (mbtnSubProductCategory.getText().toString()
-					.equalsIgnoreCase("Select Product Sub Category")) {
-				showToast("Please Select Product Sub Category");
+					.equalsIgnoreCase("Select Product Name")) {
+				showToast("Please Select Product Name");
 			} else {
 				if (mEditTitle.getText().toString().length() == 0) {
 					showToast("Please Enter Title");
@@ -336,62 +357,29 @@ public class PostAdActivity extends BaseActivity implements
 							|| mImageProfilePicPath.length() == 0) {
 						showToast("Please Select Photo");
 					} else {
-						if (mEditShortDesc.getText().toString().length() == 0) {
-							showToast("Please Enter Short Description");
+						if (mtxtRating == null || mtxtRating.length() == 0) {
+							showToast("Please Select Rating");
 						} else {
-							if (mtxtRating == null || mtxtRating.length() == 0) {
-								showToast("Please Select Rating");
-							} else {
-								if (mEditInstructions.getText().toString()
-										.length() == 0) {
-									showToast("Please Enter Instructions");
-								} else {
-									if (mEditStuff.getText().toString()
-											.length() == 0) {
-										showToast("Please Enter Product Stuff");
-									} else {
-										if (!areFieldsValidated()) {
+							if (!areFieldsValidated()) {
 
-										} else {
-											if (mEditPurchasedCost.getText()
+							} else {
+								if (mEditPurchasedCost.getText().toString()
+										.length() == 0) {
+									showToast("Please Enter Purchased Cost");
+								} else {
+									if (mEditDailyCost.getText().toString()
+											.length() == 0
+											&& mEditWeeklyCost.getText()
+													.toString().length() == 0
+											&& mEditMonthlyCost.getText()
 													.toString().length() == 0) {
-												showToast("Please Enter Purchased Cost");
-											} else {
-												if (mEditDailyCost.getText()
-														.toString().length() == 0) {
-													showToast("Please Enter Daily Cost");
-												} else {
-													if (mEditWeeklyCost
-															.getText()
-															.toString()
-															.length() == 0) {
-														showToast("Please Enter Weekly Cost");
-													} else {
-														if (mEditMonthlyCost
-																.getText()
-																.toString()
-																.length() == 0) {
-															showToast("Please Enter Monhtly Cost");
-														} else {
-															if (mEditQuantity
-																	.getText()
-																	.toString()
-																	.length() == 0) {
-																showToast("Please Enter Quantity");
-															} else {
-																if (mEditSecurityDeposit
-																		.getText()
-																		.toString()
-																		.length() == 0) {
-																	showToast("Please Enter Security Deposit");
-																} else {
-																	navigateToPostDocuments();
-																}
-															}
-														}
-													}
-												}
-											}
+										showToast("Please Enter Either Daily Cost, Weekly Cost or Monthly Cost");
+									} else {
+										if (mEditQuantity.getText().toString()
+												.length() == 0) {
+											showToast("Please Enter Quantity");
+										} else {
+											navigateToPostDocuments();
 										}
 									}
 								}
@@ -406,15 +394,26 @@ public class PostAdActivity extends BaseActivity implements
 
 	private boolean areFieldsValidated() {
 		String mtxtTitle = "";
+		boolean isEditText = false;
 		ArrayList<String> mFieldName = new ArrayList<String>();
 		if (mSelectLayout != null && mSelectLayout.getChildCount() > 0) {
 			for (int i = 0; i < mSelectLayout.getChildCount(); i++) {
 				View mView = mSelectLayout.getChildAt(i);
-				if (mView != null && mView instanceof TextView) {
+				if (mView != null && mView instanceof EditText) {
+					EditText mtxtView = (EditText) mView;
+					String mTitle = mtxtView.getText().toString();
+					if (mTitle.length() == 0) {
+						isEditText = true;
+						mtxtTitle = mtxtView.getHint().toString();
+						mtxtView.requestFocus();
+						break;
+					}
+				} else if (mView != null && mView instanceof TextView) {
 					TextView mtxtView = (TextView) mView;
 					String mTitle = mtxtView.getText().toString();
 					if (mTitle.contains("Select")) {
 						mtxtTitle = mTitle;
+						isEditText = false;
 						break;
 					}
 				}
@@ -423,16 +422,20 @@ public class PostAdActivity extends BaseActivity implements
 		if (mtxtTitle == null || mtxtTitle.length() == 0) {
 			return true;
 		} else {
-			showToast("Please " + mtxtTitle);
+			if (isEditText) {
+				showToast("Please " + mtxtTitle);
+			} else {
+				showToast("Please " + mtxtTitle);
+			}
 			return false;
 		}
 	}
 
 	private void navigateToPostDocuments() {
 		InternalApp mApp = (InternalApp) getApplication();
-		Bitmap bitmap = ((BitmapDrawable) mImgProduct.getDrawable())
-				.getBitmap();
-		mApp.setImage(bitmap);
+		// Bitmap bitmap = ((BitmapDrawable) mImgProduct.getDrawable())
+		// .getBitmap();
+		// mApp.setImage(bitmap);
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			startLoginActivity();
 		} else {
@@ -463,6 +466,7 @@ public class PostAdActivity extends BaseActivity implements
 					.toString());
 			mBundle.putString("filePath", mImageProfilePicPath);
 			mBundle.putString("productAdId", productAdId);
+			mBundle.putSerializable("controlLayouts", mControlLayouts);
 			mIntent.putExtras(mBundle);
 			startActivity(mIntent);
 		}
@@ -494,6 +498,7 @@ public class PostAdActivity extends BaseActivity implements
 				.toString());
 		mBundle.putString("filePath", mImageProfilePicPath);
 		mBundle.putString("productAdId", productAdId);
+		mBundle.putSerializable("controlLayouts", mControlLayouts);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -501,6 +506,7 @@ public class PostAdActivity extends BaseActivity implements
 	int pos = -1;
 	private ArrayList<String> mSubCategories = new ArrayList<String>();
 	private JSONArray mFieldsArray;
+	private Dialog mCustomDialog;
 
 	private void btnSelectSubProductCategoryClicked() {
 		showProgressLayout();
@@ -530,7 +536,7 @@ public class PostAdActivity extends BaseActivity implements
 			}
 			AlertDialog.Builder alert = new AlertDialog.Builder(
 					PostAdActivity.this);
-			alert.setTitle("Select Sub Category");
+			alert.setTitle("Select Product Name");
 			alert.setSingleChoiceItems(mSubCat, pos,
 					new DialogInterface.OnClickListener() {
 						@Override
@@ -557,13 +563,11 @@ public class PostAdActivity extends BaseActivity implements
 		mEditStuff.setText("");
 		mEditTitle.setText("");
 		mEditWeeklyCost.setText("");
-		mImgProduct.setImageDrawable(null);
+		// mImgProduct.setImageDrawable(null);
 		mImageProfilePicPath = "";
 		mbtnSelectRating.setText("Select Rating");
-		mImgProduct.setImageResource(R.drawable.default_loading);
-		mImgLayout.setVisibility(View.GONE);
+		// mImgProduct.setImageResource(R.drawable.default_loading);
 		mSelectLayout.removeAllViews();
-
 	}
 
 	private void initTemplateForCategoryApi() {
@@ -640,9 +644,21 @@ public class PostAdActivity extends BaseActivity implements
 			for (int i = 0; i < mArrayFields.size(); i++) {
 				final PostAdModel mModel = mArrayFields.get(i);
 				if (mModel != null) {
-					if (mModel.getFieldTitle().equalsIgnoreCase("Brand")
-							|| mModel.getFieldTitle().equalsIgnoreCase("Model")) {
-
+					if (mModel.getValues() == null
+							|| mModel.getValues().length() == 0) {
+						final EditText mEditTexxt = (EditText) LayoutInflater
+								.from(this).inflate(R.layout.editselectcontrol,
+										null);
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+								new LayoutParams(LayoutParams.MATCH_PARENT,
+										LayoutParams.WRAP_CONTENT));
+						params.setMargins(10, 10, 10, 10);
+						mEditTexxt.setLayoutParams(params);
+						mEditTexxt.setHint("Enter " + mModel.getFieldTitle());
+						mEditTexxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+						mFieldName.add(mModel.getFieldTitle());
+						StaticUtils.setEditTextHintFont(mEditTexxt, this);
+						mSelectLayout.addView(mEditTexxt);
 					} else {
 						final TextView mtxtView = (TextView) LayoutInflater
 								.from(this).inflate(R.layout.selectcontrol,
@@ -658,11 +674,19 @@ public class PostAdActivity extends BaseActivity implements
 
 							@Override
 							public void onClick(View v) {
+								// if (mtxtView.getText().toString()
+								// .contains("Others")
+								// || mtxtView.getText().toString()
+								// .contains("Other")) {
+								// showPopup(mtxtView);
+								// } else {
 								showSelectAlert(mModel, mtxtView);
+								// }
 							}
 						});
 						mSelectLayout.addView(mtxtView);
 					}
+
 				}
 			}
 		}
@@ -679,17 +703,16 @@ public class PostAdActivity extends BaseActivity implements
 			mtxtFields.setText(mTitles);
 		}
 
-		// StaticUtils.expandCollapse(mlayoutFields, true);
 		StaticUtils.expandCollapse(mlayoutFields, true);
 	}
 
-	private void showSelectAlert(PostAdModel mModel, final TextView mtxtView) {
+	private void showSelectAlert(final PostAdModel mModel,
+			final TextView mtxtView) {
 
 		ArrayList<String> mStringValues = new ArrayList<String>();
 		if (mModel.getValues() != null) {
 			JSONArray mValuesArray = mModel.getValues();
 			for (int j = 0; j < mValuesArray.length(); j++) {
-
 				JSONObject mValueObj = mValuesArray.optJSONObject(j);
 				if (mValueObj != null
 						&& !mValueObj.optString("Value").trim()
@@ -713,7 +736,14 @@ public class PostAdActivity extends BaseActivity implements
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mtxtView.setText(mStringSelectValues[which]);
+						if (mStringSelectValues[which].contains("Others")
+								|| mStringSelectValues[which].contains("Other")) {
+							showPopup(mtxtView, mModel.getFieldTitle());
+						} else {
+							mtxtView.setText(mStringSelectValues[which]);
+							mControlLayouts.put(mModel.getFieldTitle(),
+									mStringSelectValues[which]);
+						}
 						dialog.dismiss();
 					}
 
@@ -792,13 +822,13 @@ public class PostAdActivity extends BaseActivity implements
 	}
 
 	private void setSubProductsArray() {
-		mbtnSubProductCategory.setText("Select Product Sub Category");
+		mbtnSubProductCategory.setText("Select Product Name");
 		if (mCateogoryMappingsArray != null) {
 			mSubCategories = new ArrayList<String>();
 			for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {
 				CategoryModel mModel = mCateogoryMappingsArray.get(i);
 				if (mbtnSubProductCategory.getText().toString()
-						.equalsIgnoreCase("Select Product Sub Category")) {
+						.equalsIgnoreCase("Select Product Name")) {
 					pos = -1;
 				} else {
 					if (mModel.getTitle().equalsIgnoreCase(
@@ -833,16 +863,19 @@ public class PostAdActivity extends BaseActivity implements
 		}
 	}
 
+	@SuppressLint("InlinedApi")
 	protected void initiateGalleryActivity() {
 		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
 		galleryIntent.setType("image/*");
-		galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+		galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 		galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
 		startActivityForResult(galleryIntent, PICK_IMAGE);
 	}
 
+	@SuppressWarnings("unused")
 	@SuppressLint("NewApi")
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		String realPath = "";
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
@@ -851,26 +884,45 @@ public class PostAdActivity extends BaseActivity implements
 					if (data != null) {
 						Uri uri = data.getData();
 						if (uri != null) {
-							try {
-								mImgProduct.setImageURI(uri);
-								mImageProfilePicPath = getRealPathFromURI(uri);
-								mImgLayout.setVisibility(View.VISIBLE);
-							} catch (Exception e) {
-								e.getStackTrace();
+							if (Build.VERSION.SDK_INT < 11) {
+								realPath = RealPathUtil
+										.getRealPathFromURI_BelowAPI11(this,
+												data.getData());
+							} else if (Build.VERSION.SDK_INT < 19) {
+								realPath = RealPathUtil
+										.getRealPathFromURI_API11to18(this,
+												data.getData());
+							} else {
+								realPath = new File(uri.getPath())
+										.getAbsolutePath();
+							}
+							if (realPath.length() == 0) {
+								realPath = new File(uri.getPath())
+										.getAbsolutePath();
+							}
+							if (uri != null) {
+								try {
+									// mImgProduct.setImageURI(uri);
+									mImageProfilePicPath = realPath;
+									// mImgLayout.setVisibility(View.VISIBLE);
+									if (mUriArray != null)
+										mUriArray.add(uri);
+								} catch (Exception e) {
+									e.getStackTrace();
+								}
+							} else {
+								mImageProfilePicPath = "";
+								// mImgLayout.setVisibility(View.GONE);
 							}
 						} else {
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 								ClipData clipData = data.getClipData();
 								if (clipData != null) {
 									for (int i = 0; i < clipData.getItemCount(); i++) {
-										try {
-											mImgProduct.setImageURI(clipData
-													.getItemAt(i).getUri());
-											mImgLayout
-													.setVisibility(View.VISIBLE);
-										} catch (Exception e) {
-											e.getStackTrace();
-										}
+										Uri mUri = clipData.getItemAt(i)
+												.getUri();
+										if (mUriArray != null)
+											mUriArray.add(mUri);
 									}
 								}
 							}
@@ -883,9 +935,13 @@ public class PostAdActivity extends BaseActivity implements
 					try {
 						mImageProfilePicPath = uploadPicture.mCurrentPhotoPath;
 						mProfilePicBitmap = uploadPicture.setPic();
-						mImgProduct.setImageBitmap(mProfilePicBitmap);
-						mImgLayout.setVisibility(View.VISIBLE);
-
+						Uri mUri = Uri.fromFile(new File(mImageProfilePicPath));
+						if (mUri != null) {
+							if (mUriArray != null)
+								mUriArray.add(mUri);
+						}
+						// mImgProduct.setImageBitmap(mProfilePicBitmap);
+						// mImgLayout.setVisibility(View.VISIBLE);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -895,6 +951,8 @@ public class PostAdActivity extends BaseActivity implements
 				break;
 			}
 		}
+
+		loadAttachments();
 	}
 
 	public String getPathfromUri(Uri mUri) {
@@ -940,6 +998,94 @@ public class PostAdActivity extends BaseActivity implements
 	@Override
 	public void SuccessResponse(JSONArray response, int requestCode) {
 
+	}
+
+	private void showPopup(final TextView mtxtView, final String title) {
+		mCustomDialog = new Dialog(this);
+		mCustomDialog.setCancelable(false);
+		mCustomDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mCustomDialog.setContentView(R.layout.cutsom_popup);
+		mCustomDialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+		TextView mbtnDone = (TextView) mCustomDialog.findViewById(R.id.btnDone);
+
+		final EditText meditText = (EditText) mCustomDialog
+				.findViewById(R.id.editText);
+		StaticUtils.setEditTextHintFont(meditText, this);
+		String mText = "";
+		if (mtxtView.getText().toString().contains("Others - ")) {
+			mText = mtxtView.getText().toString().replace("Others - ", "");
+		}
+		if (mText.length() == 0) {
+
+		} else {
+			meditText.setText(mText);
+		}
+		mCustomDialog.show();
+
+		mbtnDone.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (TextUtils.isEmpty(meditText.getText().toString())) {
+					showToast("Please Enter");
+				} else {
+					mCustomDialog.dismiss();
+					mtxtView.setText("Others - "
+							+ meditText.getText().toString());
+					mControlLayouts.put(title, meditText.getText().toString());
+					if (areFieldsValidated()) {
+						mEditPurchasedCost.requestFocus();
+					} else {
+						hideKeyboard(meditText);
+					}
+				}
+			}
+		});
+	}
+
+	protected void hideKeyboard(EditText meditText) {
+		if (meditText != null && getWindow() != null
+				&& getWindow().getDecorView() != null) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(meditText.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(getWindow().getDecorView()
+					.getWindowToken(), 0);
+		}
+	}
+
+	@SuppressLint("NewApi")
+	private void loadAttachments() {
+
+		mLayoutAttachments.removeAllViews();
+		if (mUriArray != null) {
+			for (int i = 0; i < mUriArray.size(); i++) {
+				Uri mUri = mUriArray.get(i);
+				if (mUri != null) {
+					final LinearLayout mPhotoView = (LinearLayout) LayoutInflater
+							.from(this).inflate(R.layout.layoutphoto, null);
+					SquareImageView mImageView = (SquareImageView) mPhotoView
+							.findViewById(R.id.imgProduct);
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							new LayoutParams(300, 300));
+					params.setMargins(10, 10, 10, 10);
+					mImageView.setLayoutParams(params);
+					mImageView.setImageURI(mUri);
+					mImageView
+							.setOnLongClickListener(new OnLongClickListener() {
+
+								@Override
+								public boolean onLongClick(View v) {
+									return false;
+								}
+							});
+					mLayoutAttachments.addView(mPhotoView, 300, 300);
+				}
+			}
+		}
+		StaticUtils.expandCollapse(mScrollimages, true);
+		// StaticUtils.expandCollapse(mLayoutAttachments, true);
 	}
 
 }

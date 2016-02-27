@@ -81,6 +81,7 @@
     <color name="invisible_color">#FFFFFF</color>
     <color name="invisible_grey_color">#808080</color>
     <color name="pink">#EC016D</color>
+    <color name="pinkdark">#E03E82</color>
     <color name="blue_dark">#8235C2</color>
     <color name="blue_dark_transparent">#808235C2</color>
 

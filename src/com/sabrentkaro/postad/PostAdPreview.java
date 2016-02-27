@@ -8,11 +8,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -30,6 +34,7 @@ import com.utils.PhotoUpload;
 import com.utils.PhotoUpload.IImageUpload;
 import com.utils.PostAd;
 import com.utils.PostAd.IPostAd;
+import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
 public class PostAdPreview extends BaseActivity implements IImageUpload,
@@ -44,7 +49,9 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 	private TextView mbtnSubmit, mbtnBack;
 	private String filePath, absFilePath;
+	private LinearLayout mSelectLayout;
 
+	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
 	private String mCategory = "";
 	private String mSubCategory = "";
 	private String mAdTitle = "";
@@ -106,6 +113,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		setDetails();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void setDetails() {
 		mtxtCategory.setText(mCategory);
 		mtxtSubCategory.setText(mSubCategory);
@@ -115,24 +123,110 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtInstructions.setText(mUserInstructions);
 
 		mtxtPurchasedCost.setText(mProductPurchasedPrice);
-		mtxtDailyCost.setText(mDailyCost);
-		mtxtMonthCost.setText(mMonthCost);
+		if (mDailyCost.length() == 0) {
+			mtxtDailyCost.setVisibility(View.GONE);
+		} else {
+			mtxtDailyCost.setVisibility(View.VISIBLE);
+		}
+		if (mMonthCost.length() == 0) {
+			mtxtMonthCost.setVisibility(View.GONE);
+		} else {
+			mtxtMonthCost.setVisibility(View.VISIBLE);
+		}
+		if (mWeekCost.length() == 0) {
+			mtxtWeekCost.setVisibility(View.GONE);
+		} else {
+			mtxtWeekCost.setVisibility(View.VISIBLE);
+		}
+
+		String dailyCost = "<font color='black'>" + "Daily Cost:"
+				+ " : </font> <font color='#EC016D'>"
+				+ getString(R.string.rupeeone) + " " + mDailyCost + "</font>";
+		String monthCost = "<font color='black'>" + "Monthly Cost:"
+				+ " : </font> <font color='#EC016D'>"
+				+ getString(R.string.rupeeone) + " " + mMonthCost + "</font>";
+		String weekCost = "<font color='black'>" + "Weekly Cost:"
+				+ " : </font> <font color='#EC016D'>"
+				+ getString(R.string.rupeeone) + " " + mWeekCost + "</font>";
+
+		mtxtDailyCost.setText(Html.fromHtml(dailyCost), TextView.BufferType.SPANNABLE);
+		mtxtMonthCost.setText(Html.fromHtml(monthCost), TextView.BufferType.SPANNABLE);
 		mtxtQuanity.setText(mQuantity);
-		mtxtWeekCost.setText(mWeekCost);
+		mtxtWeekCost.setText(Html.fromHtml(weekCost), TextView.BufferType.SPANNABLE);
 		mtxtSecurityDeposit.setText(mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
-		mtxtAddress.setText("Address:" + " " + mAddress);
-		mtxtCity.setText("City:" + " " + mCity);
-		mtxtState.setText("State:" + " " + mState);
-		mtxtPincode.setText("Pincode:" + " " + mPinCode);
-		mtxtMobile.setText("Mobile Number:" + " " + mMobileNubmer);
+		// mtxtAddress.setText("Address:" + " " + mAddress);
+		// mtxtCity.setText("City:" + " " + mCity);
+		// mtxtState.setText("State:" + " " + mState);
+		// mtxtPincode.setText("Pincode:" + " " + mPinCode);
+		// mtxtMobile.setText("Mobile Number:" + " " + mMobileNubmer);
 
-		mtxtUserAddress.setText("Address:" + " " + mAddressUser);
-		mtxtUserCity.setText("City:" + " " + mCityUser);
-		mtxtUserState.setText("State:" + " " + mStateUser);
-		mtxtUserPincode.setText("Pincode:" + " " + mPinCodeUser);
-		mtxtUserMobile.setText("Mobile Number:" + " " + mMobileNubmerUser);
+		// mtxtUserAddress.setText("Address:" + " " + mAddressUser);
+		// mtxtUserCity.setText("City:" + " " + mCityUser);
+		// mtxtUserState.setText("State:" + " " + mStateUser);
+		// mtxtUserPincode.setText("Pincode:" + " " + mPinCodeUser);
+		// mtxtUserMobile.setText("Mobile Number:" + " " + mMobileNubmerUser);
+
+		mtxtCategory.setTextColor(getResources().getColor(R.color.pink));
+		mtxtSubCategory.setTextColor(getResources().getColor(R.color.pink));
+		mtxtTitle.setTextColor(getResources().getColor(R.color.pink));
+		mtxtDesc.setTextColor(getResources().getColor(R.color.pink));
+		mtxtStuff.setTextColor(getResources().getColor(R.color.pink));
+		mtxtInstructions.setTextColor(getResources().getColor(R.color.pink));
+		mtxtDailyCost.setTextColor(getResources().getColor(R.color.pink));
+		mtxtMonthCost.setTextColor(getResources().getColor(R.color.pink));
+		mtxtQuanity.setTextColor(getResources().getColor(R.color.pink));
+		mtxtWeekCost.setTextColor(getResources().getColor(R.color.pink));
+		mtxtSecurityDeposit.setTextColor(getResources().getColor(R.color.pink));
+		mtxtPurchasedCost.setTextColor(getResources().getColor(R.color.pink));
+		mtxtRating.setTextColor(getResources().getColor(R.color.pink));
+
+		String address = "<font color='black'>Address: </font> <font color='#EC016D'>"
+				+ mAddress + "</font>";
+		mtxtAddress.setText(Html.fromHtml(address),
+				TextView.BufferType.SPANNABLE);
+
+		String city = "<font color='black'>City: </font> <font color='#EC016D'>"
+				+ mCity + "</font>";
+		mtxtCity.setText(Html.fromHtml(city), TextView.BufferType.SPANNABLE);
+
+		String state = "<font color='black'>State: </font> <font color='#EC016D'>"
+				+ mState + "</font>";
+		mtxtState.setText(Html.fromHtml(state), TextView.BufferType.SPANNABLE);
+
+		String pib = "<font color='black'>Pincode: </font> <font color='#EC016D'>"
+				+ mPinCode + "</font>";
+		mtxtPincode.setText(Html.fromHtml(pib), TextView.BufferType.SPANNABLE);
+
+		String mob = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>"
+				+ mMobileNubmer + "</font>";
+		mtxtMobile.setText(Html.fromHtml(mob), TextView.BufferType.SPANNABLE);
+
+		String addressUser = "<font color='black'>Address: </font> <font color='#EC016D'>"
+				+ mAddressUser + "</font>";
+		mtxtUserAddress.setText(Html.fromHtml(addressUser),
+				TextView.BufferType.SPANNABLE);
+
+		String cityUser = "<font color='black'>City: </font> <font color='#EC016D'>"
+				+ mCityUser + "</font>";
+		mtxtUserCity.setText(Html.fromHtml(cityUser),
+				TextView.BufferType.SPANNABLE);
+
+		String stateUser = "<font color='black'>State: </font> <font color='#EC016D'>"
+				+ mStateUser + "</font>";
+		mtxtUserState.setText(Html.fromHtml(stateUser),
+				TextView.BufferType.SPANNABLE);
+
+		String pinUser = "<font color='black'>Pincode: </font> <font color='#EC016D'>"
+				+ mPinCodeUser + "</font>";
+		mtxtUserPincode.setText(Html.fromHtml(pinUser),
+				TextView.BufferType.SPANNABLE);
+
+		String mobUser = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>"
+				+ mMobileNubmerUser + "</font>";
+		mtxtUserMobile.setText(Html.fromHtml(mobUser),
+				TextView.BufferType.SPANNABLE);
 
 		InternalApp mApp = (InternalApp) getApplication();
 		mImgProduct.setImageBitmap(mApp.getImage());
@@ -142,6 +236,33 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		} else {
 			mLayoutCurrentAddress.setVisibility(View.GONE);
 		}
+
+		loadControlLaoyuts();
+	}
+
+	@SuppressLint("NewApi")
+	private void loadControlLaoyuts() {
+		mSelectLayout.removeAllViews();
+		if (controlLayouts != null) {
+			for (Map.Entry<String, String> entry : controlLayouts.entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				final TextView mtxtView = (TextView) LayoutInflater.from(this)
+						.inflate(R.layout.showcontrol, null);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+						new LayoutParams(LayoutParams.MATCH_PARENT,
+								LayoutParams.WRAP_CONTENT));
+				params.setMargins(10, 10, 10, 10);
+				mtxtView.setLayoutParams(params);
+				String mtxt = "<font color='black'>" + key
+						+ " : </font> <font color='#EC016D'>" + value
+						+ "</font>";
+				mtxtView.setText(Html.fromHtml(mtxt),
+						TextView.BufferType.SPANNABLE);
+				mSelectLayout.addView(mtxtView);
+			}
+		}
+		StaticUtils.expandCollapse(mSelectLayout, true);
 	}
 
 	private void getDetails() {
@@ -175,6 +296,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mAadthrNumber = mBundle.getString("aadharCardNumber");
 				mMobileNubmer = mBundle.getString("mobileNumber");
 				mtxtCondName = mBundle.getString("productConditionName");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
 
 				if (mBundle.getString("displayCurrent").equalsIgnoreCase(
 						"false")) {
@@ -222,6 +345,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mbtnBack = (TextView) findViewById(R.id.btnEdit);
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
+		mSelectLayout = (LinearLayout) findViewById(R.id.layoutControlTypeCapacity);
 
 		mLayoutCurrentAddress = (LinearLayout) findViewById(R.id.layoutCurrentAddress);
 

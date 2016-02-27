@@ -1,6 +1,7 @@
 package com.sabrentkaro.postad;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			meditUserAdress, meditUserCity, meditUserState, mEditUserPinCode,
 			mEditUserPhone;
 	private TextView mbtnPanCard, mbtnAadharCard, mbtnNext, mbtnSelectCity,
-			mbtnSelectUserCity;
+			mbtnSelectUserCity, mbtnClear;
 	private boolean isPanCardSelected = false, isAadharCardSelected = false;
 	private LinearLayout mPanCardLayout, mAAadharCardLayout,
 			mLayoutUserAddress;
@@ -51,6 +52,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 	private String mQuantity;
 	private String mtxtRating;
 	private String mtxtCondName;
+	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getDetails() {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
@@ -83,6 +86,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				mProductAdId = mBundle.getString("productAdId");
 				mtxtRating = mBundle.getString("productCondition");
 				mtxtCondName = mBundle.getString("productConditionName");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
 
 			}
 		}
@@ -121,11 +126,13 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mLayoutUserAddress = (LinearLayout) findViewById(R.id.layoutUserAddress);
 		mCheckAddress = (CheckBox) findViewById(R.id.checkAddress);
 		mbtnNext = (TextView) findViewById(R.id.btnNext);
+		mbtnClear = (TextView) findViewById(R.id.btnClear);
 		mbtnPanCard.setOnClickListener(this);
 		mbtnAadharCard.setOnClickListener(this);
 		mbtnNext.setOnClickListener(this);
 		mbtnSelectCity.setOnClickListener(this);
 		mbtnSelectUserCity.setOnClickListener(this);
+		mbtnClear.setOnClickListener(this);
 
 		StaticUtils.setEditTextHintFont(meditUserAdress, this);
 		StaticUtils.setEditTextHintFont(meditUserState, this);
@@ -179,6 +186,17 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		meditPanCardNumber.setText("");
 		mEditAadharCardName.setText("");
 		mEditAadharCardNumber.setText("");
+
+		mbtnSelectCity.setText("Select City");
+		mbtnSelectUserCity.setText("Select City");
+
+		meditUserAdress.setText("");
+		meditUserState.setText("");
+		mEditUserPhone.setText("");
+		mEditUserPinCode.setText("");
+
+		mCheckAddress.setChecked(false);
+
 	}
 
 	private void btnNextClicked() {
@@ -298,19 +316,21 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mBundle.putString("city", mbtnSelectCity.getText().toString());
 		mBundle.putString("stateValue", meditState.getText().toString());
 		mBundle.putString("pincode", mEditPinCode.getText().toString());
-		
-		if(mCheckAddress.isChecked()){
+		mBundle.putSerializable("controlLayouts", controlLayouts);
+
+		if (mCheckAddress.isChecked()) {
 			mBundle.putString("displayCurrent", "false");
-		}else {
+		} else {
 			mBundle.putString("displayCurrent", "true");
 		}
-		
+
 		mBundle.putString("addressUser", meditUserAdress.getText().toString());
 		mBundle.putString("cityUser", mbtnSelectUserCity.getText().toString());
 		mBundle.putString("stateValueUser", meditUserState.getText().toString());
 		mBundle.putString("pincodeUser", mEditUserPinCode.getText().toString());
-		mBundle.putString("mobileNumberUser", mEditUserPhone.getText().toString());
-		
+		mBundle.putString("mobileNumberUser", mEditUserPhone.getText()
+				.toString());
+
 		mBundle.putString("panCard", meditPanCardNumber.getText().toString());
 		mBundle.putString("aadharCardName", mEditAadharCardName.getText()
 				.toString());
@@ -380,16 +400,12 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (TextUtils.isEmpty(StorageClass.getInstance(this)
-						.getUserCity())) {
+				if (mtxtView.getText().toString()
+						.equalsIgnoreCase("Seletct City")) {
 					pos = -1;
 				} else {
-					if (mCityArray
-							.get(i)
-							.getName()
-							.equalsIgnoreCase(
-									StorageClass.getInstance(this)
-											.getUserCity())) {
+					if (mCityArray.get(i).getName()
+							.equalsIgnoreCase(mtxtView.getText().toString())) {
 						pos = i;
 					}
 				}

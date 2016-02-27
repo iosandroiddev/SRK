@@ -3,9 +3,25 @@
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:descendantFocusability="beforeDescendants"
+    android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:padding="5dp" >
+
+    <com.utils.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_margin="10dp"
+        android:background="#55000000"
+        android:gravity="center_horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/login_to_continue"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        custom:fonttype="trebuchet_ms" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,9 +96,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="bottom"
-            android:orientation="vertical" >
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp" >
 
             <com.utils.CustomTextView
                 android:layout_width="wrap_content"
@@ -100,7 +117,8 @@
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:background="@drawable/blue_custom_button_selector"
                 android:clickable="true"
                 android:ellipsize="marquee"
