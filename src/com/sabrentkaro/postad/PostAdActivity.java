@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +39,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
@@ -432,10 +434,47 @@ public class PostAdActivity extends BaseActivity implements
 	}
 
 	private void navigateToPostDocuments() {
+		ArrayList<Bitmap> mArrayBitmaps = new ArrayList<Bitmap>();
+		if (mLayoutAttachments != null) {
+			for (int i = 0; i < mLayoutAttachments.getChildCount(); i++) {
+				View mView = mLayoutAttachments.getChildAt(i);
+				if (mView instanceof LinearLayout) {
+					LinearLayout mLinearView = (LinearLayout) mView;
+					if (mLinearView != null) {
+						for (int j = 0; j < mLinearView.getChildCount(); j++) {
+							View mLinearSubView = mLinearView.getChildAt(i);
+							if (mLinearSubView instanceof LinearLayout) {
+								LinearLayout mLinearSubSubView = (LinearLayout) mLinearSubView;
+								if (mLinearSubSubView != null) {
+									for (int k = 0; k < mLinearSubSubView
+											.getChildCount(); k++) {
+										View mImgView = mLinearSubSubView
+												.getChildAt(k);
+										if (mImgView instanceof ImageView
+												|| mImgView instanceof SquareImageView) {
+											ImageView mImageView = (ImageView) mImgView;
+											Bitmap bitmap = ((BitmapDrawable) mImageView
+													.getDrawable()).getBitmap();
+											if (bitmap != null)
+												mArrayBitmaps.add(bitmap);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+
 		InternalApp mApp = (InternalApp) getApplication();
-		// Bitmap bitmap = ((BitmapDrawable) mImgProduct.getDrawable())
-		// .getBitmap();
-		// mApp.setImage(bitmap);
+		if (mArrayBitmaps.size() > 0) {
+			Bitmap bitmap = mArrayBitmaps.get(0);
+			mApp.setImage(bitmap);
+		}
+
+		mApp.setBitmapsArray(mArrayBitmaps);
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			startLoginActivity();
 		} else {

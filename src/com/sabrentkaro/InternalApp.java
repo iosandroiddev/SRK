@@ -22,6 +22,7 @@ public class InternalApp extends Application {
 	private ArrayList<CategoryModel> mCateogoryMappingsArray;
 	private Bitmap mBitmap;
 	private JSONArray jsonArray;
+	private ArrayList<Bitmap> mArrayBitmaps;
 
 	@Override
 	public void onCreate() {
@@ -85,5 +86,15 @@ public class InternalApp extends Application {
 
 	public JSONArray getPhotoUpload() {
 		return this.jsonArray;
+	}
+
+	public void setBitmapsArray(ArrayList<Bitmap> mArrayBitmaps) {
+		this.mArrayBitmaps = mArrayBitmaps;
+
+	}
+
+	public ArrayList<Bitmap> getBitmapsArray() {
+		return this.mArrayBitmaps;
+
 	}
 }

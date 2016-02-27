@@ -1,6 +1,7 @@
 package com.sabrentkaro.postad;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +10,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +29,9 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.models.ProductModel;
+import com.models.CategoryModel;
 import com.sabrentkaro.BaseActivity;
+import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.utils.ApiUtils;
@@ -50,7 +55,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private TextView mbtnSubmit, mbtnBack;
 	private String filePath, absFilePath;
 	private LinearLayout mSelectLayout;
-
+	private boolean uploadCoverImage = false;
 	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
 	private String mCategory = "";
 	private String mSubCategory = "";
@@ -149,10 +154,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				+ " : </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mWeekCost + "</font>";
 
-		mtxtDailyCost.setText(Html.fromHtml(dailyCost), TextView.BufferType.SPANNABLE);
-		mtxtMonthCost.setText(Html.fromHtml(monthCost), TextView.BufferType.SPANNABLE);
+		mtxtDailyCost.setText(Html.fromHtml(dailyCost),
+				TextView.BufferType.SPANNABLE);
+		mtxtMonthCost.setText(Html.fromHtml(monthCost),
+				TextView.BufferType.SPANNABLE);
 		mtxtQuanity.setText(mQuantity);
-		mtxtWeekCost.setText(Html.fromHtml(weekCost), TextView.BufferType.SPANNABLE);
+		mtxtWeekCost.setText(Html.fromHtml(weekCost),
+				TextView.BufferType.SPANNABLE);
 		mtxtSecurityDeposit.setText(mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
@@ -315,11 +323,11 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			}
 		}
 		InternalApp mApp = (InternalApp) getApplication();
-		ArrayList<ProductModel> mArray = mApp.getProductsArray();
+		ArrayList<CategoryModel> mArray = mApp.getCategoryMappingArray();
 		if (mArray != null && mArray.size() > 0) {
 			for (int i = 0; i < mArray.size(); i++) {
-				ProductModel mModel = mArray.get(i);
-				if (mCategory.equalsIgnoreCase(mModel.getTitle())) {
+				CategoryModel mModel = mArray.get(i);
+				if (mSubCategory.equalsIgnoreCase(mModel.getTitle())) {
 					mCode = mModel.getCode();
 				}
 			}
@@ -396,14 +404,15 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		try {
 			params.put("Id", mProductAdId);
 			params.put("Title", mAdTitle);
+			params.put("Status", "null");
 			params.put("Description", mProductDesc);
-			params.put("IsLogisticsShared", "true");
-			params.put("IsInsuredByOwner", "false");
+			params.put("IsLogisticsShared", false);
+			params.put("IsInsuredByOwner", false);
 			params.put("InsuranceCost", "null");
 			params.put("LogisticsCost", "null");
 			params.put("SecurityDeposit", mSecurityDeposit);
 			params.put("History", "null");
-			params.put("CreatedDate", "1455962224412");
+			params.put("CreatedDate", new Date().getTime());
 			params.put("Pricing", "null");
 			params.put("Business", "null");
 			params.put("MinimumRentalPeriod", "null");
@@ -454,15 +463,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mProdcutConditionObj.put("Code", mRating);
 			mProdcutConditionObj.put("Title", mtxtCondName);
 			mProdcutsObj.put("ProductCondition", mProdcutConditionObj);
-			mProdcutsObj.put("Id", mAddressArray);
-			mProdcutsObj.put("Title", mLocationObject);
-			mProdcutsObj.put("Description", "null");
-			mProdcutsObj.put("Quantity", "null");
+			mProdcutsObj.put("Id", mProductAdId);
+			mProdcutsObj.put("Title", mAdTitle);
+			mProdcutsObj.put("Description", mProductDesc);
+			mProdcutsObj.put("Quantity", mQuantity);
 			mProdcutsObj.put("PriceWhenPurchased", mProductPurchasedPrice);
 			mProdcutsObj.put("ProductCategory", mProdcutCategoryObj);
-			mProdcutsObj.put("LastName", " ");
-			mProdcutsObj.put("IsBusiness", "null");
-			mProdcutsObj.put("IsPrimary", "null");
 
 			JSONArray mPricingArray = new JSONArray();
 			JSONObject mPricingobject = new JSONObject();
@@ -488,7 +494,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mItemMediaObj.put("FileAbsolutePath", absFilePath);
 			mItemMediaObj.put("FileName", "null");
 			mItemMediaObj.put("IsThumbNail", "null");
-			mItemMediaObj.put("IsCoverImage", "null");
+			mItemMediaObj.put("IsCoverImage", uploadCoverImage);
 			mItemMediaObj.put("AdItemId", mProductAdId);
 			mItemMediaObj.put("Size", "null");
 			mItemMediaArray.put(mItemMediaObj);
@@ -516,7 +522,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mItemDeatilsObj.put("Value", "");
 			mItemDeatilsArray.put(mItemDeatilsObj);
 
-			mProdcutsObj.put("ItemDetails", mItemDeatilsArray);
+			mProdcutsObj.put("ItemDetails", mItemDeatilsArray.toString());
 			JSONArray mProdcutsArray = new JSONArray();
 			mProdcutsArray.put(mProdcutsObj);
 
@@ -526,24 +532,28 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			if (mPanCard.length() == 0) {
 				mserviceField.put("panId", mPanCard);
 			} else {
+				mserviceField.put("panId", mPanCard);
 			}
 			JSONObject mserviceProvider = new JSONObject();
 			if (mPanCard.length() == 0) {
 				mserviceProvider.put("Code", "PAN");
 				mserviceProvider.put("Title", "null");
 			} else {
+				mserviceProvider.put("Code", "PAN");
+				mserviceProvider.put("Title", "null");
 			}
 			mServicesObject.put("TpFieldJson", mserviceField);
+			mServicesObject.put("AdId", mProductAdId);
 			mServicesObject.put("TpProviderService", mserviceProvider);
 			mServiceInputs.put(mServicesObject);
 
 			JSONArray mCalenders = new JSONArray();
 			JSONObject mCalendarsObj = new JSONObject();
-			mCalendarsObj.put("DateFrom", "01-01-1900");
-			mCalendarsObj.put("DateTo", "12-31-2999");
-			mCalendarsObj.put("IsBlocked", "false");
+			mCalendarsObj.put("DateFrom", "");
+			mCalendarsObj.put("DateTo", "");
+			mCalendarsObj.put("IsBlocked", false);
 			mCalendarsObj.put("RentalValuePerDay", mDailyCost);
-			mCalendarsObj.put("IsOpenCalendar", "true");
+			mCalendarsObj.put("IsOpenCalendar", true);
 			mCalenders.put(mCalendarsObj);
 
 			JSONArray mArrayAdSettings = new JSONArray();
@@ -580,7 +590,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mProducSpec.put("Code", "INSURANCE");
 			mProducSpec.put("Title", "Insurance Preferences");
 			mAdSetObj.put("ProductCategorySpecification", mProducSpec);
-			mAdSetObj.put("Value", "true");
+			mAdSetObj.put("Value", true);
 			mAdSetObj.put("Id", "4");
 			mArrayAdSettings.put(mAdSetObj);
 
@@ -745,6 +755,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 					public void onResponse(JSONObject response) {
 						hideProgressLayout();
 						showToast("Success");
+						showAlert();
 					}
 
 				}, new ErrorListener() {
@@ -776,6 +787,32 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mQueue.add(mObjReq);
 	}
 
+	private void showAlert() {
+		new AlertDialog.Builder(this)
+				.setTitle("Success")
+				.setMessage("Product Posted Successfully!")
+				.setOnDismissListener(new OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						dialog.cancel();
+						navigateToHome();
+					}
+				})
+				.setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).create().show();
+	}
+
+	private void navigateToHome() {
+		Intent mIntent = new Intent(this, HomeActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(mIntent);
+	}
+
 	private void callPostAdApi(String ent) {
 		PostAd mObj = new PostAd(this, ent, this);
 		mObj.startExexcution();
@@ -791,11 +828,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				if (mObj != null) {
 					filePath = mObj.optString("Filepath");
 					absFilePath = mObj.optString("FileAbsolutePath");
+					uploadCoverImage = mObj.optBoolean("IsCoverImage");
 					initPostAdApi();
 				}
 			}
 		} else {
-
+			showToast(message);
+			hideProgressLayout();
 		}
 	}
 
