@@ -2,6 +2,8 @@ package com.sabrentkaro.postad;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,17 +12,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +33,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +42,7 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -64,12 +70,10 @@ import com.sabrentkaro.R;
 import com.sabrentkaro.login.LoginActivity;
 import com.utils.ApiUtils;
 import com.utils.MiscUtils;
-import com.utils.RealPathUtil;
 import com.utils.SquareImageView;
 import com.utils.StaticData;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
-import com.utils.UploadPicture;
 
 public class PostAdActivity extends BaseActivity implements
 		IObjectParseListener, IArrayParseListener {
@@ -89,10 +93,7 @@ public class PostAdActivity extends BaseActivity implements
 	private LinearLayout mSelectLayout, mlayoutFields;
 
 	private HashMap<String, String> mControlLayouts = new HashMap<String, String>();
-	final static int PICK_IMAGE = 1;
-	final static int CAPTURE_IMAGE = 2;
-
-	public static UploadPicture uploadPicture;
+	final static int CAMERA_SELECT_CODE = 1;
 	private Bitmap mProfilePicBitmap;
 	private RatingBar mRatingBar;
 	private String mImageProfilePicPath = "";
@@ -106,10 +107,12 @@ public class PostAdActivity extends BaseActivity implements
 	private LinearLayout mLayoutSubCat;
 
 	private ArrayList<String> mImageArrayPaths = new ArrayList<String>();
+	private ArrayList<File> mImageFileArray = new ArrayList<File>();
 
 	private ArrayList<Uri> mUriArray = new ArrayList<Uri>();
 
 	private HorizontalScrollView mScrollimages;
+	private File cameraFile;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -313,19 +316,18 @@ public class PostAdActivity extends BaseActivity implements
 
 	private void btnUploadPhotoClicked() {
 		if (mUriArray != null && mUriArray.size() < 5) {
-			final String[] mArray = { "Camera", "Gallery", "Cancel" };
+			final String[] mArray = { "Captue Image", "Photo Gallery", "Cancel" };
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 			builder.setItems(mArray, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
-					if (mArray[which].toString().equalsIgnoreCase("Camera")) {
-						StaticUtils.isProfilePic = true;
+					if (mArray[which].toString().equalsIgnoreCase(
+							"Captue Image")) {
 						initiateCameraActivity();
 					} else if (mArray[which].toString().equalsIgnoreCase(
-							"Gallery")) {
-						StaticUtils.isProfilePic = true;
+							"Photo Gallery")) {
 						initiateGalleryActivity();
 					} else {
 
@@ -355,8 +357,7 @@ public class PostAdActivity extends BaseActivity implements
 				if (mEditTitle.getText().toString().length() == 0) {
 					showToast("Please Enter Title");
 				} else {
-					if (mImageProfilePicPath == null
-							|| mImageProfilePicPath.length() == 0) {
+					if (mUriArray == null || mUriArray.size() == 0) {
 						showToast("Please Select Photo");
 					} else {
 						if (mtxtRating == null || mtxtRating.length() == 0) {
@@ -434,47 +435,9 @@ public class PostAdActivity extends BaseActivity implements
 	}
 
 	private void navigateToPostDocuments() {
-		ArrayList<Bitmap> mArrayBitmaps = new ArrayList<Bitmap>();
-		if (mLayoutAttachments != null) {
-			for (int i = 0; i < mLayoutAttachments.getChildCount(); i++) {
-				View mView = mLayoutAttachments.getChildAt(i);
-				if (mView instanceof LinearLayout) {
-					LinearLayout mLinearView = (LinearLayout) mView;
-					if (mLinearView != null) {
-						for (int j = 0; j < mLinearView.getChildCount(); j++) {
-							View mLinearSubView = mLinearView.getChildAt(i);
-							if (mLinearSubView instanceof LinearLayout) {
-								LinearLayout mLinearSubSubView = (LinearLayout) mLinearSubView;
-								if (mLinearSubSubView != null) {
-									for (int k = 0; k < mLinearSubSubView
-											.getChildCount(); k++) {
-										View mImgView = mLinearSubSubView
-												.getChildAt(k);
-										if (mImgView instanceof ImageView
-												|| mImgView instanceof SquareImageView) {
-											ImageView mImageView = (ImageView) mImgView;
-											Bitmap bitmap = ((BitmapDrawable) mImageView
-													.getDrawable()).getBitmap();
-											if (bitmap != null)
-												mArrayBitmaps.add(bitmap);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
-		}
-
 		InternalApp mApp = (InternalApp) getApplication();
-		if (mArrayBitmaps.size() > 0) {
-			Bitmap bitmap = mArrayBitmaps.get(0);
-			mApp.setImage(bitmap);
-		}
-
-		mApp.setBitmapsArray(mArrayBitmaps);
+		mApp.setUriArray(mUriArray);
+		mApp.setImageFilesArray(mImageFileArray);
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			startLoginActivity();
 		} else {
@@ -895,8 +858,13 @@ public class PostAdActivity extends BaseActivity implements
 
 	protected void initiateCameraActivity() {
 		if (isDeviceSupportCamera()) {
-			uploadPicture = new UploadPicture(this);
-			uploadPicture.dispatchTakePictureIntent(CAPTURE_IMAGE, this);
+			cameraFile = new File(StaticUtils.getSabRentKaroCameraDir(),
+					"IMAGE_" + System.currentTimeMillis() + ".jpg");
+			Uri cameraImageUri = Uri.fromFile(cameraFile);
+			Intent camerIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			camerIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+					cameraImageUri);
+			startActivityForResult(camerIntent, CAMERA_SELECT_CODE);
 		} else {
 			showToast("Camera feature not available");
 		}
@@ -904,93 +872,68 @@ public class PostAdActivity extends BaseActivity implements
 
 	@SuppressLint("InlinedApi")
 	protected void initiateGalleryActivity() {
-		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-		galleryIntent.setType("image/*");
-		galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-		galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-		startActivityForResult(galleryIntent, PICK_IMAGE);
+		Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+		photoPickerIntent.setType("image/*");
+		photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+		photoPickerIntent.addCategory(Intent.CATEGORY_OPENABLE);
+		startActivityForResult(photoPickerIntent, CAMERA_SELECT_CODE);
 	}
 
 	@SuppressWarnings("unused")
 	@SuppressLint("NewApi")
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		String realPath = "";
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK) {
-			switch (requestCode) {
-			case PICK_IMAGE:
-				if (resultCode == Activity.RESULT_OK) {
-					if (data != null) {
-						Uri uri = data.getData();
-						if (uri != null) {
-							if (Build.VERSION.SDK_INT < 11) {
-								realPath = RealPathUtil
-										.getRealPathFromURI_BelowAPI11(this,
-												data.getData());
-							} else if (Build.VERSION.SDK_INT < 19) {
-								realPath = RealPathUtil
-										.getRealPathFromURI_API11to18(this,
-												data.getData());
-							} else {
-								realPath = new File(uri.getPath())
-										.getAbsolutePath();
-							}
-							if (realPath.length() == 0) {
-								realPath = new File(uri.getPath())
-										.getAbsolutePath();
-							}
-							if (uri != null) {
-								try {
-									// mImgProduct.setImageURI(uri);
-									mImageProfilePicPath = realPath;
-									// mImgLayout.setVisibility(View.VISIBLE);
-									if (mUriArray != null)
-										mUriArray.add(uri);
-								} catch (Exception e) {
-									e.getStackTrace();
-								}
-							} else {
-								mImageProfilePicPath = "";
-								// mImgLayout.setVisibility(View.GONE);
-							}
-						} else {
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-								ClipData clipData = data.getClipData();
-								if (clipData != null) {
-									for (int i = 0; i < clipData.getItemCount(); i++) {
-										Uri mUri = clipData.getItemAt(i)
-												.getUri();
-										if (mUriArray != null)
-											mUriArray.add(mUri);
-									}
-								}
-							}
-						}
-					}
-				}
-				break;
-			case CAPTURE_IMAGE:
-				if (resultCode == Activity.RESULT_OK) {
-					try {
-						mImageProfilePicPath = uploadPicture.mCurrentPhotoPath;
-						mProfilePicBitmap = uploadPicture.setPic();
-						Uri mUri = Uri.fromFile(new File(mImageProfilePicPath));
-						if (mUri != null) {
-							if (mUriArray != null)
-								mUriArray.add(mUri);
-						}
-						// mImgProduct.setImageBitmap(mProfilePicBitmap);
-						// mImgLayout.setVisibility(View.VISIBLE);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				break;
-			default:
-				break;
-			}
-		}
+		switch (requestCode) {
+		case CAMERA_SELECT_CODE:
+			if (resultCode == RESULT_OK) {
+				if (cameraFile != null) {
+					MediaScannerConnection
+							.scanFile(
+									this,
+									new String[] { cameraFile.getPath() },
+									new String[] { "image/jpeg" },
+									new MediaScannerConnection.OnScanCompletedListener() {
+										@Override
+										public void onScanCompleted(
+												String path, final Uri uri) {
+											runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													if (uri != null) {
+														mUriArray.add(uri);
+													}
+													mImageFileArray
+															.add(cameraFile);
+													loadAttachments();
+												}
+											});
+										}
+									});
+					// }
+				} else {
+					Uri uri = data.getData();
+					if (uri != null) {
+						mUriArray.add(uri);
+						mImageFileArray.add(new File(uri.getPath()));
+					} else {
+						boolean isMaxFile = false;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+							ClipData clipData = data.getClipData();
 
+							if (clipData != null) {
+								for (int i = 0; i < clipData.getItemCount(); i++) {
+									mUriArray.add(clipData.getItemAt(i)
+											.getUri());
+									mImageFileArray.add(new File(clipData
+											.getItemAt(i).getUri().toString()));
+								}
+							}
+						}
+					}
+				}
+			}
+			break;
+		}
+		cameraFile = null;
 		loadAttachments();
 	}
 
@@ -1096,7 +1039,6 @@ public class PostAdActivity extends BaseActivity implements
 
 	@SuppressLint("NewApi")
 	private void loadAttachments() {
-
 		mLayoutAttachments.removeAllViews();
 		if (mUriArray != null) {
 			for (int i = 0; i < mUriArray.size(); i++) {
@@ -1104,20 +1046,31 @@ public class PostAdActivity extends BaseActivity implements
 				if (mUri != null) {
 					final LinearLayout mPhotoView = (LinearLayout) LayoutInflater
 							.from(this).inflate(R.layout.layoutphoto, null);
-					SquareImageView mImageView = (SquareImageView) mPhotoView
+					final SquareImageView mImageView = (SquareImageView) mPhotoView
 							.findViewById(R.id.imgProduct);
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 							new LayoutParams(300, 300));
 					params.setMargins(10, 10, 10, 10);
 					mImageView.setLayoutParams(params);
 					mImageView.setImageURI(mUri);
+					String mime = getMimeType(mUri);
+					if (mime != null && mime.startsWith("image")) {
+						Bitmap bmp = getBitmap(mUri);
+						if (bmp == null) {
+						} else {
+							mImageView.setImageBitmap(bmp);
+						}
+					}
+					mImageView.setTag(mUri);
 					mImageView
 							.setOnLongClickListener(new OnLongClickListener() {
 
 								@Override
 								public boolean onLongClick(View v) {
-									return false;
+									showAlert(mImageView);
+									return true;
 								}
+
 							});
 					mLayoutAttachments.addView(mPhotoView, 300, 300);
 				}
@@ -1127,4 +1080,122 @@ public class PostAdActivity extends BaseActivity implements
 		// StaticUtils.expandCollapse(mLayoutAttachments, true);
 	}
 
+	private void showAlert(final SquareImageView mImageView) {
+		new AlertDialog.Builder(this)
+				.setTitle("Warning")
+				.setMessage("Do you want to delete the Image ?")
+				.setOnDismissListener(new OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						dialog.cancel();
+					}
+				})
+				.setNegativeButton(android.R.string.no,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								Uri mUri = (Uri) mImageView.getTag();
+								if (mUri != null) {
+									if (mUriArray != null
+											&& mUriArray.size() > 0) {
+										if (mUriArray.contains(mUri)) {
+											mUriArray.remove(mUri);
+											loadAttachments();
+										}
+										if (mImageFileArray.contains(new File(
+												mUri.toString()))) {
+											mImageFileArray.remove(new File(
+													mUri.toString()));
+										}
+									}
+								}
+							}
+						}).create().show();
+
+	}
+
+	private Bitmap getBitmap(Uri uri) {
+		InputStream in = null;
+		try {
+			final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
+			in = getContentResolver().openInputStream(uri);
+
+			// Decode image size
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(in, null, o);
+			in.close();
+
+			int scale = 1;
+			while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > IMAGE_MAX_SIZE) {
+				scale++;
+			}
+			Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth
+					+ ", orig-height: " + o.outHeight);
+
+			Bitmap b = null;
+			in = getContentResolver().openInputStream(uri);
+			if (scale > 1) {
+				scale--;
+				// scale to max possible inSampleSize that still yields an image
+				// larger than target
+				o = new BitmapFactory.Options();
+				o.inSampleSize = scale;
+				b = BitmapFactory.decodeStream(in, null, o);
+
+				// resize to desired dimensions
+				int height = b.getHeight();
+				int width = b.getWidth();
+				Log.d("", "1th scale operation dimenions - width: " + width
+						+ ", height: " + height);
+
+				double y = Math.sqrt(IMAGE_MAX_SIZE
+						/ (((double) width) / height));
+				double x = (y / height) * width;
+
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+						(int) y, true);
+				b.recycle();
+				b = scaledBitmap;
+
+				System.gc();
+			} else {
+				b = BitmapFactory.decodeStream(in);
+			}
+			in.close();
+
+			Log.d("",
+					"bitmap size - width: " + b.getWidth() + ", height: "
+							+ b.getHeight());
+			return b;
+		} catch (IOException e) {
+			Log.e("", e.getMessage(), e);
+			return null;
+		}
+	}
+
+	private String getMimeType(Uri file) {
+		String contentType;
+		String ext;
+		MimeTypeMap mime = MimeTypeMap.getSingleton();
+		if ("file".equalsIgnoreCase(file.getScheme())) {
+			String filePath = file.getPath();
+			ext = filePath.substring(filePath.lastIndexOf(".") + 1);
+			contentType = mime.getMimeTypeFromExtension(ext);
+		} else {
+			contentType = getContentResolver().getType(file);
+			// ext = mime.getExtensionFromMimeType(contentType);
+		}
+		return contentType;
+	}
 }

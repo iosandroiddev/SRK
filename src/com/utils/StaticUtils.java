@@ -570,4 +570,12 @@ public class StaticUtils {
 		return connection;
 	}
 
+	public static File getSabRentKaroCameraDir() {
+		File cameraDir = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM
+						+ File.separator + "SabRentKaro");
+		cameraDir.mkdirs();
+		return cameraDir;
+	}
+
 }

@@ -1,5 +1,6 @@
 package com.sabrentkaro;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -7,6 +8,7 @@ import org.json.JSONArray;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.examples.toolbox.MyVolley;
@@ -22,7 +24,9 @@ public class InternalApp extends Application {
 	private ArrayList<CategoryModel> mCateogoryMappingsArray;
 	private Bitmap mBitmap;
 	private JSONArray jsonArray;
-	private ArrayList<Bitmap> mArrayBitmaps;
+	private ArrayList<Uri> mArrayBitmaps;
+
+	private ArrayList<File> mFileImagesArray;
 
 	@Override
 	public void onCreate() {
@@ -88,13 +92,21 @@ public class InternalApp extends Application {
 		return this.jsonArray;
 	}
 
-	public void setBitmapsArray(ArrayList<Bitmap> mArrayBitmaps) {
-		this.mArrayBitmaps = mArrayBitmaps;
+	public void setUriArray(ArrayList<Uri> mArrayUri) {
+		this.mArrayBitmaps = mArrayUri;
 
 	}
 
-	public ArrayList<Bitmap> getBitmapsArray() {
+	public ArrayList<Uri> getUriArray() {
 		return this.mArrayBitmaps;
+	}
 
+	public void setImageFilesArray(ArrayList<File> mArrayUri) {
+		this.mFileImagesArray = mArrayUri;
+
+	}
+
+	public ArrayList<File> getImageFilesArray() {
+		return this.mFileImagesArray;
 	}
 }

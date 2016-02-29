@@ -1,5 +1,7 @@
 package com.sabrentkaro.postad;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +15,20 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.webkit.MimeTypeMap;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -36,6 +47,7 @@ import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.utils.ApiUtils;
 import com.utils.PhotoUpload;
+import com.utils.SquareImageView;
 import com.utils.PhotoUpload.IImageUpload;
 import com.utils.PostAd;
 import com.utils.PostAd.IPostAd;
@@ -49,8 +61,6 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mtxtRating, mtxtInstructions, mtxtStuff, mtxtQuanity,
 			mtxtPurchasedCost, mtxtDailyCost, mtxtWeekCost, mtxtMonthCost,
 			mtxtSecurityDeposit;
-
-	private ImageView mImgProduct;
 
 	private TextView mbtnSubmit, mbtnBack;
 	private String filePath, absFilePath;
@@ -73,7 +83,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private String mWeekCost = "";
 	private String mQuantity = "";
 	private String mRating = "";
-
+	private boolean imagesCompleted = false;
 	private String mAadthrNumber = "";
 	private String mMobileNubmer = "";
 	private String mAadharName = "";
@@ -83,14 +93,15 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private String mCity = "";
 	private String mAddress = "";
 	private String mCode = "";
-
+	private HorizontalScrollView mScrollimages;
+	private ArrayList<Uri> mUriArray = new ArrayList<Uri>();
 	private String mtxtCondName;
 	private TextView mtxtAddress;
 	private TextView mtxtState;
 	private TextView mtxtCity;
 	private TextView mtxtMobile;
 	private TextView mtxtPincode;
-
+	private int currentImageUploadCount = 0;
 	private TextView mtxtUserAddress;
 	private TextView mtxtUserState;
 	private TextView mtxtUserCity;
@@ -108,6 +119,9 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private LinearLayout mLayoutCurrentAddress;
 
 	private String mAuthHeader;
+	int currentImageCount = 0;
+	private JSONArray mItemsMediaArrayResponse;
+	private LinearLayout mLayoutAttachments;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -126,6 +140,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtDesc.setText(mProductDesc);
 		mtxtStuff.setText(mAdditionalStuff);
 		mtxtInstructions.setText(mUserInstructions);
+
+		loadAttachments();
 
 		mtxtPurchasedCost.setText(mProductPurchasedPrice);
 		if (mDailyCost.length() == 0) {
@@ -236,9 +252,6 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtUserMobile.setText(Html.fromHtml(mobUser),
 				TextView.BufferType.SPANNABLE);
 
-		InternalApp mApp = (InternalApp) getApplication();
-		mImgProduct.setImageBitmap(mApp.getImage());
-
 		if (showCurrentAdrees) {
 			mLayoutCurrentAddress.setVisibility(View.VISIBLE);
 		} else {
@@ -348,12 +361,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtWeekCost = (TextView) findViewById(R.id.weekCost);
 		mtxtMonthCost = (TextView) findViewById(R.id.monthCost);
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.securityDeposit);
-		mImgProduct = (ImageView) findViewById(R.id.imgProduct);
 		mbtnSubmit = (TextView) findViewById(R.id.btnSubmit);
 		mbtnBack = (TextView) findViewById(R.id.btnEdit);
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
 		mSelectLayout = (LinearLayout) findViewById(R.id.layoutControlTypeCapacity);
+		mScrollimages = (HorizontalScrollView) findViewById(R.id.scrollImages);
+		mLayoutAttachments = (LinearLayout) findViewById(R.id.layoutAttachments);
 
 		mLayoutCurrentAddress = (LinearLayout) findViewById(R.id.layoutCurrentAddress);
 
@@ -393,8 +407,18 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 	private void btnSubmitClicked() {
 		showProgressLayout();
-		PhotoUpload mUpload = new PhotoUpload(this, mFilePath, mProductAdId,
-				this);
+
+		InternalApp mApp = (InternalApp) getApplication();
+		if (mApp.getUriArray() != null && mApp.getUriArray().size() > 0) {
+			if (currentImageUploadCount < mApp.getUriArray().size()) {
+				startPhotUpload(currentImageUploadCount, mApp);
+			}
+		}
+	}
+
+	private void startPhotUpload(int pos, InternalApp mApp) {
+		PhotoUpload mUpload = new PhotoUpload(this,
+				mApp.getUriArray().get(pos), mProductAdId, this);
 		mUpload.startExexcution();
 	}
 
@@ -498,7 +522,10 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mItemMediaObj.put("AdItemId", mProductAdId);
 			mItemMediaObj.put("Size", "null");
 			mItemMediaArray.put(mItemMediaObj);
-			mProdcutsObj.put("ItemMedia", mItemMediaArray);
+			if (mItemsMediaArrayResponse != null)
+				mProdcutsObj.put("ItemMedia", mItemsMediaArrayResponse);
+			else
+				mProdcutsObj.put("ItemMedia", mItemMediaArray);
 
 			JSONArray mItemDeatilsArray = new JSONArray();
 			JSONObject mItemDeatilsObj = new JSONObject();
@@ -824,24 +851,155 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			InternalApp mApplication = (InternalApp) getApplication();
 			JSONArray mResponseArray = mApplication.getPhotoUpload();
 			if (mResponseArray != null && mResponseArray.length() > 0) {
+				currentImageCount++;
+				mItemsMediaArrayResponse = mResponseArray;
 				JSONObject mObj = mResponseArray.optJSONObject(0);
 				if (mObj != null) {
 					filePath = mObj.optString("Filepath");
 					absFilePath = mObj.optString("FileAbsolutePath");
 					uploadCoverImage = mObj.optBoolean("IsCoverImage");
+				}
+				if (currentImageCount == mUriArray.size()) {
 					initPostAdApi();
+				} else {
+					currentImageUploadCount = currentImageUploadCount + 1;
+					startPhotUpload(currentImageUploadCount, mApplication);
 				}
 			}
 		} else {
 			showToast(message);
 			hideProgressLayout();
 		}
+
 	}
 
 	@Override
 	public void onAdPosted(String message) {
 		showToast(message);
 		hideProgressLayout();
+	}
+
+	@SuppressLint("NewApi")
+	private void loadAttachments() {
+		mLayoutAttachments.removeAllViews();
+		mUriArray = ((InternalApp) getApplication()).getUriArray();
+		if (mUriArray != null) {
+			for (int i = 0; i < mUriArray.size(); i++) {
+				Uri mUri = mUriArray.get(i);
+				if (mUri != null) {
+					final LinearLayout mPhotoView = (LinearLayout) LayoutInflater
+							.from(this).inflate(R.layout.layoutphoto, null);
+					final SquareImageView mImageView = (SquareImageView) mPhotoView
+							.findViewById(R.id.imgProduct);
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							new LayoutParams(300, 300));
+					params.setMargins(10, 10, 10, 10);
+					mImageView.setLayoutParams(params);
+					mImageView.setImageURI(mUri);
+					String mime = getMimeType(mUri);
+					if (mime != null && mime.startsWith("image")) {
+						Bitmap bmp = getBitmap(mUri);
+						if (bmp == null) {
+						} else {
+							mImageView.setImageBitmap(bmp);
+						}
+					}
+					mImageView.setTag(mUri);
+					mLayoutAttachments.addView(mPhotoView, 300, 300);
+				}
+			}
+		}
+		StaticUtils.expandCollapse(mScrollimages, true);
+		// StaticUtils.expandCollapse(mLayoutAttachments, true);
+	}
+
+	private Bitmap getBitmap(Uri uri) {
+		InputStream in = null;
+		try {
+			final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
+			in = getContentResolver().openInputStream(uri);
+
+			// Decode image size
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(in, null, o);
+			in.close();
+
+			int scale = 1;
+			while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > IMAGE_MAX_SIZE) {
+				scale++;
+			}
+			Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth
+					+ ", orig-height: " + o.outHeight);
+
+			Bitmap b = null;
+			in = getContentResolver().openInputStream(uri);
+			if (scale > 1) {
+				scale--;
+				// scale to max possible inSampleSize that still yields an image
+				// larger than target
+				o = new BitmapFactory.Options();
+				o.inSampleSize = scale;
+				b = BitmapFactory.decodeStream(in, null, o);
+
+				// resize to desired dimensions
+				int height = b.getHeight();
+				int width = b.getWidth();
+				Log.d("", "1th scale operation dimenions - width: " + width
+						+ ", height: " + height);
+
+				double y = Math.sqrt(IMAGE_MAX_SIZE
+						/ (((double) width) / height));
+				double x = (y / height) * width;
+
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+						(int) y, true);
+				b.recycle();
+				b = scaledBitmap;
+
+				System.gc();
+			} else {
+				b = BitmapFactory.decodeStream(in);
+			}
+			in.close();
+
+			Log.d("",
+					"bitmap size - width: " + b.getWidth() + ", height: "
+							+ b.getHeight());
+			return b;
+		} catch (IOException e) {
+			Log.e("", e.getMessage(), e);
+			return null;
+		}
+	}
+
+	private String getMimeType(Uri file) {
+		String contentType;
+		String ext;
+		MimeTypeMap mime = MimeTypeMap.getSingleton();
+		if ("file".equalsIgnoreCase(file.getScheme())) {
+			String filePath = file.getPath();
+			ext = filePath.substring(filePath.lastIndexOf(".") + 1);
+			contentType = mime.getMimeTypeFromExtension(ext);
+		} else {
+			contentType = getContentResolver().getType(file);
+			// ext = mime.getExtensionFromMimeType(contentType);
+		}
+		return contentType;
+	}
+
+	public String getPath(Uri uri) {
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = getContentResolver().query(uri, projection, null, null,
+				null);
+		if (cursor == null)
+			return null;
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		String s = cursor.getString(column_index);
+		cursor.close();
+		return s;
 	}
 
 }

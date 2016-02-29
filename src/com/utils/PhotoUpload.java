@@ -16,8 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.TextUtils;
+import android.provider.MediaStore;
 
 import com.android.jsonclasses.AndroidMultipartEntity;
 import com.android.jsonclasses.AndroidMultipartEntity.ProgressListener;
@@ -25,7 +27,7 @@ import com.sabrentkaro.InternalApp;
 
 public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 
-	private String imagePath;
+	private Uri mImageUri;
 	private String productId;
 
 	IImageUpload mUpload;
@@ -36,9 +38,9 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 		public void onImageUpload(String message);
 	}
 
-	public PhotoUpload(IImageUpload mUpoad, String imagePath, String productId,
+	public PhotoUpload(IImageUpload mUpoad, Uri mImageUri, String productId,
 			Context mContext) {
-		this.imagePath = imagePath;
+		this.mImageUri = mImageUri;
 		this.productId = productId;
 		this.mContext = mContext;
 		mApplication = (InternalApp) mContext.getApplicationContext();
@@ -46,7 +48,7 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 	}
 
 	public void startExexcution() {
-		if (!(TextUtils.isEmpty(imagePath))) {
+		if (mImageUri != null) {
 			execute();
 		}
 	}
@@ -79,8 +81,8 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 						}
 					});
 
-			File sourceFile = new File(imagePath);
-
+			String mPath = getPath(mImageUri);
+			File sourceFile = new File(mPath);
 			entity.addPart("file-3", new FileBody(sourceFile));
 			entity.addPart(
 					"Content-type",
@@ -132,5 +134,19 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 		super.onPostExecute(result);
 		if (mUpload != null)
 			mUpload.onImageUpload(result);
+	}
+
+	public String getPath(Uri uri) {
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null,
+				null);
+		if (cursor == null)
+			return null;
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		String s = cursor.getString(column_index);
+		cursor.close();
+		return s;
 	}
 }

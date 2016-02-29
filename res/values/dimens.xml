@@ -8,5 +8,6 @@
     <!-- Sliding Label Dimens -->
     <dimen name="sliding_label">15sp</dimen>
     <dimen name="topbar_label">17sp</dimen>
+    <dimen name="one_dp">1dp</dimen>
 
 </resources>

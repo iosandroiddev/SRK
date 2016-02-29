@@ -133,37 +133,26 @@
                 android:textSize="15sp"
                 custom:fonttype="trebuchet_ms" />
 
-            <LinearLayout
+            <HorizontalScrollView
+                android:id="@+id/scrollImages"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:visibility="visible" >
 
-                <FrameLayout
-                    android:id="@+id/imgLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@color/transparent"
-                    android:padding="10dp"
-                    android:visibility="visible" >
-
-                    <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_gravity="center"
-                        android:background="#55000000"
-                        android:gravity="center"
-                        android:orientation="vertical" >
-
-                        <com.utils.SquareImageView
-                            android:id="@+id/imgProduct"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            android:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/default_loading" />
-                    </LinearLayout>
-                </FrameLayout>
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layoutAttachments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="false"
+                    android:clickable="false"
+                    android:duplicateParentState="true"
+                    android:gravity="center"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
             <com.utils.CustomTextView
                 android:layout_width="match_parent"
