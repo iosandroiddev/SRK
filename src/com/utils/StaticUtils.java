@@ -3,6 +3,7 @@ package com.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,9 @@ import android.widget.TextView.OnEditorActionListener;
 
 @SuppressLint("SimpleDateFormat")
 public class StaticUtils {
+
+	private static DateFormat formatter = SimpleDateFormat
+			.getDateTimeInstance();
 
 	public static boolean isProfilePic = false;
 
@@ -576,6 +580,10 @@ public class StaticUtils {
 						+ File.separator + "SabRentKaro");
 		cameraDir.mkdirs();
 		return cameraDir;
+	}
+
+	public static String formatDate(Date date) {
+		return formatter.format(date);
 	}
 
 }
