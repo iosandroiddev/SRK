@@ -23,9 +23,26 @@ public class PostAdSaver {
 	private String panCard = "";
 	private String aadharname = "";
 	private String aadharNumber = "";
-	
-	
-	private boolean isProductAddressChecked =false;
+
+	private boolean isProductAddressChecked = false;
+	private boolean isPanCardSelected = false;
+	private boolean isAaadharCardSelected = false;
+
+	public boolean isPanCardSelected() {
+		return isPanCardSelected;
+	}
+
+	public void setPanCardSelected(boolean isPanCardSelected) {
+		this.isPanCardSelected = isPanCardSelected;
+	}
+
+	public boolean isAaadharCardSelected() {
+		return isAaadharCardSelected;
+	}
+
+	public void setAaadharCardSelected(boolean isAaadharCardSelected) {
+		this.isAaadharCardSelected = isAaadharCardSelected;
+	}
 
 	private boolean isEditing = false;
 
