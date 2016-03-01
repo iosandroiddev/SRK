@@ -144,7 +144,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 		loadAttachments();
 
-		mtxtPurchasedCost.setText(mProductPurchasedPrice);
+		mtxtPurchasedCost.setText(getString(R.string.rupeeone) + " "
+				+ mProductPurchasedPrice);
 		if (mDailyCost.length() == 0) {
 			mtxtDailyCost.setVisibility(View.GONE);
 		} else {
@@ -178,7 +179,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtQuanity.setText(mQuantity);
 		mtxtWeekCost.setText(Html.fromHtml(weekCost),
 				TextView.BufferType.SPANNABLE);
-		mtxtSecurityDeposit.setText(mSecurityDeposit);
+		mtxtSecurityDeposit.setText(getString(R.string.rupeeone) + " "
+				+ mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
 		// mtxtAddress.setText("Address:" + " " + mAddress);
