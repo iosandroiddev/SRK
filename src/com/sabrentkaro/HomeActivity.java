@@ -44,7 +44,6 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		setAdapter();
 	}
 
-	
 	private void loadAlert() {
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserCity())) {
 			showCityAlert();
@@ -212,6 +211,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void btnPostAdClicked() {
+		PostAdSaver.getInstance(this).setEditing(false);
 		Intent mIntent = new Intent(this, PostAdActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putSerializable("productsArray", mProductsArray);

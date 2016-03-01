@@ -44,6 +44,7 @@ import com.models.CategoryModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
+import com.sabrentkaro.PostAdSaver;
 import com.sabrentkaro.R;
 import com.utils.ApiUtils;
 import com.utils.PhotoUpload;
@@ -400,9 +401,15 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	}
 
 	private void btnEditClicked() {
-		Intent mIntent = new Intent(this, PostAdActivity.class);
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivity(mIntent);
+		PostAdSaver.getInstance(this).setEditing(true);
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		PostAdSaver.getInstance(this).setEditing(true);
+		finish();
 	}
 
 	private void btnSubmitClicked() {

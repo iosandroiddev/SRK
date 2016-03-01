@@ -142,6 +142,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 
 	private void btnPostAdClicked() {
 		btnMenuClicked();
+		PostAdSaver.getInstance(this).setEditing(false);
 		Intent mIntent = new Intent(this, PostAdActivity.class);
 		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);

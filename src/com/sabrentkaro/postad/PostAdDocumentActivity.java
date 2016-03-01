@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.models.CityModel;
 import com.sabrentkaro.BaseActivity;
+import com.sabrentkaro.PostAdSaver;
 import com.sabrentkaro.R;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
@@ -94,11 +95,39 @@ public class PostAdDocumentActivity extends BaseActivity implements
 	}
 
 	private void loadDetails() {
-		meditAdress.setText(StorageClass.getInstance(this).getAddress());
-		mbtnSelectCity.setText(StorageClass.getInstance(this).getUserCity());
-		meditState.setText(StorageClass.getInstance(this).getUserState());
-		mEditPinCode.setText(StorageClass.getInstance(this).getPinCode());
-		mEditPhone.setText(StorageClass.getInstance(this).getMobileNumber());
+		PostAdSaver mSaver = PostAdSaver.getInstance(this);
+
+		if (PostAdSaver.getInstance(this).isEditing()) {
+			meditAdress.setText(mSaver.getAddress());
+			mbtnSelectCity.setText(mSaver.getCity());
+			meditState.setText(mSaver.getState());
+			mEditPinCode.setText(mSaver.getPincode());
+			mEditPhone.setText(mSaver.getMobNumber());
+			mCheckAddress.setChecked(mSaver.isProductAddressChecked());
+			meditPanCardNumber.setText(mSaver.getPanCard());
+
+			mEditAadharCardName.setText(mSaver.getAadharname());
+			mEditAadharCardNumber.setText(mSaver.getAadharNumber());
+			if (mSaver.isProductAddressChecked()) {
+
+			} else {
+				meditUserAdress.setText(mSaver.getUserAddress());
+				mbtnSelectUserCity.setText(mSaver.getUserCity());
+				meditUserState.setText(mSaver.getUserState());
+				mEditUserPinCode.setText(mSaver.getUserPincode());
+				mEditUserPhone.setText(mSaver.getUserMobNumber());
+				// StaticUtils.expandCollapse(mLayoutUserAddress, true);
+			}
+		} else {
+			meditAdress.setText(StorageClass.getInstance(this).getAddress());
+			mbtnSelectCity
+					.setText(StorageClass.getInstance(this).getUserCity());
+			meditState.setText(StorageClass.getInstance(this).getUserState());
+			mEditPinCode.setText(StorageClass.getInstance(this).getPinCode());
+			mEditPhone
+					.setText(StorageClass.getInstance(this).getMobileNumber());
+		}
+
 	}
 
 	private void loadReferences() {
@@ -293,6 +322,25 @@ public class PostAdDocumentActivity extends BaseActivity implements
 	}
 
 	private void navigateToPostPreview() {
+
+		PostAdSaver mAdSaver = PostAdSaver.getInstance(this);
+		mAdSaver.setCity(mbtnSelectCity.getText().toString());
+		mAdSaver.setAadharname(mEditAadharCardName.getText().toString());
+		mAdSaver.setAadharNumber(mEditAadharCardNumber.getText().toString());
+		mAdSaver.setAddress(meditAdress.getText().toString());
+		mAdSaver.setState(meditState.getText().toString());
+		mAdSaver.setPincode(mEditPinCode.getText().toString());
+		mAdSaver.setMobNumber(mEditPhone.getText().toString());
+		mAdSaver.setPanCard(meditPanCardNumber.getText().toString());
+
+		mAdSaver.setUserCity(mbtnSelectUserCity.getText().toString());
+		mAdSaver.setUserAddress(meditUserAdress.getText().toString());
+		mAdSaver.setUserState(meditUserState.getText().toString());
+		mAdSaver.setUserPincode(mEditUserPinCode.getText().toString());
+		mAdSaver.setUserMobNumber(mEditUserPhone.getText().toString());
+
+		mAdSaver.setProductAddressChecked(mCheckAddress.isChecked());
+
 		Intent mIntent = new Intent(this, PostAdPreview.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("category", mCategory);
