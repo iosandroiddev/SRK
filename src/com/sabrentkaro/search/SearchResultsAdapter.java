@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.models.SearchModel;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sabrentkaro.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,10 +28,16 @@ public class SearchResultsAdapter extends BaseAdapter {
 	private ArrayList<SearchModel> mArraySearchResult = new ArrayList<SearchModel>();
 	private AQuery mQuery;
 	private Context mContext;
+	private ImageLoader mImageLoader;
 
 	public SearchResultsAdapter(Context context) {
 		this.mContext = context;
 		mQuery = new AQuery(mContext);
+		mImageLoader = ImageLoader.getInstance();
+		mOptions = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.default_loading)
+				.showImageForEmptyUri(R.drawable.default_loading)
+				.showImageOnFail(R.drawable.default_loading).build();
 	}
 
 	public interface IRentClick {
@@ -37,6 +45,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 	}
 
 	IRentClick mRentClick;
+	private DisplayImageOptions mOptions;
 
 	public void setCallback(IRentClick mRent) {
 		this.mRentClick = mRent;
@@ -130,11 +139,9 @@ public class SearchResultsAdapter extends BaseAdapter {
 		}
 
 		mHolder.mtxtLocation.setSelected(true);
-
 		Picasso.with(mContext).load(mModel.getCoverImagePath())
 				.placeholder(R.drawable.default_loading)
 				.error(R.drawable.default_loading).into(mHolder.mItemImg);
-
 		mHolder.mbtnRent.setOnClickListener(new onRentClick(position));
 
 		if (mModel.getItemsArray() == null

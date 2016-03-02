@@ -3,6 +3,7 @@ package com.sabrentkaro.postad;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -120,7 +121,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			}
 
 			if (mSaver.isPanCardSelected()) {
-				isPanCardSelected =false;
+				isPanCardSelected = false;
 				btnPanCardClicked();
 			} else {
 				if (mSaver.isAaadharCardSelected()) {
@@ -400,7 +401,20 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				.toString());
 		mBundle.putString("mobileNumber", mEditPhone.getText().toString());
 		mIntent.putExtras(mBundle);
-		startActivity(mIntent);
+		startActivityForResult(mIntent, 100);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 100) {
+			if (resultCode == Activity.RESULT_OK) {
+				PostAdSaver.getInstance(this).setEditing(true);
+				finish();
+			} else {
+
+			}
+		}
 	}
 
 	private void btnPanCardClicked() {
@@ -492,30 +506,30 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-
-		PostAdSaver mAdSaver = PostAdSaver.getInstance(this);
-		mAdSaver.setCity(mbtnSelectCity.getText().toString());
-		mAdSaver.setAadharname(mEditAadharCardName.getText().toString());
-		mAdSaver.setAadharNumber(mEditAadharCardNumber.getText().toString());
-		mAdSaver.setAddress(meditAdress.getText().toString());
-		mAdSaver.setState(meditState.getText().toString());
-		mAdSaver.setPincode(mEditPinCode.getText().toString());
-		mAdSaver.setMobNumber(mEditPhone.getText().toString());
-		mAdSaver.setPanCard(meditPanCardNumber.getText().toString());
-
-		mAdSaver.setUserCity(mbtnSelectUserCity.getText().toString());
-		mAdSaver.setUserAddress(meditUserAdress.getText().toString());
-		mAdSaver.setUserState(meditUserState.getText().toString());
-		mAdSaver.setUserPincode(mEditUserPinCode.getText().toString());
-		mAdSaver.setUserMobNumber(mEditUserPhone.getText().toString());
-		mAdSaver.setPanCardSelected(isPanCardSelected);
-		mAdSaver.setAaadharCardSelected(isAadharCardSelected);
-		mAdSaver.setProductAddressChecked(mCheckAddress.isChecked());
-
-		mAdSaver.setEditing(true);
-	}
+	// @Override
+	// public void onBackPressed() {
+	// super.onBackPressed();
+	//
+	// PostAdSaver mAdSaver = PostAdSaver.getInstance(this);
+	// mAdSaver.setCity(mbtnSelectCity.getText().toString());
+	// mAdSaver.setAadharname(mEditAadharCardName.getText().toString());
+	// mAdSaver.setAadharNumber(mEditAadharCardNumber.getText().toString());
+	// mAdSaver.setAddress(meditAdress.getText().toString());
+	// mAdSaver.setState(meditState.getText().toString());
+	// mAdSaver.setPincode(mEditPinCode.getText().toString());
+	// mAdSaver.setMobNumber(mEditPhone.getText().toString());
+	// mAdSaver.setPanCard(meditPanCardNumber.getText().toString());
+	//
+	// mAdSaver.setUserCity(mbtnSelectUserCity.getText().toString());
+	// mAdSaver.setUserAddress(meditUserAdress.getText().toString());
+	// mAdSaver.setUserState(meditUserState.getText().toString());
+	// mAdSaver.setUserPincode(mEditUserPinCode.getText().toString());
+	// mAdSaver.setUserMobNumber(mEditUserPhone.getText().toString());
+	// mAdSaver.setPanCardSelected(isPanCardSelected);
+	// mAdSaver.setAaadharCardSelected(isAadharCardSelected);
+	// mAdSaver.setProductAddressChecked(mCheckAddress.isChecked());
+	//
+	// mAdSaver.setEditing(true);
+	// }
 
 }

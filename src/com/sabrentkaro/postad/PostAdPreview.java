@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -404,13 +405,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 	private void btnEditClicked() {
 		PostAdSaver.getInstance(this).setEditing(true);
-		finish();
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		PostAdSaver.getInstance(this).setEditing(true);
+		setResult(Activity.RESULT_OK);
 		finish();
 	}
 

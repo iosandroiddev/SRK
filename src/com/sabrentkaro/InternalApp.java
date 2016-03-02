@@ -15,6 +15,8 @@ import com.android.volley.examples.toolbox.MyVolley;
 import com.android.volley.toolbox.Volley;
 import com.models.CategoryModel;
 import com.models.ProductModel;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class InternalApp extends Application {
 
@@ -32,6 +34,9 @@ public class InternalApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		MyVolley.init(this);
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				this).build();
+		ImageLoader.getInstance().init(config);
 		queue = Volley.newRequestQueue(this);
 	}
 

@@ -19,6 +19,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
@@ -47,11 +48,13 @@ public class ProductDetailsActivity extends BaseActivity {
 	private LinearLayout mLayoutWeekCost, mLayoutMonthCost, mLayoutDailyCost;
 	private String mImageUrl;
 	private LinearLayout mLayoutFiedlsValues;
+	private ImageLoader mImageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentLayout(R.layout.activity_product_details);
+		mImageLoader = ImageLoader.getInstance();
 		getDetails();
 		loadLayoutReferences();
 		initProductDetailsApi();

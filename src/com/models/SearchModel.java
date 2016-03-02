@@ -61,6 +61,7 @@ public class SearchModel implements Serializable {
 	}
 
 	public void setCoverImagePath(String coverImagePath) {
+		coverImagePath = coverImagePath.toString().replace("\\", "/");
 		this.coverImagePath = coverImagePath;
 	}
 
