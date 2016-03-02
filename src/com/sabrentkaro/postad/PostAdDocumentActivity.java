@@ -61,8 +61,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		addContentLayout(R.layout.post_documents);
 		loadReferences();
-		loadDetails();
 		getDetails();
+		loadDetails();
 
 	}
 
@@ -121,12 +121,16 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			}
 
 			if (mSaver.isPanCardSelected()) {
-				isPanCardSelected = false;
-				btnPanCardClicked();
+				isPanCardSelected = true;
+				isAadharCardSelected = false;
+				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_select, 0, 0, 0);
 			} else {
 				if (mSaver.isAaadharCardSelected()) {
-					isAadharCardSelected = false;
-					btnAadharCardClicked();
+					isAadharCardSelected = true;
+					isPanCardSelected = false;
+					mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+							R.drawable.btn_select, 0, 0, 0);
 				} else {
 
 				}

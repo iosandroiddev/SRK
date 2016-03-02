@@ -573,9 +573,10 @@ public class PostAdActivity extends BaseActivity implements
 		mLayoutAttachments.removeAllViews();
 		mUriArray.clear();
 		mImageArrayPaths.clear();
-		mImageFileArray.clear();
-		StaticUtils.expandCollapse(mLayoutAttachments, false);
 		StaticUtils.expandCollapse(mScrollimages, false);
+		mImageFileArray.clear();
+		// StaticUtils.expandCollapse(mLayoutAttachments, false);
+		// StaticUtils.expandCollapse(mScrollimages, false);
 	}
 
 	private void initTemplateForCategoryApi() {
