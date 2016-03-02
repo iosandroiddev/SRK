@@ -22,7 +22,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -45,7 +45,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
@@ -570,6 +569,12 @@ public class PostAdActivity extends BaseActivity implements
 		mbtnSelectRating.setText("Select Rating");
 		// mImgProduct.setImageResource(R.drawable.default_loading);
 		mSelectLayout.removeAllViews();
+
+		mLayoutAttachments.removeAllViews();
+		mUriArray.clear();
+		mImageArrayPaths.clear();
+		mImageFileArray.clear();
+		StaticUtils.expandCollapse(mLayoutAttachments, false);
 	}
 
 	private void initTemplateForCategoryApi() {
@@ -1053,9 +1058,12 @@ public class PostAdActivity extends BaseActivity implements
 					params.setMargins(10, 10, 10, 10);
 					mImageView.setLayoutParams(params);
 					mImageView.setImageURI(mUri);
+					int xy = (int) (200 * getResources().getDimension(
+							R.dimen.one_dp));
+					Point size = new Point(xy, xy);
 					String mime = getMimeType(mUri);
 					if (mime != null && mime.startsWith("image")) {
-						Bitmap bmp = getBitmap(mUri);
+						Bitmap bmp = getResizedBitmap(mUri, size);
 						if (bmp == null) {
 						} else {
 							mImageView.setImageBitmap(bmp);
@@ -1197,5 +1205,52 @@ public class PostAdActivity extends BaseActivity implements
 			// ext = mime.getExtensionFromMimeType(contentType);
 		}
 		return contentType;
+	}
+
+	private Bitmap getResizedBitmap(Uri file, Point size) {
+		// First decode with inJustDecodeBounds=true to check dimensions
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		if ("file".equalsIgnoreCase(file.getScheme())) {
+			BitmapFactory.decodeFile(file.getPath(), options);
+		} else {
+			InputStream stream = null;
+			try {
+				stream = getContentResolver().openInputStream(file);
+			} catch (IOException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+			}
+			if (stream != null) {
+				BitmapFactory.decodeStream(stream, null, options);
+			}
+		}
+		Bitmap bmp = null;
+		if (options.outHeight > 0 && options.outWidth > 0) {
+			// Calculate inSampleSize
+			options.inSampleSize = StaticUtils.calculateInSampleSize(options,
+					size.x, size.y);
+			// Decode bitmap with inSampleSize set
+			options.inJustDecodeBounds = false;
+			try {
+				if ("file".equalsIgnoreCase(file.getScheme())) {
+					bmp = BitmapFactory.decodeFile(file.getPath(), options);
+				} else {
+					InputStream stream = null;
+					try {
+						stream = getContentResolver().openInputStream(file);
+					} catch (IOException e) {
+						Log.e(this.getClass().getName(), e.getMessage());
+					}
+					if (stream != null) {
+						bmp = BitmapFactory.decodeStream(stream, null, options);
+					}
+				}
+			} catch (OutOfMemoryError oome) {
+				Log.e("Out Of Memory Error",
+						oome.getMessage() == null ? "OutOfMemory error: size "
+								+ size.x + "x" + size.y : oome.getMessage());
+			}
+		}
+		return bmp;
 	}
 }

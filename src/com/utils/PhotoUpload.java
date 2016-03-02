@@ -81,7 +81,11 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 						}
 					});
 
-			String mPath = getPath(mImageUri);
+			String mPath = StaticUtils.getPath(mContext, mImageUri);
+			if (mPath == null || mPath.length() == 0) {
+				return "File Path not Found";
+			}
+
 			File sourceFile = new File(mPath);
 			entity.addPart("file-3", new FileBody(sourceFile));
 			entity.addPart(
@@ -138,8 +142,8 @@ public class PhotoUpload extends AsyncTask<Void, Integer, String> {
 
 	public String getPath(Uri uri) {
 		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null,
-				null);
+		Cursor cursor = mContext.getContentResolver().query(uri, projection,
+				null, null, null);
 		if (cursor == null)
 			return null;
 		int column_index = cursor

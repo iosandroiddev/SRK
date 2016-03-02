@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -899,11 +900,15 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 							new LayoutParams(300, 300));
 					params.setMargins(10, 10, 10, 10);
 					mImageView.setLayoutParams(params);
-					mImageView.setImageURI(mUri);
+
 					String mime = getMimeType(mUri);
+					int xy = (int) (200 * getResources().getDimension(
+							R.dimen.one_dp));
+					Point size = new Point(xy, xy);
 					if (mime != null && mime.startsWith("image")) {
-						Bitmap bmp = getBitmap(mUri);
+						Bitmap bmp = getResizedBitmap(mUri, size);
 						if (bmp == null) {
+							mImageView.setImageURI(mUri);
 						} else {
 							mImageView.setImageBitmap(bmp);
 						}
@@ -1004,6 +1009,53 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		String s = cursor.getString(column_index);
 		cursor.close();
 		return s;
+	}
+
+	private Bitmap getResizedBitmap(Uri file, Point size) {
+		// First decode with inJustDecodeBounds=true to check dimensions
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		if ("file".equalsIgnoreCase(file.getScheme())) {
+			BitmapFactory.decodeFile(file.getPath(), options);
+		} else {
+			InputStream stream = null;
+			try {
+				stream = getContentResolver().openInputStream(file);
+			} catch (IOException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+			}
+			if (stream != null) {
+				BitmapFactory.decodeStream(stream, null, options);
+			}
+		}
+		Bitmap bmp = null;
+		if (options.outHeight > 0 && options.outWidth > 0) {
+			// Calculate inSampleSize
+			options.inSampleSize = StaticUtils.calculateInSampleSize(options,
+					size.x, size.y);
+			// Decode bitmap with inSampleSize set
+			options.inJustDecodeBounds = false;
+			try {
+				if ("file".equalsIgnoreCase(file.getScheme())) {
+					bmp = BitmapFactory.decodeFile(file.getPath(), options);
+				} else {
+					InputStream stream = null;
+					try {
+						stream = getContentResolver().openInputStream(file);
+					} catch (IOException e) {
+						Log.e(this.getClass().getName(), e.getMessage());
+					}
+					if (stream != null) {
+						bmp = BitmapFactory.decodeStream(stream, null, options);
+					}
+				}
+			} catch (OutOfMemoryError oome) {
+				Log.e("Out Of Memory Error",
+						oome.getMessage() == null ? "OutOfMemory error: size "
+								+ size.x + "x" + size.y : oome.getMessage());
+			}
+		}
+		return bmp;
 	}
 
 }
