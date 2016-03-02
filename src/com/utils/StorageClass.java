@@ -242,6 +242,14 @@ public class StorageClass {
 		return mCityArray;
 
 	}
+	
+	public String getCity() {
+		return sh.getString("user_selected_city", "");
+	}
+
+	public void setCity(String cityName) {
+		edit.putString("user_selected_city", cityName).commit();
+	}
 
 	public String getUserCity() {
 		return sh.getString("user_city", "");

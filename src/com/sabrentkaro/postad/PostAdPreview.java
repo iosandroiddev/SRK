@@ -278,7 +278,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						new LayoutParams(LayoutParams.MATCH_PARENT,
 								LayoutParams.WRAP_CONTENT));
-				params.setMargins(10, 10, 10, 10);
+				params.setMargins(20, 10, 10, 10);
+				mtxtView.setPadding(20, 10, 10, 10);
 				mtxtView.setLayoutParams(params);
 				String mtxt = "<font color='black'>" + key
 						+ " : </font> <font color='#EC016D'>" + value

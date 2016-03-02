@@ -269,8 +269,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 							.get(i)
 							.getName()
 							.equalsIgnoreCase(
-									StorageClass.getInstance(this)
-											.getUserCity())) {
+									StorageClass.getInstance(this).getCity())) {
 						pos = i;
 					}
 				}
@@ -286,8 +285,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								StorageClass.getInstance(
-										SearchResultsActivity.this)
-										.setUserCity(mCities[which]);
+										SearchResultsActivity.this).setCity(
+										mCities[which]);
 								dialog.dismiss();
 								setLocation();
 								initSearchResultsApi();

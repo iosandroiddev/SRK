@@ -45,7 +45,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void loadAlert() {
-		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserCity())) {
+		if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
 			showCityAlert();
 		} else {
 
@@ -70,7 +70,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								StorageClass.getInstance(HomeActivity.this)
-										.setUserCity(mCities[which]);
+										.setCity(mCities[which]);
 								dialog.dismiss();
 								setLocation();
 							}

@@ -164,7 +164,9 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mbtnAadharCard = (TextView) findViewById(R.id.btnAadharCard);
 
 		mPanCardLayout = (LinearLayout) findViewById(R.id.layoutPanCard);
+		mPanCardLayout.setVisibility(View.GONE);
 		mAAadharCardLayout = (LinearLayout) findViewById(R.id.layoutAadharCard);
+		mAAadharCardLayout.setVisibility(View.GONE);
 		mLayoutUserAddress = (LinearLayout) findViewById(R.id.layoutUserAddress);
 		mCheckAddress = (CheckBox) findViewById(R.id.checkAddress);
 		mbtnNext = (TextView) findViewById(R.id.btnNext);
@@ -436,6 +438,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				StaticUtils.expandCollapse(mAAadharCardLayout, false);
 			}
 		}
+		mPanCardLayout.invalidate();
 	}
 
 	private void btnAadharCardClicked() {
@@ -456,8 +459,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
 					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, true);
-
 		}
+		mAAadharCardLayout.invalidate();
 	}
 
 	@Override

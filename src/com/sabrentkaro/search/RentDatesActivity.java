@@ -115,7 +115,7 @@ public class RentDatesActivity extends BaseActivity implements
 
 	private void showDateTimeDialog(final TextView mtxtValue) {
 		this.mtxtDateField = mtxtValue;
-		DatePickerUtility datePicker = new DatePickerUtility(this, this, true,
+		DatePickerUtility datePicker = new DatePickerUtility(this, this, false,
 				true);
 		datePicker.showDialog();
 	}
@@ -266,9 +266,9 @@ public class RentDatesActivity extends BaseActivity implements
 		mQueue.add(mObjReq);
 
 	}
-	
+
 	private void resposneForDatesApi(JSONObject response) {
-		
+		navigateToAdressDocuments();
 	}
 
 	private void navigateToAdressDocuments() {

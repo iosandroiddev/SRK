@@ -189,11 +189,11 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void setLocation() {
-		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserCity())) {
+		if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
 			mtxtLocation.setText("");
 			mtxtLocation.setVisibility(View.GONE);
 		} else {
-			mtxtLocation.setText(StorageClass.getInstance(this).getUserCity());
+			mtxtLocation.setText(StorageClass.getInstance(this).getCity());
 			mtxtLocation.setVisibility(View.VISIBLE);
 		}
 
@@ -252,8 +252,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 							.get(i)
 							.getName()
 							.equalsIgnoreCase(
-									StorageClass.getInstance(this)
-											.getUserCity())) {
+									StorageClass.getInstance(this).getCity())) {
 						pos = i;
 					}
 				}
@@ -269,7 +268,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 							public void onClick(DialogInterface dialog,
 									int which) {
 								StorageClass.getInstance(BaseActivity.this)
-										.setUserCity(mCities[which]);
+										.setCity(mCities[which]);
 								dialog.dismiss();
 								setLocation();
 							}
