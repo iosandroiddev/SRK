@@ -182,10 +182,14 @@ public class OrderDetailsActivity extends BaseActivity {
 	}
 
 	private void loadValues() {
-		mtxtProductRentalValue.setText("Total Amount: " + mProdRentValue);
-		mtxtFacilitaionCharges.setText("Total Amount: " + mFaciliValue);
-		mtxtServiceTax.setText("Total Amount: " + mServiceValue);
-		mtxtLogistics.setText("Total Amount: " + mLogisticsValue);
+		mtxtProductRentalValue.setText(getString(R.string.rupeeone) + ""
+				+ mProdRentValue);
+		mtxtFacilitaionCharges.setText(getString(R.string.rupeeone) + " "
+				+ mFaciliValue);
+		mtxtServiceTax.setText(getString(R.string.rupeeone) + " "
+				+ mServiceValue);
+		mtxtLogistics.setText(getString(R.string.rupeeone) + " "
+				+ mLogisticsValue);
 
 		int totalCost = Integer.parseInt(mProdRentValue)
 				+ Integer.parseInt(mFaciliValue)

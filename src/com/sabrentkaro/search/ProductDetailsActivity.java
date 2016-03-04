@@ -35,7 +35,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	private TextView mtxtProductName, mtxtCategory, mtxtLocation,
 			mtxtDailyCost, mtxtMonthCost, mtxtWeekCost, mtxtSecurityDeposit,
 			mtxtYearOfPurchase, mtxtMonthOfPurchase, mtxtQuantity,
-			mtxtProductTitle;
+			mtxtProductTitle, mtxtRating;
 	private EditText mEditQuantity;
 	private TextView mbtnRent;
 	private String selectedProductAdId;
@@ -124,6 +124,7 @@ public class ProductDetailsActivity extends BaseActivity {
 		mLayoutDailyCost = (LinearLayout) findViewById(R.id.layoutDailyCost);
 		mLayoutFiedlsValues = (LinearLayout) findViewById(R.id.rootFieldsValues);
 		mtxtProductTitle = (TextView) findViewById(R.id.txtProductTitle);
+		mtxtRating = (TextView) findViewById(R.id.txtRating);
 		mLayoutFiedlsValues.setVisibility(View.GONE);
 		mbtnRent.setOnClickListener(this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
@@ -352,17 +353,23 @@ public class ProductDetailsActivity extends BaseActivity {
 		if (TextUtils.isEmpty(productConditionValue)
 				|| productConditionValue.equalsIgnoreCase("0")) {
 			mImageRating.setImageResource(R.drawable.zerorating);
+			mtxtRating.setText("");
 		} else {
 			if (productConditionValue.equalsIgnoreCase("1")) {
 				mImageRating.setImageResource(R.drawable.onerating);
+				mtxtRating.setText("Working");
 			} else if (productConditionValue.equalsIgnoreCase("2")) {
 				mImageRating.setImageResource(R.drawable.tworating);
+				mtxtRating.setText("Average");
 			} else if (productConditionValue.equalsIgnoreCase("3")) {
 				mImageRating.setImageResource(R.drawable.threerating);
+				mtxtRating.setText("Good");
 			} else if (productConditionValue.equalsIgnoreCase("4")) {
 				mImageRating.setImageResource(R.drawable.fourrating);
+				mtxtRating.setText("Very Good");
 			} else {
 				mImageRating.setImageResource(R.drawable.fiverating);
+				mtxtRating.setText("Like New");
 			}
 		}
 

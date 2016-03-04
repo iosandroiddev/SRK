@@ -520,7 +520,7 @@ public class PostAdActivity extends BaseActivity implements
 
 					@Override
 					public void run() {
-						showaAlert(pos, mSubCategories);
+						showaAlert(mSubCategories);
 					}
 
 				}, 200);
@@ -528,13 +528,24 @@ public class PostAdActivity extends BaseActivity implements
 		}
 	}
 
-	private void showaAlert(int pos, ArrayList<String> mSubCategories) {
+	private void showaAlert(ArrayList<String> mSubCategories) {
 		hideProgressLayout();
+		int pos = -1;
 		if (mSubCategories != null) {
 			final String[] mSubCat = new String[mSubCategories.size()];
 			for (int i = 0; i < mSubCategories.size(); i++) {
 				mSubCat[i] = mSubCategories.get(i);
+				if (mbtnSubProductCategory.getText().toString()
+						.equalsIgnoreCase("Select Product Name")) {
+					pos = -1;
+				} else {
+					if (mSubCat[i].equalsIgnoreCase(mbtnSubProductCategory
+							.getText().toString())) {
+						pos = i;
+					}
+				}
 			}
+
 			AlertDialog.Builder alert = new AlertDialog.Builder(
 					PostAdActivity.this);
 			alert.setTitle("Select Product Name");
@@ -564,10 +575,8 @@ public class PostAdActivity extends BaseActivity implements
 		mEditStuff.setText("");
 		mEditTitle.setText("");
 		mEditWeeklyCost.setText("");
-		// mImgProduct.setImageDrawable(null);
 		mImageProfilePicPath = "";
 		mbtnSelectRating.setText("Select Rating");
-		// mImgProduct.setImageResource(R.drawable.default_loading);
 		mSelectLayout.removeAllViews();
 
 		mLayoutAttachments.removeAllViews();
@@ -575,8 +584,6 @@ public class PostAdActivity extends BaseActivity implements
 		mImageArrayPaths.clear();
 		StaticUtils.expandCollapse(mScrollimages, false);
 		mImageFileArray.clear();
-		// StaticUtils.expandCollapse(mLayoutAttachments, false);
-		// StaticUtils.expandCollapse(mScrollimages, false);
 	}
 
 	private void initTemplateForCategoryApi() {
@@ -738,10 +745,21 @@ public class PostAdActivity extends BaseActivity implements
 				mStringSelectValues[i] = mStringValues.get(i);
 			}
 		}
+		int pos = -1;
+		if (mtxtView.getText().toString().contains("Select")) {
+			pos = -1;
+		} else {
+			for (int i = 0; i < mStringSelectValues.length; i++) {
+				if (mStringSelectValues[i].equalsIgnoreCase(mtxtView.getText()
+						.toString())) {
+					pos = i;
+				}
+			}
+		}
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle("Select " + mModel.getFieldTitle());
-		alert.setSingleChoiceItems(mStringSelectValues, -1,
+		alert.setSingleChoiceItems(mStringSelectValues, pos,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -803,7 +821,19 @@ public class PostAdActivity extends BaseActivity implements
 		if (mRartings != null) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 			alert.setTitle("Select Rating");
-			alert.setSingleChoiceItems(mRartings, pos,
+			int position = -1;
+			for (int i = 0; i < mRartings.length; i++) {
+				if (mbtnSelectRating.getText().toString()
+						.equalsIgnoreCase("Select Rating")) {
+					position = -1;
+				} else {
+					if (mRartings[i].equalsIgnoreCase(mbtnSelectRating
+							.getText().toString())) {
+						position = i;
+					}
+				}
+			}
+			alert.setSingleChoiceItems(mRartings, position,
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -832,6 +862,7 @@ public class PostAdActivity extends BaseActivity implements
 
 	private void setSubProductsArray() {
 		mbtnSubProductCategory.setText("Select Product Name");
+		clearAllFields();
 		if (mCateogoryMappingsArray != null) {
 			mSubCategories = new ArrayList<String>();
 			for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {

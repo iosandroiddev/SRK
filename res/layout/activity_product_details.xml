@@ -450,7 +450,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:padding="3dp"
+                        android:visibility="gone"
                         android:src="@drawable/zerorating" />
+                    
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtRating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
                 </LinearLayout>
             </LinearLayout>
 
