@@ -864,7 +864,6 @@ public class PostAdActivity extends BaseActivity implements
 	private void setSubProductsArray() {
 		mbtnSubProductCategory.setText("Select Product Name");
 		clearAllFields();
-		mlayoutFields.removeAllViews();
 		StaticUtils.expandCollapse(mlayoutFields, false);
 		if (mCateogoryMappingsArray != null) {
 			mSubCategories = new ArrayList<String>();
