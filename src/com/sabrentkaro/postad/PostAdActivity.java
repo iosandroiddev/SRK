@@ -719,6 +719,7 @@ public class PostAdActivity extends BaseActivity implements
 			mtxtFields.setText(mTitles);
 		}
 
+//		StaticUtils.expandCollapse(mSelectLayout, true);
 		StaticUtils.expandCollapse(mlayoutFields, true);
 	}
 
