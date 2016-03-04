@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
         android:hint="@string/enter_address"
+        android:imeOptions="actionDone"
         android:inputType="text"
         android:padding="3dp"
-        android:imeOptions="actionDone"
         android:textSize="15sp" >
     </EditText>
 
@@ -54,6 +54,7 @@
         android:layout_margin="3dp"
         android:hint="@string/enter_pincode"
         android:inputType="number"
+        android:maxLength="5"
         android:padding="3dp"
         android:textSize="15sp" >
     </EditText>
@@ -64,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
         android:hint="@string/enter_phone_number"
-        android:inputType="number"
+        android:inputType="phone"
+        android:maxLength="10"
         android:padding="3dp"
         android:textSize="15sp" >
     </EditText>
