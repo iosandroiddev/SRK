@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        android:maxLength="5"
+        android:maxLength="6"
         android:hint="@string/enter_pincode"
         android:inputType="number"
         android:padding="3dp"

@@ -136,28 +136,44 @@ public class AddressDocumentsActivity extends BaseActivity {
 					if (mEditPinCode.getText().toString().length() == 0) {
 						showToast("Please Enter Pincode");
 					} else {
-						if (mEditPhone.getText().toString().length() == 0) {
-							showToast("Please Enter Mobile Number");
+						if (mEditPinCode.getText().toString().length() != 6) {
+							showToast("Please Enter Valid Pincode");
 						} else {
-							if (!isPanCardSelected && !isAadharCardSelected) {
-								showToast("Please Select Documents");
-							} else if (isPanCardSelected) {
-								if (TextUtils.isEmpty(meditPanCardNumber
-										.getText().toString())) {
-									showToast("Please Enter Pan Card Number");
+							if (mEditPhone.getText().toString().length() == 0) {
+								showToast("Please Enter Mobile Number");
+							} else {
+								if (mEditPhone.getText().toString().length() != 10) {
+									showToast("Please Enter Valid Mobile Number");
 								} else {
-									startOrdersActivity();
-								}
-							} else if (isAadharCardSelected) {
-								if (TextUtils.isEmpty(mEditAadharCardName
-										.getText().toString())) {
-									showToast("Please Enter AadharCard Name");
-								} else if (TextUtils
-										.isEmpty(mEditAadharCardNumber
-												.getText().toString())) {
-									showToast("Please Enter AadharCard Number");
-								} else {
-									startOrdersActivity();
+									if (!isPanCardSelected
+											&& !isAadharCardSelected) {
+										showToast("Please Select Documents");
+									} else if (isPanCardSelected) {
+										if (TextUtils
+												.isEmpty(meditPanCardNumber
+														.getText().toString())) {
+											showToast("Please Enter PAN Card Number");
+										} else {
+											if (meditPanCardNumber.getText()
+													.toString().length() != 10) {
+												showToast("Please Enter  Valid PAN Card Number");
+											} else {
+												startOrdersActivity();
+											}
+										}
+									} else if (isAadharCardSelected) {
+										if (TextUtils
+												.isEmpty(mEditAadharCardName
+														.getText().toString())) {
+											showToast("Please Enter AadharCard Name");
+										} else if (TextUtils
+												.isEmpty(mEditAadharCardNumber
+														.getText().toString())) {
+											showToast("Please Enter AadharCard Number");
+										} else {
+											startOrdersActivity();
+										}
+									}
 								}
 							}
 						}

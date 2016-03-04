@@ -54,7 +54,7 @@
         android:layout_margin="3dp"
         android:hint="@string/enter_pincode"
         android:inputType="number"
-        android:maxLength="5"
+        android:maxLength="6"
         android:padding="3dp"
         android:textSize="15sp" >
     </EditText>

@@ -262,28 +262,49 @@ public class PostAdDocumentActivity extends BaseActivity implements
 						if (mEditPinCode.getText().toString().length() == 0) {
 							showToast("Please Enter Pincode");
 						} else {
-							if (mEditPhone.getText().toString().length() == 0) {
-								showToast("Please Enter Phone Number");
+							if (mEditPinCode.getText().toString().length() != 6) {
+								showToast("Please Enter Valid Pincode");
 							} else {
-								if (!isPanCardSelected && !isAadharCardSelected) {
-									showToast("Please Select Documents");
-								} else if (isPanCardSelected) {
-									if (TextUtils.isEmpty(meditPanCardNumber
-											.getText().toString())) {
-										showToast("Please Enter Pan Card Number");
+								if (mEditPhone.getText().toString().length() == 0) {
+									showToast("Please Enter Phone Number");
+								} else {
+									if (mEditPhone.getText().toString()
+											.length() != 10) {
+										showToast("Please Enter Valid Phone Number");
 									} else {
-										navigateToPostPreview();
-									}
-								} else if (isAadharCardSelected) {
-									if (TextUtils.isEmpty(mEditAadharCardName
-											.getText().toString())) {
-										showToast("Please Enter AadharCard Name");
-									} else if (TextUtils
-											.isEmpty(mEditAadharCardNumber
-													.getText().toString())) {
-										showToast("Please Enter AadharCard Number");
-									} else {
-										navigateToPostPreview();
+										if (!isPanCardSelected
+												&& !isAadharCardSelected) {
+											showToast("Please Select Documents");
+										} else if (isPanCardSelected) {
+											if (TextUtils
+													.isEmpty(meditPanCardNumber
+															.getText()
+															.toString())) {
+												showToast("Please Enter PAN Card Number");
+											} else {
+												if (meditPanCardNumber
+														.getText().toString()
+														.length() != 10) {
+													showToast("Please Enter Valid PAN Card Number");
+												} else {
+													navigateToPostPreview();
+												}
+											}
+										} else if (isAadharCardSelected) {
+											if (TextUtils
+													.isEmpty(mEditAadharCardName
+															.getText()
+															.toString())) {
+												showToast("Please Enter AadharCard Name");
+											} else if (TextUtils
+													.isEmpty(mEditAadharCardNumber
+															.getText()
+															.toString())) {
+												showToast("Please Enter AadharCard Number");
+											} else {
+												navigateToPostPreview();
+											}
+										}
 									}
 								}
 							}
@@ -306,28 +327,50 @@ public class PostAdDocumentActivity extends BaseActivity implements
 						if (mEditUserPinCode.getText().toString().length() == 0) {
 							showToast("Please Enter Pincode");
 						} else {
-							if (mEditUserPhone.getText().toString().length() == 0) {
-								showToast("Please Enter Phone Number");
+							if (mEditUserPinCode.getText().toString().length() != 6) {
+								showToast("Please Enter Valid Pincode");
 							} else {
-								if (!isPanCardSelected && !isAadharCardSelected) {
-									showToast("Please Select Documents");
-								} else if (isPanCardSelected) {
-									if (TextUtils.isEmpty(meditPanCardNumber
-											.getText().toString())) {
-										showToast("Please Enter Pan Card Number");
+								if (mEditUserPhone.getText().toString()
+										.length() == 0) {
+									showToast("Please Enter Phone Number");
+								} else {
+									if (mEditUserPhone.getText().toString()
+											.length() != 10) {
+										showToast("Please Enter Valid Phone Number");
 									} else {
-										navigateToPostPreview();
-									}
-								} else if (isAadharCardSelected) {
-									if (TextUtils.isEmpty(mEditAadharCardName
-											.getText().toString())) {
-										showToast("Please Enter AadharCard Name");
-									} else if (TextUtils
-											.isEmpty(mEditAadharCardNumber
-													.getText().toString())) {
-										showToast("Please Enter AadharCard Number");
-									} else {
-										navigateToPostPreview();
+										if (!isPanCardSelected
+												&& !isAadharCardSelected) {
+											showToast("Please Select Documents");
+										} else if (isPanCardSelected) {
+											if (TextUtils
+													.isEmpty(meditPanCardNumber
+															.getText()
+															.toString())) {
+												showToast("Please Enter PAN Card Number");
+											} else {
+												if (meditPanCardNumber
+														.getText().toString()
+														.length() != 10) {
+													showToast("Please Enter Valid PAN Card Number");
+												} else {
+													navigateToPostPreview();
+												}
+											}
+										} else if (isAadharCardSelected) {
+											if (TextUtils
+													.isEmpty(mEditAadharCardName
+															.getText()
+															.toString())) {
+												showToast("Please Enter AadharCard Name");
+											} else if (TextUtils
+													.isEmpty(mEditAadharCardNumber
+															.getText()
+															.toString())) {
+												showToast("Please Enter AadharCard Number");
+											} else {
+												navigateToPostPreview();
+											}
+										}
 									}
 								}
 							}
