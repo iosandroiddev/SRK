@@ -267,11 +267,25 @@ public class BaseActivity extends SlidingFragmentActivity implements
 									int which) {
 								StorageClass.getInstance(BaseActivity.this)
 										.setCity(mCities[which]);
+								storeCityValue();
 								dialog.dismiss();
 								setLocation();
 							}
+
 						});
 				alert.show();
+			}
+		}
+	}
+
+	public void storeCityValue() {
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
+		for (int i = 0; i < mCityArray.size(); i++) {
+			if (mCityArray.get(i).getName()
+					.equalsIgnoreCase(StorageClass.getInstance(this).getCity())) {
+				StorageClass.getInstance(this).setCityValue(
+						mCityArray.get(i).getValue());
 			}
 		}
 	}

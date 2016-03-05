@@ -73,6 +73,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 										.setCity(mCities[which]);
 								dialog.dismiss();
 								setLocation();
+								storeCityValue();
 							}
 						});
 				alert.show();

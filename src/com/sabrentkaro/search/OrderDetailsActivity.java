@@ -70,13 +70,15 @@ public class OrderDetailsActivity extends BaseActivity {
 
 		JSONObject mParams = new JSONObject();
 		try {
+			String mlocation = StorageClass.getInstance(this).getCity();
+			String mLocValue = StorageClass.getInstance(this).getCityValue();
 			mParams.put("AdId", selectedProductAdId);
 			mParams.put("CouponCode", null);
 			mParams.put("FromDate", mStartDate);
 			mParams.put("ToDate", mEndDate);
-			mParams.put("LocationId", mLocationId);
+			mParams.put("LocationId", mLocValue);
 			mParams.put("Quantity", mQuantity);
-			mParams.put("Location", "Hyderabad");
+			mParams.put("Location",mlocation );
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

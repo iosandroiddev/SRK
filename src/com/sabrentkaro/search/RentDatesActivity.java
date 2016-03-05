@@ -219,12 +219,14 @@ public class RentDatesActivity extends BaseActivity implements
 		showProgressLayout();
 		JSONObject params = new JSONObject();
 		try {
+
 			params.put("FromDate", mStartDateStr);
 			params.put("ToDate", mStartEndStr);
 			params.put("Quantity", mQuantity);
-			params.put("LocationId", "1");
+			params.put("LocationId", StorageClass.getInstance(this)
+					.getCityValue());
 			params.put("AdId", selectedProductAdId);
-			params.put("Location", StorageClass.getInstance(this).getUserCity());
+			params.put("Location", StorageClass.getInstance(this).getCity());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -270,63 +272,78 @@ public class RentDatesActivity extends BaseActivity implements
 	}
 
 	private void resposneForDatesApi(JSONObject response) {
-		boolean isPassed = true;
+		boolean isPassed = false;
+		// if (response != null) {
+		// try {
+		// JSONArray mAvailableDates = response
+		// .optJSONArray("AvailableDates");
+		// if (mAvailableDates != null) {
+		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+		// "MM/dd/yyyy");
+		// Date startDate = null;
+		//
+		// startDate = simpleDateFormat.parse(mtxtStartDate.getText()
+		// .toString());
+		//
+		// Date endDate = null;
+		// try {
+		// endDate = simpleDateFormat.parse(mtxtEndDate.getText()
+		// .toString());
+		// } catch (ParseException e1) {
+		// e1.printStackTrace();
+		// }
+		//
+		// SimpleDateFormat yearDateFormat = new SimpleDateFormat(
+		// "yyyy-MM-dd");
+		//
+		// for (int i = 0; i < mAvailableDates.length(); i++) {
+		// Date availableDate = simpleDateFormat
+		// .parse(simpleDateFormat.format(yearDateFormat
+		// .parse(mAvailableDates.optString(i))));
+		// if (startDate.before(availableDate)
+		// || startDate.compareTo(availableDate) < 0) {
+		// Log.e("Date After : ", "" + availableDate);
+		// isPassed = false;
+		// showToast("Selected Start Date is Not Available. Please Select dates on or after: "
+		// + simpleDateFormat.format(availableDate));
+		// break;
+		// }
+		//
+		// if (endDate.after(availableDate)) {
+		// Log.e("Date Before : ", "" + availableDate);
+		// isPassed = false;
+		// showToast("Selected End Date is Not Available. Please Select dates on or before: "
+		// + simpleDateFormat.format(availableDate));
+		// break;
+		// }
+		// }
+		//
+		// }
+		// } catch (ParseException e1) {
+		// e1.printStackTrace();
+		// }
+		//
+		// }
 		if (response != null) {
-			try {
-				JSONArray mAvailableDates = response
-						.optJSONArray("AvailableDates");
-				if (mAvailableDates != null) {
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							"MM/dd/yyyy");
-					Date startDate = null;
-
-					startDate = simpleDateFormat.parse(mtxtStartDate.getText()
-							.toString());
-
-					Date endDate = null;
-					try {
-						endDate = simpleDateFormat.parse(mtxtEndDate.getText()
-								.toString());
-					} catch (ParseException e1) {
-						e1.printStackTrace();
-					}
-
-					SimpleDateFormat yearDateFormat = new SimpleDateFormat(
-							"yyyy-MM-dd");
-
-					for (int i = 0; i < mAvailableDates.length(); i++) {
-						Date availableDate = simpleDateFormat
-								.parse(simpleDateFormat.format(yearDateFormat
-										.parse(mAvailableDates.optString(i))));
-						if (startDate.before(availableDate)
-								|| startDate.compareTo(availableDate) < 0) {
-							Log.e("Date After : ", "" + availableDate);
-							isPassed = false;
-							showToast("Selected Start Date is Not Available. Please Select dates on or after: "
-									+ simpleDateFormat.format(availableDate));
-							break;
-						}
-
-						if (endDate.after(availableDate)) {
-							Log.e("Date Before : ", "" + availableDate);
-							isPassed = false;
-							showToast("Selected End Date is Not Available. Please Select dates on or before: "
-									+ simpleDateFormat.format(availableDate));
-							break;
-						}
-					}
-
+			JSONArray mAvailableDates = response.optJSONArray("AvailableDates");
+			if (mAvailableDates != null) {
+				if (mAvailableDates.length() > 0) {
+					isPassed = true;
 				}
-			} catch (ParseException e1) {
-				e1.printStackTrace();
+			} else {
+				isPassed = false;
 			}
-
+		} else {
+			isPassed = false;
 		}
 		if (isPassed)
 			navigateToAdressDocuments();
+		else
+			showToast("Product is not available between the dates you have Selected. Please select different Dates");
 	}
 
 	private void navigateToAdressDocuments() {
+		String mLocValue = StorageClass.getInstance(this).getCityValue();
 		Intent intent = new Intent(this, AddressDocumentsActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedStartDate", mtxtStartDate.getText()
@@ -334,7 +351,7 @@ public class RentDatesActivity extends BaseActivity implements
 		mBundle.putString("selectedEndDate", mtxtEndDate.getText().toString());
 		mBundle.putString("selectedAdId", selectedProductAdId);
 		mBundle.putString("quantity", mQuantity);
-		mBundle.putString("locationId", "1");
+		mBundle.putString("locationId", mLocValue);
 		mBundle.putString("productPrice", mPrice);
 		mBundle.putString("productDescription", mProductDescription);
 		intent.putExtras(mBundle);

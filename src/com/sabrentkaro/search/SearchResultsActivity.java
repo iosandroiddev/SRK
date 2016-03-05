@@ -296,6 +296,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 										mCities[which]);
 								dialog.dismiss();
 								setLocation();
+								storeCityValue();
 								index = 1;
 								initSearchResultsApi(index);
 							}

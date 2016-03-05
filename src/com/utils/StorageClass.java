@@ -250,6 +250,15 @@ public class StorageClass {
 	public void setCity(String cityName) {
 		edit.putString("user_selected_city", cityName).commit();
 	}
+	
+	
+	public String getCityValue() {
+		return sh.getString("user_selected_city_value", "");
+	}
+
+	public void setCityValue(String cityName) {
+		edit.putString("user_selected_city_value", cityName).commit();
+	}
 
 	public String getUserCity() {
 		return sh.getString("user_city", "");
