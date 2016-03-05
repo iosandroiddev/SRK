@@ -40,7 +40,7 @@
     <string name="rent_value_details">Rent Value Details</string>
     <string name="enter_email_id">Enter Email Id</string>
     <string name="enter_password">Enter Password</string>
-    <string name="forgot_password_">Forgot Password?</string>
+    <string name="forgot_password_"><u>Forgot Password?</u></string>
     <string name="don_t_have_an_account_">Don\'t have an Account?</string>
     <string name="register">Register</string>
     <string name="confirm_email_id">Confirm Email Id</string>
@@ -162,5 +162,11 @@
     <string name="listing_images">Listing Images</string>
     <string name="login_to_continue">Login to continue</string>
     <string name="register_to_continue">Register to continue</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="not_signed_up_yet_"><u>Not Signed up yet?</u></string>
+    <string name="get_me_in">GET ME IN</string>
+    <string name="or">Or</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
 
 </resources>

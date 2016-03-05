@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -33,7 +35,6 @@ import com.sabrentkaro.R;
 import com.utils.ApiUtils;
 import com.utils.DatePickerUtility;
 import com.utils.DatePickerUtility.IDatePickListener;
-import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
 public class RentDatesActivity extends BaseActivity implements
@@ -117,6 +118,8 @@ public class RentDatesActivity extends BaseActivity implements
 		this.mtxtDateField = mtxtValue;
 		DatePickerUtility datePicker = new DatePickerUtility(this, this, false,
 				true);
+		Calendar cal = Calendar.getInstance();
+		datePicker.setMinDate(cal.YEAR, cal.MONTH, cal.DAY_OF_MONTH);
 		datePicker.showDialog();
 	}
 
@@ -233,7 +236,6 @@ public class RentDatesActivity extends BaseActivity implements
 					@Override
 					public void onResponse(JSONObject response) {
 						hideProgressLayout();
-						showToast("Success");
 						resposneForDatesApi(response);
 					}
 
@@ -268,7 +270,60 @@ public class RentDatesActivity extends BaseActivity implements
 	}
 
 	private void resposneForDatesApi(JSONObject response) {
-		navigateToAdressDocuments();
+		boolean isPassed = true;
+		if (response != null) {
+			try {
+				JSONArray mAvailableDates = response
+						.optJSONArray("AvailableDates");
+				if (mAvailableDates != null) {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"MM/dd/yyyy");
+					Date startDate = null;
+
+					startDate = simpleDateFormat.parse(mtxtStartDate.getText()
+							.toString());
+
+					Date endDate = null;
+					try {
+						endDate = simpleDateFormat.parse(mtxtEndDate.getText()
+								.toString());
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+
+					SimpleDateFormat yearDateFormat = new SimpleDateFormat(
+							"yyyy-MM-dd");
+
+					for (int i = 0; i < mAvailableDates.length(); i++) {
+						Date availableDate = simpleDateFormat
+								.parse(simpleDateFormat.format(yearDateFormat
+										.parse(mAvailableDates.optString(i))));
+						if (startDate.before(availableDate)
+								|| startDate.compareTo(availableDate) < 0) {
+							Log.e("Date After : ", "" + availableDate);
+							isPassed = false;
+							showToast("Selected Start Date is Not Available. Please Select dates on or after: "
+									+ simpleDateFormat.format(availableDate));
+							break;
+						}
+
+						if (endDate.after(availableDate)) {
+							Log.e("Date Before : ", "" + availableDate);
+							isPassed = false;
+							showToast("Selected End Date is Not Available. Please Select dates on or before: "
+									+ simpleDateFormat.format(availableDate));
+							break;
+						}
+					}
+
+				}
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+		if (isPassed)
+			navigateToAdressDocuments();
 	}
 
 	private void navigateToAdressDocuments() {

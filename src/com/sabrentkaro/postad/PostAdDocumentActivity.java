@@ -302,7 +302,13 @@ public class PostAdDocumentActivity extends BaseActivity implements
 															.toString())) {
 												showToast("Please Enter AadharCard Number");
 											} else {
-												navigateToPostPreview();
+												if (mEditAadharCardNumber
+														.getText().toString()
+														.length() != 12) {
+													showToast("Please Enter Valid AadharCard Number");
+												} else {
+													navigateToPostPreview();
+												}
 											}
 										}
 									}

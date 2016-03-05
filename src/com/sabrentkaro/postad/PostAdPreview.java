@@ -165,13 +165,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		}
 
 		String dailyCost = "<font color='black'>" + "Daily Cost:"
-				+ " : </font> <font color='#EC016D'>"
+				+ " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mDailyCost + "</font>";
 		String monthCost = "<font color='black'>" + "Monthly Cost:"
-				+ " : </font> <font color='#EC016D'>"
+				+ " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mMonthCost + "</font>";
 		String weekCost = "<font color='black'>" + "Weekly Cost:"
-				+ " : </font> <font color='#EC016D'>"
+				+ " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mWeekCost + "</font>";
 
 		mtxtDailyCost.setText(Html.fromHtml(dailyCost),

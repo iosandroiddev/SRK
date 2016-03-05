@@ -244,8 +244,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (TextUtils.isEmpty(StorageClass.getInstance(this)
-						.getUserCity())) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
 					pos = -1;
 				} else {
 					if (mCityArray
@@ -259,7 +258,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 				mCities[i] = mCityArray.get(i).getName();
 			}
 			if (mCities != null) {
-				StorageClass.getInstance(this).getUserCity();
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
 				alert.setSingleChoiceItems(mCities, pos,

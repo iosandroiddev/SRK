@@ -9,6 +9,7 @@ import android.app.Application;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.multidex.MultiDexApplication;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.examples.toolbox.MyVolley;
@@ -18,7 +19,7 @@ import com.models.ProductModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class InternalApp extends Application {
+public class InternalApp extends MultiDexApplication {
 
 	RequestQueue queue;
 	private ArrayList<ProductModel> mProductsArray;

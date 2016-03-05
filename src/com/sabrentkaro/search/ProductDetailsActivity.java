@@ -178,6 +178,8 @@ public class ProductDetailsActivity extends BaseActivity {
 								if (mMediaObj != null) {
 									mImageUrl = mMediaObj.optString("Filepath")
 											.toString();
+									mImageUrl = mImageUrl.toString().replace(
+											"\\", "/");
 								}
 							}
 						}

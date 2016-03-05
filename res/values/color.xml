@@ -84,5 +84,9 @@
     <color name="pinkdark">#E03E82</color>
     <color name="blue_dark">#8235C2</color>
     <color name="blue_dark_transparent">#808235C2</color>
+    
+    
+    <color name="fbcolor">#2D4373</color>
+    <color name="googlecolor">#C23321</color>
 
 </resources>

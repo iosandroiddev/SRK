@@ -7,57 +7,107 @@
     android:focusableInTouchMode="true"
     android:padding="5dp" >
 
-    <com.utils.CustomTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_margin="10dp"
-        android:background="#55000000"
-        android:gravity="center_horizontal"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:padding="5dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="@string/login_to_continue"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        custom:fonttype="trebuchet_ms" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:gravity="center"
+        android:layout_margin="5dp"
         android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/emailId"
+        <com.utils.CustomTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:hint="@string/enter_email_id"
-            android:inputType="text" />
+            android:layout_gravity="center_horizontal|top"
+            android:background="#55000000"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="5dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/login_to_continue"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            custom:fonttype="trebuchet_ms" />
 
-        <EditText
-            android:id="@+id/password"
+        <LinearLayout
+            android:id="@+id/loginViaEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:hint="@string/enter_password"
-            android:inputType="textPassword" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal" >
+            <EditText
+                android:id="@+id/emailId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="@string/enter_email_id"
+                android:inputType="textEmailAddress" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="@string/enter_password"
+                android:inputType="textPassword" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal" >
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="5dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/not_signed_up_yet_"
+                    android:textColor="@color/red"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnForgotPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center_vertical|end"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="5dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/forgot_password_"
+                    android:textColor="@color/red"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
 
             <com.utils.CustomTextView
-                android:id="@+id/btnLoginUser"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnLoginEmail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:layout_margin="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/blue_custom_button_selector"
                 android:clickable="true"
                 android:ellipsize="marquee"
@@ -67,74 +117,103 @@
                 android:padding="10dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@string/login"
+                android:text="@string/get_me_in"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />
-
-            <com.utils.CustomTextView
-                android:id="@+id/btnForgotPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_margin="5dp"
-                android:background="@drawable/blue_custom_button_selector"
-                android:clickable="true"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:padding="10dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="@string/forgot_password_"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                custom:fonttype="trebuchet_ms" />
-        </FrameLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:background="#55000000" />
 
             <com.utils.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start"
+                android:layout_gravity="end|center_vertical"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center_vertical|end"
                 android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@string/don_t_have_an_account_"
+                android:text="@string/or"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 custom:fonttype="trebuchet_ms" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:background="#55000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
+
             <com.utils.CustomTextView
-                android:id="@+id/btnRegister"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnFb"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/blue_custom_button_selector"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/fb_button_selector"
                 android:clickable="true"
+                android:drawableLeft="@drawable/facebook"
+                android:drawableStart="@drawable/facebook"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:scrollHorizontally="true"
+                android:text="@string/facebook"
                 android:singleLine="true"
-                android:text="@string/register"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />
 
-            <requestFocus>
-            </requestFocus>
+            <com.utils.CustomTextView
+                android:id="@+id/btnGoogle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/google_button_selector"
+                android:clickable="true"
+                android:drawableLeft="@drawable/google"
+                android:drawableStart="@drawable/google"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/google"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
         </LinearLayout>
     </LinearLayout>
 

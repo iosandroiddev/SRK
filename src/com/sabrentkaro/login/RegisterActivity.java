@@ -1,14 +1,19 @@
 package com.sabrentkaro.login;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,13 +38,52 @@ public class RegisterActivity extends BaseActivity {
 			mEditDisplayName, mEditMobileNumber;
 	private TextView mbtnGenerateOtp, mbtnSelectCity;
 	private CheckBox mCheckTerms;
+	private String deviceId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentLayout(R.layout.activity_regsiter);
+		getDeviceId();
 		loadLayoutReferences();
 		hideSoftKeyboard();
+		getAccountsRegisteredOnDevice();
+	}
+
+	private void getAccountsRegisteredOnDevice() {
+		ArrayList<String> mPossibleEmails = new ArrayList<String>();
+		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+		Account[] accounts = AccountManager.get(this).getAccounts();
+		for (Account account : accounts) {
+			if (emailPattern.matcher(account.name).matches()) {
+				mPossibleEmails.add(account.name);
+			}
+		}
+
+		String[] mUserAccounts = null;
+		if (mPossibleEmails != null) {
+			mUserAccounts = new String[mPossibleEmails.size()];
+			for (int i = 0; i < mPossibleEmails.size(); i++) {
+				mUserAccounts[i] = mPossibleEmails.get(i);
+			}
+		}
+
+		if (mUserAccounts != null) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle("Select Account");
+			alert.setSingleChoiceItems(mUserAccounts, -1,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+			alert.show();
+		}
+	}
+
+	private void getDeviceId() {
+		deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 	}
 
 	private void loadLayoutReferences() {
@@ -136,6 +180,8 @@ public class RegisterActivity extends BaseActivity {
 			mLogin.put("MobileNumber", mEditMobileNumber.getText().toString());
 			mLogin.put("IsClaims", "false");
 			mLogin.put("UserTypeId", "1");
+			
+//			1 = Individual 2 = Business
 
 			JSONObject mUserProfileParams = new JSONObject();
 			mUserProfileParams.put("UserProfile", mUserProfile);

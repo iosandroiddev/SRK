@@ -171,7 +171,12 @@ public class AddressDocumentsActivity extends BaseActivity {
 														.getText().toString())) {
 											showToast("Please Enter AadharCard Number");
 										} else {
-											startOrdersActivity();
+											if (mEditAadharCardNumber.getText()
+													.toString().length() != 12) {
+												showToast("Please Enter Valid AadharCard Number");
+											} else {
+												startOrdersActivity();
+											}
 										}
 									}
 								}

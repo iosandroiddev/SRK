@@ -188,7 +188,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:inputType="text"
+                    android:inputType="number"
+                    android:maxLength="12"
                     android:padding="3dp"
                     android:textSize="15sp" />
             </LinearLayout>

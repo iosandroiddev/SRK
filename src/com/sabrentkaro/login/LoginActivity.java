@@ -16,7 +16,6 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.jsonclasses.JSONObjectRequestResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -29,13 +28,16 @@ import com.sabrentkaro.R;
 import com.sabrentkaro.postad.PostAdDocumentActivity;
 import com.sabrentkaro.search.RentDatesActivity;
 import com.utils.ApiUtils;
+import com.utils.GetSocialDetails;
+import com.utils.GetSocialDetails.IFbLoginCallBack;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 
 	private EditText mEditEmail, mEditPassword;
-	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword;
+	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword, mbtnFacebok,
+			mbtnGoogle;
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
 	private Dialog mForgotPasswordDialog;
 
@@ -59,6 +61,9 @@ public class LoginActivity extends BaseActivity {
 
 	private boolean hasBundle = false;
 
+	// GoogleApiClient mGoogleApiClient;
+	// private ConnectionResult mConnectionResult;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +71,14 @@ public class LoginActivity extends BaseActivity {
 		getDetails();
 		loadLayoutReferences();
 		hideSoftKeyboard();
+		// initGoogleApiClient();
+	}
+
+	private void initGoogleApiClient() {
+		// mGoogleApiClient = new GoogleApiClient.Builder(this)
+		// .addConnectionCallbacks(this)
+		// .addOnConnectionFailedListener(this).addApi(Plus.API, null)
+		// .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 	}
 
 	private void getDetails() {
@@ -105,16 +118,20 @@ public class LoginActivity extends BaseActivity {
 	private void loadLayoutReferences() {
 		mEditEmail = (EditText) findViewById(R.id.emailId);
 		mEditPassword = (EditText) findViewById(R.id.password);
-		mbtnLogin = (TextView) findViewById(R.id.btnLoginUser);
-		mbtnRegister = (TextView) findViewById(R.id.btnRegister);
+		mbtnLogin = (TextView) findViewById(R.id.btnLoginEmail);
+		mbtnRegister = (TextView) findViewById(R.id.btnSignUp);
 		mbtnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 		StaticUtils.setEditTextHintFont(mEditEmail, this);
 		StaticUtils.setEditTextHintFont(mEditPassword, this);
 		mbtnForgotPassword.setOnClickListener(this);
 
+		mbtnFacebok = (TextView) findViewById(R.id.btnFb);
+		mbtnGoogle = (TextView) findViewById(R.id.btnGoogle);
+
 		mbtnLogin.setOnClickListener(this);
 		mbtnRegister.setOnClickListener(this);
-
+		mbtnFacebok.setOnClickListener(this);
+		mbtnGoogle.setOnClickListener(this);
 		// mEditEmail.setText("harathithippaluru@sabrentkaro.com");
 		// mEditPassword.setText("harathi@raj1");
 	}
@@ -123,18 +140,52 @@ public class LoginActivity extends BaseActivity {
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
-		case R.id.btnLoginUser:
+		case R.id.btnLoginEmail:
 			btnLoginUserClicked();
 			break;
-		case R.id.btnRegister:
+		case R.id.btnSignUp:
 			btnRegisterClicked();
 			break;
 		case R.id.btnForgotPassword:
 			showForgotPasswordPopup();
 			break;
+		case R.id.btnFb:
+			btnFacebookClicked();
+			break;
+		case R.id.btnGoogle:
+			btnGoogleClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnGoogleClicked() {
+		// if (!mGoogleApiClient.isConnecting()) {
+		// checkSigningError();
+		// }
+	}
+
+	private void checkSigningError() {
+		// if (mConnectionResult.hasResolution()) {
+		// try {
+		// mConnectionResult.startResolutionForResult(this, 110);
+		// } catch (SendIntentException e) {
+		// mGoogleApiClient.connect();
+		// }
+		// }
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// if (mGoogleApiClient.isConnected()) {
+		// mGoogleApiClient.disconnect();
+		// }
+	}
+
+	private void btnFacebookClicked() {
+		loginViaFb();
 	}
 
 	private void btnRegisterClicked() {
@@ -153,6 +204,11 @@ public class LoginActivity extends BaseActivity {
 		} else {
 			initLoginApi();
 		}
+	}
+
+	private void loginViaFb() {
+		GetSocialDetails mSocial = new GetSocialDetails(this);
+		mSocial.getAndPostFaceBookUserDetails();
 	}
 
 	private void initLoginApi() {
@@ -424,4 +480,59 @@ public class LoginActivity extends BaseActivity {
 			}
 		}
 	}
+
+	@Override
+	public void onFbLoginSucsess(String accessToken, JSONObject mUserInfo) {
+
+	}
+
+	// @Override
+	// public void onConnected(Bundle arg0) {
+	// getProfileInformation();
+	// }
+	//
+	// @Override
+	// public void onConnectionSuspended(int cause) {
+	//
+	// }
+	//
+	// @Override
+	// public void onConnectionFailed(ConnectionResult arg0) {
+	//
+	// }
+	//
+	// @Override
+	// protected void onActivityResult(int requestCode, int responseCode,
+	// Intent intent) {
+	// super.onActivityResult(requestCode, responseCode, intent);
+	// if (requestCode == 110) {
+	// if (responseCode != RESULT_OK) {
+	// }
+	// if (!mGoogleApiClient.isConnecting()) {
+	// mGoogleApiClient.connect();
+	// }
+	// }
+	// }
+	//
+	// private void getProfileInformation() {
+	// try {
+	// if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+	// Person currentPerson = Plus.PeopleApi
+	// .getCurrentPerson(mGoogleApiClient);
+	// String personName = currentPerson.getDisplayName();
+	// String personPhotoUrl = currentPerson.getImage().getUrl();
+	// String personGooglePlusProfile = currentPerson.getUrl();
+	// String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+	//
+	// personPhotoUrl = personPhotoUrl.substring(0,
+	// personPhotoUrl.length() - 2) + 400;
+	//
+	// } else {
+	// Toast.makeText(getApplicationContext(),
+	// "Person information is null", Toast.LENGTH_LONG).show();
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 }

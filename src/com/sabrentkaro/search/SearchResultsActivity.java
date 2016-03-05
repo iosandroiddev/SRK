@@ -13,6 +13,8 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,13 +32,16 @@ import com.sabrentkaro.search.SearchResultsAdapter.IRentClick;
 import com.utils.ApiUtils;
 import com.utils.StorageClass;
 
-public class SearchResultsActivity extends BaseActivity implements IRentClick {
+public class SearchResultsActivity extends BaseActivity implements IRentClick,
+		OnScrollListener {
 
 	private ArrayList<SearchModel> mSearchResultsArray = new ArrayList<SearchModel>();
 	private SearchResultsAdapter mAdapter;
 	private String selectedCategory = "";
 	private TextView mtxtProductTitle;
 	private ListView mListView;
+	int index = 1;
+	private int preLast = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +53,14 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 			selectedCategory = mBundle.getString("selectedCategory");
 		}
 		loadLayoutReferences();
-		initSearchResultsApi();
+		initSearchResultsApi(index);
 
 	}
 
 	private void loadLayoutReferences() {
 		mtxtProductTitle = (TextView) findViewById(R.id.titleSearchProduct);
 		mListView = (ListView) findViewById(R.id.listView);
+		mListView.setOnScrollListener(this);
 		mtxtProductTitle.setText(selectedCategory);
 		mAdapter = new SearchResultsAdapter(this);
 
@@ -68,7 +74,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 				});
 	}
 
-	private void initSearchResultsApi() {
+	private void initSearchResultsApi(int index) {
 		showProgressLayout();
 		JSONObject params = new JSONObject();
 		JSONArray minputs = new JSONArray();
@@ -83,7 +89,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		minputs.put(mObj);
 		mObj = new JSONObject();
 		try {
-			String mlocation = StorageClass.getInstance(this).getUserCity();
+			String mlocation = StorageClass.getInstance(this).getCity();
 			mObj.put("SearchText", mlocation);
 			mObj.put("SearchType", "location");
 			mObj.put("SearchCondition", "AND");
@@ -94,8 +100,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 
 		JSONObject mPagingInputs = new JSONObject();
 		try {
-			mPagingInputs.put("PageNumber", "1");
-			mPagingInputs.put("PageSize", "25");
+			mPagingInputs.put("PageNumber", index);
+			mPagingInputs.put("PageSize", "50");
 			mPagingInputs.put("UserId", null);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -231,6 +237,9 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 						mSearchResultsArray.add(mModel);
 					}
 				}
+
+			} else {
+				hideProgressLayout();
 			}
 		}
 		setAdapter();
@@ -238,7 +247,6 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 
 	private void setAdapter() {
 		mAdapter.setCallback(this);
-		mAdapter.clearItems();
 		mAdapter.addItems(mSearchResultsArray);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
@@ -261,8 +269,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (TextUtils.isEmpty(StorageClass.getInstance(this)
-						.getUserCity())) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
 					pos = -1;
 				} else {
 					if (mCityArray
@@ -276,7 +283,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 				mCities[i] = mCityArray.get(i).getName();
 			}
 			if (mCities != null) {
-				StorageClass.getInstance(this).getUserCity();
+				StorageClass.getInstance(this).getCity();
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
 				alert.setSingleChoiceItems(mCities, pos,
@@ -289,11 +296,32 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick {
 										mCities[which]);
 								dialog.dismiss();
 								setLocation();
-								initSearchResultsApi();
+								index = 1;
+								initSearchResultsApi(index);
 							}
 						});
 				alert.show();
 			}
 		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+
+		final int lastItem = firstVisibleItem + visibleItemCount;
+		if (lastItem == totalItemCount) {
+			if (preLast != lastItem) {
+				preLast = lastItem;
+				index = index + 1;
+				initSearchResultsApi(index);
+			}
+		}
+
 	}
 }
