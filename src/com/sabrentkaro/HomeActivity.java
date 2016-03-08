@@ -2,9 +2,12 @@ package com.sabrentkaro;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,12 +17,18 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.adapters.HomeAdapter;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.models.CategoryModel;
 import com.models.CityModel;
 import com.models.ProductModel;
 import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchActivity;
 import com.sabrentkaro.search.SearchResultsActivity;
+import com.utils.ApiUtils;
 import com.utils.StorageClass;
 
 public class HomeActivity extends BaseActivity implements OnItemClickListener {
@@ -42,6 +51,45 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		loadReferences();
 		addClickListeners();
 		setAdapter();
+		// initDeviceEntryApi();
+	}
+
+	private void initDeviceEntryApi() {
+		final String deviceUdId = Secure.getString(getContentResolver(),
+				Secure.ANDROID_ID);
+		showProgressLayout();
+		JSONObject params = new JSONObject();
+
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						hideProgressLayout();
+						showToast(response.toString());
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast(error.toString());
+					}
+
+				}) {
+
+			@Override
+			public byte[] getBody() {
+				super.getBody();
+				return deviceUdId.getBytes();
+			}
+
+		};
+
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mObjReq);
+
 	}
 
 	private void loadAlert() {

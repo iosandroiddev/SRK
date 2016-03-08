@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro" >
+
+    <com.utils.CustomTextView
+        android:id="@+id/btnSelectUserType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_margin="5dp"
+        android:background="@drawable/blue_button_selector"
+        android:drawableEnd="@drawable/ic_arrow_down_"
+        android:drawableRight="@drawable/ic_arrow_down_"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:text="@string/select_user_type"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        custom:fonttype="trebuchet_ms" />
+
+    <EditText
+        android:id="@+id/displayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="@string/display_name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/emailId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_email_id"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_password"
+        android:inputType="textPassword" />
+
+    <com.utils.CustomTextView
+        android:id="@+id/btnSelectCountry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_margin="5dp"
+        android:background="@drawable/blue_button_selector"
+        android:drawableEnd="@drawable/ic_arrow_down_"
+        android:drawableRight="@drawable/ic_arrow_down_"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:text="@string/select_city"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        custom:fonttype="trebuchet_ms" />
+
+    <EditText
+        android:id="@+id/mobileNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_mobile_number"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editPanCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_pan_card_number"
+        android:inputType="text"
+        android:maxLength="10" />
+
+    <CheckBox
+        android:id="@+id/checkTerms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:checked="false"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:text="@string/i_accept_to_the_terms_of_use_listing_policy_and_renting_policy_of_sabrentkaro"
+        android:textSize="14sp" />
+
+    <com.utils.CustomTextView
+        android:id="@+id/btnGenerateOtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/blue_custom_button_selector"
+        android:clickable="true"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="10dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        custom:fonttype="trebuchet_ms" />
+
+</merge>

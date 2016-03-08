@@ -41,6 +41,7 @@ public class GetSocialDetails {
 		mCallback = new FacebookUtilityWithCallback(mactvity, "147051608808100");
 
 		mCallback.facebooklogin(mCallFb);
+		
 	}
 
 	/**
@@ -128,6 +129,11 @@ public class GetSocialDetails {
 				// "Unable to login with Facebook. Please try again.");
 			}
 		}
+	}
+	
+	
+	public void logoutFb() {
+		mCallback.facebookLogout(mLOgout);
 	}
 
 	public static final int FBCode = 1, TwitterCode = 3, Gplus = 5;

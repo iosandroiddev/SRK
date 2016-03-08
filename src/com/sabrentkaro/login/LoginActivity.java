@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +22,16 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.Plus.PlusOptions;
+import com.google.android.gms.plus.model.people.Person;
+import com.models.FbUserInfo;
+import com.models.GPlusUserInfo;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
@@ -33,7 +44,8 @@ import com.utils.GetSocialDetails.IFbLoginCallBack;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
-public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
+public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
+		ConnectionCallbacks, OnConnectionFailedListener {
 
 	private EditText mEditEmail, mEditPassword;
 	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword, mbtnFacebok,
@@ -58,11 +70,19 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 	private String mtxtRating;
 	private String mtxtCondName;
 	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
+	private String fbAccessToken = "";
+	private String fbId = "";
+	private String gPlusId = "";
+	private FbUserInfo mFbUserInfo;
+	private GPlusUserInfo mGPlusUserInfo;
 
 	private boolean hasBundle = false;
+	private boolean btnGoogleClicked = false;
+	private boolean mSignInClicked;
+	private boolean mIntentInProgress;
 
-	// GoogleApiClient mGoogleApiClient;
-	// private ConnectionResult mConnectionResult;
+	GoogleApiClient mGoogleApiClient;
+	private ConnectionResult mConnectionResult;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,14 +91,16 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 		getDetails();
 		loadLayoutReferences();
 		hideSoftKeyboard();
-		// initGoogleApiClient();
+		initGoogleApiClient();
+
 	}
 
 	private void initGoogleApiClient() {
-		// mGoogleApiClient = new GoogleApiClient.Builder(this)
-		// .addConnectionCallbacks(this)
-		// .addOnConnectionFailedListener(this).addApi(Plus.API, null)
-		// .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.addApi(Plus.API, PlusOptions.builder().build())
+				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
 	}
 
 	private void getDetails() {
@@ -161,30 +183,47 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 	}
 
 	private void btnGoogleClicked() {
-		// if (!mGoogleApiClient.isConnecting()) {
-		// checkSigningError();
-		// }
+		btnGoogleClicked = true;
+		if (!mGoogleApiClient.isConnecting()) {
+			checkSigningError();
+			mSignInClicked = true;
+		}
+
 	}
 
 	private void checkSigningError() {
-		// if (mConnectionResult.hasResolution()) {
-		// try {
-		// mConnectionResult.startResolutionForResult(this, 110);
-		// } catch (SendIntentException e) {
-		// mGoogleApiClient.connect();
-		// }
-		// }
+		if (mConnectionResult != null && mConnectionResult.hasResolution()) {
+			try {
+				mIntentInProgress = true;
+				mConnectionResult.startResolutionForResult(this, 10);
+			} catch (SendIntentException e) {
+				mIntentInProgress = false;
+				mGoogleApiClient.connect();
+			}
+		} else {
+			if (mGPlusUserInfo != null) {
+				responseForGPlus();
+			}
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// if (mGoogleApiClient.isConnected()) {
-		// mGoogleApiClient.disconnect();
-		// }
+		if (mGoogleApiClient.isConnected()) {
+			mGoogleApiClient.disconnect();
+		}
+	}
+
+	protected void onStop() {
+		super.onStop();
+		if (mGoogleApiClient.isConnected()) {
+			mGoogleApiClient.disconnect();
+		}
 	}
 
 	private void btnFacebookClicked() {
+		btnGoogleClicked = false;
 		loginViaFb();
 	}
 
@@ -202,8 +241,14 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 		} else if (TextUtils.isEmpty(mEditPassword.getText().toString())) {
 			showToast("Please Enter Password");
 		} else {
-			initLoginApi();
+			initLoginApi(false, false);
 		}
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		mGoogleApiClient.connect();
 	}
 
 	private void loginViaFb() {
@@ -211,12 +256,20 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 		mSocial.getAndPostFaceBookUserDetails();
 	}
 
-	private void initLoginApi() {
+	private void initLoginApi(boolean fbLogin, boolean gplusLogin) {
 		showProgressLayout();
 		JSONObject mLoginParams = new JSONObject();
 		try {
 			mLoginParams.put("Email", mEditEmail.getText().toString());
 			mLoginParams.put("IsClaims", false);
+			if (fbLogin) {
+				mLoginParams.put("Provider", "FB");
+				mLoginParams.put("ProviderKey", fbId);
+			}
+			if (gplusLogin) {
+				mLoginParams.put("Provider", "Google");
+				mLoginParams.put("ProviderKey", gPlusId);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -246,7 +299,11 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 		JSONObject mLogin = new JSONObject();
 		try {
 			mLogin.put("Login", mLoginParams);
-			mLogin.put("Verifications", mPassword);
+			if (fbLogin || gplusLogin) {
+
+			} else {
+				mLogin.put("Verifications", mPassword);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -483,56 +540,120 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack {
 
 	@Override
 	public void onFbLoginSucsess(String accessToken, JSONObject mUserInfo) {
-
+		responseForFB(accessToken, mUserInfo);
 	}
 
-	// @Override
-	// public void onConnected(Bundle arg0) {
-	// getProfileInformation();
-	// }
-	//
-	// @Override
-	// public void onConnectionSuspended(int cause) {
-	//
-	// }
-	//
-	// @Override
-	// public void onConnectionFailed(ConnectionResult arg0) {
-	//
-	// }
-	//
-	// @Override
-	// protected void onActivityResult(int requestCode, int responseCode,
-	// Intent intent) {
-	// super.onActivityResult(requestCode, responseCode, intent);
-	// if (requestCode == 110) {
-	// if (responseCode != RESULT_OK) {
-	// }
-	// if (!mGoogleApiClient.isConnecting()) {
-	// mGoogleApiClient.connect();
-	// }
-	// }
-	// }
-	//
-	// private void getProfileInformation() {
-	// try {
-	// if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-	// Person currentPerson = Plus.PeopleApi
-	// .getCurrentPerson(mGoogleApiClient);
-	// String personName = currentPerson.getDisplayName();
-	// String personPhotoUrl = currentPerson.getImage().getUrl();
-	// String personGooglePlusProfile = currentPerson.getUrl();
-	// String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-	//
-	// personPhotoUrl = personPhotoUrl.substring(0,
-	// personPhotoUrl.length() - 2) + 400;
-	//
-	// } else {
-	// Toast.makeText(getApplicationContext(),
-	// "Person information is null", Toast.LENGTH_LONG).show();
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
+	private void responseForFB(String accessToken, JSONObject mUserInfo) {
+		fbAccessToken = accessToken;
+		if (mUserInfo != null) {
+			fbId = mUserInfo.optString("id");
+			String email = mUserInfo.optString("email");
+			String firstName = mUserInfo.optString("first_name");
+			String lastName = mUserInfo.optString("last_name");
+			String gender = mUserInfo.optString("gender");
+			String name = mUserInfo.optString("name");
+
+			mFbUserInfo = new FbUserInfo();
+			mFbUserInfo.setId(fbId);
+			mFbUserInfo.setEmail(email);
+			mFbUserInfo.setFirstName(firstName);
+			mFbUserInfo.setLastName(lastName);
+			mFbUserInfo.setGender(gender);
+			mFbUserInfo.setName(name);
+			mFbUserInfo.setAccessToken(fbAccessToken);
+
+			initLoginApi(true, false);
+
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		mSignInClicked = false;
+		hideProgressLayout();
+		responseForGPlus();
+	}
+
+	@Override
+	public void onConnectionSuspended(int cause) {
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 10) {
+			if (resultCode != RESULT_OK) {
+				mSignInClicked = false;
+			}
+			mIntentInProgress = false;
+			if (!mGoogleApiClient.isConnecting()) {
+				mGoogleApiClient.connect();
+			}
+		}
+	}
+
+	private void responseForGPlus() {
+		Person signedInUser = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+		mGPlusUserInfo = new GPlusUserInfo();
+		if (signedInUser != null) {
+
+			if (signedInUser.hasId()) {
+				String userId = signedInUser.getId();
+				mGPlusUserInfo.setId(userId);
+			}
+			if (signedInUser.hasDisplayName()) {
+				String userName = signedInUser.getDisplayName();
+				mGPlusUserInfo.setUserName(userName);
+			}
+
+			if (signedInUser.hasTagline()) {
+				String tagLine = signedInUser.getTagline();
+				mGPlusUserInfo.setTagLine(tagLine);
+			}
+
+			if (signedInUser.hasAboutMe()) {
+				String aboutMe = signedInUser.getAboutMe();
+				mGPlusUserInfo.setAboutMe(aboutMe);
+			}
+
+			if (signedInUser.hasBirthday()) {
+				String birthday = signedInUser.getBirthday();
+				mGPlusUserInfo.setBirthday(birthday);
+			}
+
+			if (signedInUser.hasCurrentLocation()) {
+				String userLocation = signedInUser.getCurrentLocation();
+				mGPlusUserInfo.setLocation(userLocation);
+			}
+
+			String userEmail = Plus.AccountApi.getAccountName(mGoogleApiClient);
+			mGPlusUserInfo.setEmail(userEmail);
+
+			if (signedInUser.hasImage()) {
+				String userProfilePicUrl = signedInUser.getImage().getUrl();
+				int profilePicRequestSize = 250;
+				userProfilePicUrl = userProfilePicUrl.substring(0,
+						userProfilePicUrl.length() - 2) + profilePicRequestSize;
+				mGPlusUserInfo.setProfilePic(userProfilePicUrl);
+			}
+
+		}
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		if (!result.hasResolution()) {
+			GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+					11).show();
+			return;
+		}
+		if (!mIntentInProgress) {
+			mConnectionResult = result;
+
+			if (mSignInClicked) {
+				checkSigningError();
+			}
+		}
+
+	}
 }

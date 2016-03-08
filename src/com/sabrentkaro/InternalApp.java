@@ -5,21 +5,18 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
-import android.app.Application;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.multidex.MultiDexApplication;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.examples.toolbox.MyVolley;
 import com.android.volley.toolbox.Volley;
 import com.models.CategoryModel;
 import com.models.ProductModel;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class InternalApp extends MultiDexApplication {
+import android.app.Application;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
+
+public class InternalApp extends Application {
 
 	RequestQueue queue;
 	private ArrayList<ProductModel> mProductsArray;
@@ -35,9 +32,6 @@ public class InternalApp extends MultiDexApplication {
 	public void onCreate() {
 		super.onCreate();
 		MyVolley.init(this);
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				this).build();
-		ImageLoader.getInstance().init(config);
 		queue = Volley.newRequestQueue(this);
 	}
 
@@ -46,8 +40,7 @@ public class InternalApp extends MultiDexApplication {
 	}
 
 	public boolean isTabletLayout() {
-		int screenLayout = getResources().getConfiguration().screenLayout
-				& Configuration.SCREENLAYOUT_SIZE_MASK;
+		int screenLayout = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		return screenLayout != Configuration.SCREENLAYOUT_SIZE_SMALL
 				&& screenLayout != Configuration.SCREENLAYOUT_SIZE_NORMAL;
 	}
@@ -79,8 +72,7 @@ public class InternalApp extends MultiDexApplication {
 
 	}
 
-	public void setCategoryMappingArray(
-			ArrayList<CategoryModel> mCateogoryMappingsArray) {
+	public void setCategoryMappingArray(ArrayList<CategoryModel> mCateogoryMappingsArray) {
 		this.mCateogoryMappingsArray = mCateogoryMappingsArray;
 
 	}

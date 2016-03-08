@@ -18,14 +18,30 @@
             android:layout_gravity="center_horizontal|top"
             android:layout_margin="10dp"
             android:background="#55000000"
-            android:gravity="center_horizontal"
+            android:gravity="start|center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:padding="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="@string/register_to_continue"
+            android:text="@string/sign_up_to_proceed"
             android:textColor="@color/white"
             android:textSize="18sp"
+            custom:fonttype="trebuchet_ms" />
+
+        <com.utils.CustomTextView
+            android:id="@+id/txtMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="10dp"
+            android:gravity="start|center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="5dp"
+            android:scrollHorizontally="true"
+            android:text="@string/sign_up_to_proceed"
+            android:textColor="@color/pinkdark"
+            android:textSize="15sp"
+            android:visibility="gone"
             custom:fonttype="trebuchet_ms" />
 
         <ScrollView
@@ -39,78 +55,53 @@
                 android:layout_margin="10dp"
                 android:orientation="vertical" >
 
-                <EditText
-                    android:id="@+id/displayName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/display_name"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/emailId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/enter_email_id"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/confirmEmailId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/confirm_email_id"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/enter_password"
-                    android:inputType="textPassword" />
-
                 <com.utils.CustomTextView
-                    android:id="@+id/btnSelectCountry"
+                    android:id="@+id/btnSignUpFb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/blue_button_selector"
-                    android:drawableEnd="@drawable/ic_arrow_down_"
-                    android:drawableRight="@drawable/ic_arrow_down_"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/fb_button_selector"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/facebook"
+                    android:drawableStart="@drawable/facebook"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="10dp"
+                    android:padding="5dp"
+                    android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@string/select_city"
-                    android:textColor="@color/black"
+                    android:text="@string/facebook"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
-                    android:id="@+id/mobileNumber"
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSignupGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/enter_mobile_number"
-                    android:inputType="number" />
-
-                <CheckBox
-                    android:id="@+id/checkTerms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:checked="false"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/google_button_selector"
                     android:clickable="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/i_accept_to_the_terms_of_use_listing_policy_and_renting_policy_of_sabrentkaro"
-                    android:textSize="14sp" />
+                    android:drawableLeft="@drawable/google"
+                    android:drawableStart="@drawable/google"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="5dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/google"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnGenerateOtp"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/btnSignUpEmail"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
@@ -120,13 +111,130 @@
                     android:fadingEdge="horizontal"
                     android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="10dp"
+                    android:padding="15dp"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@string/generate_otp"
+                    android:text="@string/signup_with_email"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:id="@+id/commonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnSelectUserType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/blue_button_selector"
+                        android:drawableEnd="@drawable/ic_arrow_down_"
+                        android:drawableRight="@drawable/ic_arrow_down_"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:text="@string/select_user_type"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <EditText
+                        android:id="@+id/displayName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/display_name"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/emailId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/enter_email_id"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/enter_password"
+                        android:inputType="textPassword" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnSelectCountry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/blue_button_selector"
+                        android:drawableEnd="@drawable/ic_arrow_down_"
+                        android:drawableRight="@drawable/ic_arrow_down_"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:text="@string/select_city"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <EditText
+                        android:id="@+id/mobileNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/enter_mobile_number"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/editPanCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_pan_card_number"
+                        android:inputType="text"
+                        android:maxLength="10"
+                        android:visibility="gone" />
+
+                    <CheckBox
+                        android:id="@+id/checkTerms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:checked="false"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/i_accept_to_the_terms_of_use_listing_policy_and_renting_policy_of_sabrentkaro"
+                        android:textSize="14sp" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnGenerateOtp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/blue_custom_button_selector"
+                        android:clickable="true"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:gravity="center"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="10dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="@string/submit"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

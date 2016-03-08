@@ -24,6 +24,9 @@ public class ApiUtils {
 
 	public static final String POSTREGISTERUSER = BASE_URL
 			+ "User/PostRegisterUser";
+	
+	public static final String POSTREGISTERUSERMOBILE = BASE_URL
+			+ "User/PostRegisterUserMobile";
 
 	public static final String CALCULATERENTALPRICING = BASE_URL
 			+ "Rental/CalculateRentalPricing";
@@ -43,4 +46,7 @@ public class ApiUtils {
 
 	public static final String GETADAVAILABILITYCALENDAR = BASE_URL
 			+ "Rental/GetAdAvailabilityCalendar";
+
+	public static final String POSTDEVICEENTRY = BASE_URL
+			+ "Common/PostDeviceEntry";
 }

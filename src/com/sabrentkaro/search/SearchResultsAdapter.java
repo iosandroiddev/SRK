@@ -19,8 +19,6 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.models.SearchModel;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sabrentkaro.R;
 import com.squareup.picasso.Picasso;
 
@@ -28,14 +26,10 @@ public class SearchResultsAdapter extends BaseAdapter {
 	private ArrayList<SearchModel> mArraySearchResult = new ArrayList<SearchModel>();
 	private AQuery mQuery;
 	private Context mContext;
-	private ImageLoader mImageLoader;
 
 	public SearchResultsAdapter(Context context) {
 		this.mContext = context;
 		mQuery = new AQuery(mContext);
-		mImageLoader = ImageLoader.getInstance();
-		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_loading)
-				.showImageForEmptyUri(R.drawable.default_loading).showImageOnFail(R.drawable.default_loading).build();
 	}
 
 	public interface IRentClick {
@@ -43,7 +37,6 @@ public class SearchResultsAdapter extends BaseAdapter {
 	}
 
 	IRentClick mRentClick;
-	private DisplayImageOptions mOptions;
 
 	public void setCallback(IRentClick mRent) {
 		this.mRentClick = mRent;
@@ -91,14 +84,22 @@ public class SearchResultsAdapter extends BaseAdapter {
 		Holder mHolder;
 		if (convertView == null) {
 			mHolder = new Holder();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.search_result_item, null);
-			mHolder.mtxtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
-			mHolder.mtxtPostedBy = (TextView) convertView.findViewById(R.id.txtPostedBy);
-			mHolder.mtxtLocation = (TextView) convertView.findViewById(R.id.txtLocation);
-			mHolder.mtxtPrice = (TextView) convertView.findViewById(R.id.txtPricePerDay);
-			mHolder.mItemImg = (ImageView) convertView.findViewById(R.id.itemProduct);
-			mHolder.mbtnRent = (TextView) convertView.findViewById(R.id.btnRent);
-			mHolder.mRootFiedlsLayout = (LinearLayout) convertView.findViewById(R.id.rootFields);
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.search_result_item, null);
+			mHolder.mtxtTitle = (TextView) convertView
+					.findViewById(R.id.txtTitle);
+			mHolder.mtxtPostedBy = (TextView) convertView
+					.findViewById(R.id.txtPostedBy);
+			mHolder.mtxtLocation = (TextView) convertView
+					.findViewById(R.id.txtLocation);
+			mHolder.mtxtPrice = (TextView) convertView
+					.findViewById(R.id.txtPricePerDay);
+			mHolder.mItemImg = (ImageView) convertView
+					.findViewById(R.id.itemProduct);
+			mHolder.mbtnRent = (TextView) convertView
+					.findViewById(R.id.btnRent);
+			mHolder.mRootFiedlsLayout = (LinearLayout) convertView
+					.findViewById(R.id.rootFields);
 			convertView.setTag(mHolder);
 		} else {
 			mHolder = (Holder) convertView.getTag();
@@ -110,9 +111,12 @@ public class SearchResultsAdapter extends BaseAdapter {
 		mHolder.mtxtPostedBy.setText(mModel.getPostedBy());
 		mHolder.mtxtLocation.setText(mModel.getLocation());
 
-		if (mModel.getPricePerDay().equalsIgnoreCase("0") || mModel.getPricePerDay().length() == 0) {
-			if (mModel.getPricePerWeek().equalsIgnoreCase("0") || mModel.getPricePerWeek().length() == 0) {
-				if (mModel.getPricePerMonth().equalsIgnoreCase("0") || mModel.getPricePerMonth().length() == 0) {
+		if (mModel.getPricePerDay().equalsIgnoreCase("0")
+				|| mModel.getPricePerDay().length() == 0) {
+			if (mModel.getPricePerWeek().equalsIgnoreCase("0")
+					|| mModel.getPricePerWeek().length() == 0) {
+				if (mModel.getPricePerMonth().equalsIgnoreCase("0")
+						|| mModel.getPricePerMonth().length() == 0) {
 					mHolder.mtxtPrice.setText("");
 				} else {
 					mHolder.mtxtPrice.setText(mModel.getPricePerMonth());
@@ -125,23 +129,28 @@ public class SearchResultsAdapter extends BaseAdapter {
 		}
 
 		mHolder.mtxtLocation.setSelected(true);
-		Picasso.with(mContext).load(mModel.getCoverImagePath()).placeholder(R.drawable.default_loading)
+		Picasso.with(mContext).load(mModel.getCoverImagePath())
+				.placeholder(R.drawable.default_loading)
 				.error(R.drawable.default_loading).into(mHolder.mItemImg);
 		mHolder.mbtnRent.setOnClickListener(new onRentClick(position));
 
-		if (mModel.getItemsArray() == null || mModel.getItemsArray().length() == 0) {
+		if (mModel.getItemsArray() == null
+				|| mModel.getItemsArray().length() == 0) {
 			mHolder.mRootFiedlsLayout.setVisibility(View.GONE);
 		} else {
 			mHolder.mRootFiedlsLayout.setVisibility(View.VISIBLE);
 			mHolder.mRootFiedlsLayout.removeAllViews();
 			for (int i = 0; i < mModel.getItemsArray().length(); i++) {
-				final TextView mtxtView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.itemtext, null);
+				final TextView mtxtView = (TextView) LayoutInflater.from(
+						mContext).inflate(R.layout.itemtext, null);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-						new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+						new LayoutParams(LayoutParams.MATCH_PARENT,
+								LayoutParams.WRAP_CONTENT));
 				params.setMargins(2, 5, 2, 5);
 				JSONObject mCatTonObj = mModel.getItemsArray().optJSONObject(i);
 				mtxtView.setLayoutParams(params);
-				mtxtView.setText(mCatTonObj.optString("title") + ": " + mCatTonObj.optString("value"));
+				mtxtView.setText(mCatTonObj.optString("title") + ": "
+						+ mCatTonObj.optString("value"));
 				mtxtView.setSelected(true);
 				mtxtView.setEllipsize(TruncateAt.MARQUEE);
 				mtxtView.setSingleLine(true);
