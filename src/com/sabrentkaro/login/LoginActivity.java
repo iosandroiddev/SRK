@@ -561,7 +561,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 			mFbUserInfo.setGender(gender);
 			mFbUserInfo.setName(name);
 			mFbUserInfo.setAccessToken(fbAccessToken);
-
+			mEditEmail.setText(email);
 			initLoginApi(true, false);
 
 		}
@@ -600,6 +600,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 			if (signedInUser.hasId()) {
 				String userId = signedInUser.getId();
 				mGPlusUserInfo.setId(userId);
+				gPlusId = userId;
 			}
 			if (signedInUser.hasDisplayName()) {
 				String userName = signedInUser.getDisplayName();
@@ -635,6 +636,11 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 				userProfilePicUrl = userProfilePicUrl.substring(0,
 						userProfilePicUrl.length() - 2) + profilePicRequestSize;
 				mGPlusUserInfo.setProfilePic(userProfilePicUrl);
+			}
+
+			if (btnGoogleClicked) {
+				mEditEmail.setText(userEmail);
+				initLoginApi(false, true);
 			}
 
 		}

@@ -65,6 +65,7 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 	private boolean mIntentInProgress;
 	private GPlusUserInfo mGPlusUserInfo = null;
 	private boolean gplusClicked = false;
+	private boolean fbClicked = false;
 	private FbUserInfo mFbUserInfo;
 	private GetSocialDetails mSocial;
 
@@ -274,18 +275,25 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 										.getText().toString())) {
 									showToast("Please Enter Mobile Number");
 								} else {
-									if (TextUtils.isEmpty(mEditPanCardNumber
-											.getText().toString())) {
-										showToast("Please Enter PAN Card Number");
+
+									if (mbtnSelectUser.getText().toString()
+											.equalsIgnoreCase("Individual")) {
+										initiateRegisterApi();
 									} else {
-										if (mEditPanCardNumber.getText()
-												.toString().length() != 10) {
-											showToast("Please Enter Valid PAN Card Number");
+										if (TextUtils
+												.isEmpty(mEditPanCardNumber
+														.getText().toString())) {
+											showToast("Please Enter PAN Card Number");
 										} else {
-											if (!mCheckTerms.isChecked()) {
-												showToast("Please check Terms & Conditions");
+											if (mEditPanCardNumber.getText()
+													.toString().length() != 10) {
+												showToast("Please Enter Valid PAN Card Number");
 											} else {
-												initiateRegisterApi();
+												if (!mCheckTerms.isChecked()) {
+													showToast("Please check Terms & Conditions");
+												} else {
+													initiateRegisterApi();
+												}
 											}
 										}
 									}
@@ -311,6 +319,14 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 			mLogin.put("Email", mEditEmail.getText().toString());
 			mLogin.put("MobileNumber", mEditMobileNumber.getText().toString());
 			mLogin.put("IsClaims", "false");
+			if (fbClicked) {
+				mLogin.put("Provider", "FB");
+				mLogin.put("ProviderKey", mFbUserInfo.getId());
+			}
+			if (gplusClicked) {
+				mLogin.put("Provider", "Google");
+				mLogin.put("ProviderKey", mGPlusUserInfo.getId());
+			}
 			if (mbtnSelectUser.getText().toString()
 					.equalsIgnoreCase("Individual")) {
 				mLogin.put("UserTypeId", "1");
@@ -545,6 +561,7 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 			}
 
 			if (gplusClicked) {
+				fbClicked = false;
 				StaticUtils.expandCollapse(mlayoutCommonFields, true);
 				mEditEmail.setText(userEmail);
 				mEditEmail.setEnabled(false);
@@ -577,6 +594,8 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 	}
 
 	private void loginViaFb() {
+		fbClicked = true;
+		gplusClicked = false;
 		mSocial = new GetSocialDetails(this);
 		mSocial.getAndPostFaceBookUserDetails();
 	}
