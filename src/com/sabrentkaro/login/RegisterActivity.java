@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -520,8 +521,10 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 					if (mObjUserProfile != null) {
 						userName = mObjUserProfile.optString("Name");
 					}
-					JSONObject mObjUserAdress = (JSONObject) mObjUser
-							.optJSONArray("Addresses").opt(0);
+					JSONArray mAddressArray = (JSONArray) mObjUser
+							.optJSONArray("Addresses");
+					if(mAddressArray!=null){
+					JSONObject mObjUserAdress = (JSONObject) mAddressArray.opt(0);
 					if (mObjUserAdress != null) {
 						try {
 							String addressLine = mObjUserAdress
@@ -548,6 +551,7 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
+					}
 					}
 					StorageClass.getInstance(this).setUserName(userName);
 					StorageClass.getInstance(this).setAuthHeader(
