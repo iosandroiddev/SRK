@@ -78,11 +78,11 @@ public class StorageClass {
 		edit.putBoolean("auto_login", membertype).commit();
 	}
 
-	public void setAuthorizationToken(String AuthToken) {
+	public void setAccessToken(String AuthToken) {
 		edit.putString("Auth_Token", AuthToken).commit();
 	}
 
-	public String getAuthorizationToken() {
+	public String getAccessToken() {
 		return sh.getString("Auth_Token", "");
 	}
 
@@ -242,7 +242,7 @@ public class StorageClass {
 		return mCityArray;
 
 	}
-	
+
 	public String getCity() {
 		return sh.getString("user_selected_city", "");
 	}
@@ -250,8 +250,7 @@ public class StorageClass {
 	public void setCity(String cityName) {
 		edit.putString("user_selected_city", cityName).commit();
 	}
-	
-	
+
 	public String getCityValue() {
 		return sh.getString("user_selected_city_value", "");
 	}

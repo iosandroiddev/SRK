@@ -50,7 +50,8 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 	private EditText mEditEmail, mEditPassword;
 	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword, mbtnFacebok,
 			mbtnGoogle;
-	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
+	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice,
+			mProductDescription, mQuantity;
 	private Dialog mForgotPasswordDialog;
 
 	private String mCategory;
@@ -131,6 +132,9 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 				hasBundle = true;
 				selectedProductAdId = mBundle.getString("selectedAdId");
 				mPrice = mBundle.getString("productPrice");
+				mMonthPrice = mBundle.getString("productPriceMonth");
+				;
+				mWeekPrice = mBundle.getString("productPriceweek");
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
 			}
@@ -183,11 +187,12 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 	}
 
 	private void btnGoogleClicked() {
-		btnGoogleClicked = true;
-		if (!mGoogleApiClient.isConnecting()) {
-			checkSigningError();
-			mSignInClicked = true;
-		}
+		// btnGoogleClicked = true;
+		// if (!mGoogleApiClient.isConnecting()) {
+		// checkSigningError();
+		// mSignInClicked = true;
+		// }
+		showToast("Will be available in Next Release");
 
 	}
 
@@ -224,11 +229,48 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 
 	private void btnFacebookClicked() {
 		btnGoogleClicked = false;
-		loginViaFb();
+		// loginViaFb();
+		showToast("Will be available in Next Release");
 	}
 
 	private void btnRegisterClicked() {
 		Intent mIntent = new Intent(this, RegisterActivity.class);
+		if (hasBundle) {
+			if (selectedProductAdId == null
+					|| selectedProductAdId.length() == 0) {
+				Bundle mBundle = new Bundle();
+				mBundle.putString("category", mCategory);
+				mBundle.putString("subCategory", mSubCategory);
+				mBundle.putString("adTitle", mAdTitle);
+				mBundle.putString("productDescription", mProductDesc);
+				mBundle.putString("productCondition", "");
+				mBundle.putString("userInstructions", mUserInstructions);
+				mBundle.putString("additionalStuff", mAdditionalStuff);
+				mBundle.putString("productPurchasedPrice",
+						mProductPurchasedPrice);
+				mBundle.putString("dailyCost", mDailyCost);
+				mBundle.putString("productAdId", mProductAdId);
+				mBundle.putString("weekCost", mWeekCost);
+				mBundle.putString("monthlyCost", mMonthCost);
+				mBundle.putString("productCondition", mtxtRating);
+				mBundle.putString("filePath", mFilePath);
+				mBundle.putString("quantity", mQuantity);
+				mBundle.putString("securityDeposit", mSecurityDeposit);
+				mBundle.putString("productConditionName", mtxtCondName);
+				mBundle.putSerializable("controlLayouts", controlLayouts);
+				mIntent.putExtras(mBundle);
+			} else {
+				Bundle mBundle = new Bundle();
+				mBundle.putString("selectedAdId", selectedProductAdId);
+				mBundle.putString("productPrice", mPrice);
+				mBundle.putString("quantity", mQuantity);
+				mBundle.putString("productPriceMonth", mMonthPrice);
+				mBundle.putString("productPriceWeek", mWeekPrice);
+				mBundle.putString("productDescription", mProductDescription);
+				mIntent.putExtras(mBundle);
+			}
+		} else {
+		}
 		startActivity(mIntent);
 	}
 
@@ -450,6 +492,8 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 		mBundle.putString("selectedAdId", selectedProductAdId);
 		mBundle.putString("productPrice", mPrice);
 		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productPriceMonth", mMonthPrice);
+		mBundle.putString("productPriceWeek", mWeekPrice);
 		mBundle.putString("productDescription", mProductDescription);
 		intent.putExtras(mBundle);
 		startActivity(intent);

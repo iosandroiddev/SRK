@@ -38,7 +38,7 @@ public class GetSocialDetails {
 	 */
 	public void getAndPostFaceBookUserDetails() {
 
-		mCallback = new FacebookUtilityWithCallback(mactvity, "147051608808100");
+		mCallback = new FacebookUtilityWithCallback(mactvity, "969051026512281");
 
 		mCallback.facebooklogin(mCallFb);
 		

@@ -32,8 +32,8 @@ import com.utils.StorageClass;
 public class OrderDetailsActivity extends BaseActivity {
 
 	private String selectedProductAdId, mPrice, mProductDescription, mQuantity,
-			mStartDate, mEndDate, mLocationId, mAddress, mCity, mState,
-			txtAddress, mAuthHeader;
+			mStartDate, mEndDate, mLocationId, mMonthPrice, mWeekPrice,
+			mAddress, mCity, mState, txtAddress, mAuthHeader;
 
 	private TextView mtxtTotalCost, mtxtRentalPeriod, mtxtShippingAddress,
 			mtxtDescription, mtxtQuantity, mtxtFromDate, mtxtToDate,
@@ -78,7 +78,7 @@ public class OrderDetailsActivity extends BaseActivity {
 			mParams.put("ToDate", mEndDate);
 			mParams.put("LocationId", mLocValue);
 			mParams.put("Quantity", mQuantity);
-			mParams.put("Location",mlocation );
+			mParams.put("Location", mlocation);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -184,7 +184,7 @@ public class OrderDetailsActivity extends BaseActivity {
 	}
 
 	private void loadValues() {
-		mtxtProductRentalValue.setText(getString(R.string.rupeeone) + ""
+		mtxtProductRentalValue.setText(getString(R.string.rupeeone) + " "
 				+ mProdRentValue);
 		mtxtFacilitaionCharges.setText(getString(R.string.rupeeone) + " "
 				+ mFaciliValue);
@@ -221,6 +221,19 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtFromDate.setText(mStartDate);
 		mtxtToDate.setText(mEndDate);
 		mtxtPerDayCost.setText(mPrice);
+		if (mMonthPrice == null || mMonthPrice.contains("null")
+				|| mMonthPrice.length() == 0) {
+
+		} else {
+			mtxtPerMonthCost.setText(mMonthPrice);
+		}
+		if (mWeekPrice == null || mWeekPrice.contains("null")
+				|| mWeekPrice.length() == 0) {
+
+		} else {
+			mtxtPerWeekCost.setText(mWeekPrice);
+		}
+
 	}
 
 	private void getDetails() {
@@ -240,6 +253,8 @@ public class OrderDetailsActivity extends BaseActivity {
 				mState = mBundle.getString("state");
 				mPincode = mBundle.getString("pincode");
 				mMobile = mBundle.getString("mobile");
+				mMonthPrice = mBundle.getString("productPriceMonth");
+				mWeekPrice = mBundle.getString("productPriceweek");
 				txtAddress = mAddress + "\n" + mCity + "\n" + mState + "\n"
 						+ mPincode + "\n" + mMobile;
 			}

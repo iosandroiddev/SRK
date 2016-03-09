@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -41,7 +42,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
 	private TextView mbtnLogin, mtxtTitle;
-	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName;
+	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName,
+			mbtnTermsConditions;
 	private LinearLayout mLoginLayout;
 
 	@Override
@@ -73,6 +75,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mbtnPostAd.setOnClickListener(this);
 		mbtnSearchProducts.setOnClickListener(this);
 		mbtnHome.setOnClickListener(this);
+		mbtnTermsConditions.setOnClickListener(this);
 	}
 
 	private void getLayoutReferences() {
@@ -82,6 +85,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mtxtLocation = (TextView) findViewById(R.id.txtLocation);
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
+		mbtnTermsConditions = (TextView) findViewById(R.id.btnTermsConditions);
 		mtxtTitle = (TextView) findViewById(R.id.txtTitle);
 		mtxtTitle.setOnClickListener(new OnClickListener() {
 
@@ -90,6 +94,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 				navigateToHome();
 			}
 		});
+
 		mbtnSearchProducts = (TextView) findViewById(R.id.btnSearchProducts);
 		mbtnHome = (TextView) findViewById(R.id.btnHome);
 		mLoginLayout = (LinearLayout) findViewById(R.id.layouLogin);
@@ -135,9 +140,20 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		case R.id.btnHome:
 			btnHomeClicked();
 			break;
+		case R.id.btnTermsConditions:
+			btnTermsConditionsClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnTermsConditionsClicked() {
+		btnMenuClicked();
+		mbtnTermsConditions.setSelected(true);
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("http://allrental.co.in/documents/termsofuse"));
+		startActivity(browserIntent);
 	}
 
 	private void btnPostAdClicked() {

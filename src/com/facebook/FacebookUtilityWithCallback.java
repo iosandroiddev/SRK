@@ -27,12 +27,12 @@ import com.sabrentkaro.R;
  */
 public class FacebookUtilityWithCallback {
 	private Activity activity;
-	private String facebookAppId = "161839200607948";
+	private String facebookAppId = "969051026512281";
 
 	private ProgressDialog progressDialog;
 	private Facebook mFacebook;
 
-	private final String[] PERMISSIONS = { "publish_checkins,publish_actions,publish_stream,user_photos,user_videos" }; // offline_access
+	private final String[] PERMISSIONS = { "email, public_profile, basic_info,user_videos,user_about_me" }; // offline_access
 
 	private final int POST = 0, IMAGE = 1, VIDEO = 2, DIALOG = 3, LOGIN = 4;
 

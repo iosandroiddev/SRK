@@ -42,6 +42,12 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	private ListView mListView;
 	int index = 1;
 	private int preLast = 0;
+	private boolean isloading = false;
+
+	int currentFirstVisibleItem = 0;
+	int currentVisibleItemCount = 0;
+	int totalItemCount = 0;
+	int currentScrollState = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +69,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		mListView.setOnScrollListener(this);
 		mtxtProductTitle.setText(selectedCategory);
 		mAdapter = new SearchResultsAdapter(this);
-
+		mAdapter.setCallback(this);
+		mListView.setAdapter(mAdapter);
 		((TextView) (findViewById(R.id.txtLocation)))
 				.setOnClickListener(new OnClickListener() {
 
@@ -201,6 +208,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 									int monthPrice = Integer.parseInt(mModel
 											.getPricePerMonth());
 									int dayPrice = monthPrice / 30;
+									dayPrice = Math.round(monthPrice / 30);
 									mModel.setPricePerDay(String
 											.valueOf(dayPrice));
 								}
@@ -208,6 +216,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 								int weekPrice = Integer.parseInt(mModel
 										.getPricePerWeek());
 								int dayPrice = weekPrice / 7;
+								dayPrice = Math.round(weekPrice / 7);
 								mModel.setPricePerDay(String.valueOf(dayPrice));
 							}
 						} else {
@@ -246,9 +255,14 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	}
 
 	private void setAdapter() {
-		mAdapter.setCallback(this);
-		mAdapter.addItems(mSearchResultsArray);
-		mListView.setAdapter(mAdapter);
+
+		if (index == 1) {
+			mAdapter.clearItems();
+			mAdapter.addItems(mSearchResultsArray);
+		} else {
+			mAdapter.addItems(mSearchResultsArray);
+		}
+		isloading = false;
 		mAdapter.notifyDataSetChanged();
 	}
 
@@ -308,21 +322,29 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+		this.currentScrollState = scrollState;
+		this.isScrollCompleted();
 	}
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
+		this.currentFirstVisibleItem = firstVisibleItem;
+		this.currentVisibleItemCount = visibleItemCount;
+		this.totalItemCount = totalItemCount;
 
-		final int lastItem = firstVisibleItem + visibleItemCount;
-		if (lastItem == totalItemCount) {
-			if (preLast != lastItem) {
-				preLast = lastItem;
+	}
+
+	private void isScrollCompleted() {
+		if (this.currentVisibleItemCount > 0
+				&& this.currentScrollState == SCROLL_STATE_IDLE
+				&& this.totalItemCount == (currentFirstVisibleItem + currentVisibleItemCount)) {
+			if (!isloading) {
+				isloading = true;
 				index = index + 1;
 				initSearchResultsApi(index);
 			}
 		}
-
 	}
+
 }

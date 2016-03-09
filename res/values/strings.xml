@@ -173,5 +173,6 @@
     <string name="sign_up_to_proceed">Sign up to proceed</string>
     <string name="signup_with_email">Sign up with Email</string>
     <string name="proceed_to_continue">Proceed to Continue</string>
+    <string name="terms_conditions">Terms &amp; Conditions</string>
 
 </resources>

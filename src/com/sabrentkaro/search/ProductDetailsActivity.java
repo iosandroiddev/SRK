@@ -416,6 +416,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedAdId", selectedProductAdId);
 		mBundle.putString("productPrice", mDailyCost);
+		mBundle.putString("productPriceMonth", mMonthlyCost);
+		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
 		intent.putExtras(mBundle);
@@ -427,6 +429,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedAdId", selectedProductAdId);
 		mBundle.putString("productPrice", mDailyCost);
+		mBundle.putString("productPriceMonth", mMonthlyCost);
+		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
 		mIntent.putExtras(mBundle);

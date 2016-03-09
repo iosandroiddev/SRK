@@ -124,6 +124,25 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             custom:fonttype="trebuchet_ms" />
+        
+        <com.utils.CustomTextView
+            android:id="@+id/btnTermsConditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/custom_button_selector"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/terms_conditions"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            custom:fonttype="trebuchet_ms" />
     </LinearLayout>
 
 </FrameLayout>

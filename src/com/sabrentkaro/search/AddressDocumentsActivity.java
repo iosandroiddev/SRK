@@ -28,7 +28,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 	private boolean isPanCardSelected = false, isAadharCardSelected = false;
 	private LinearLayout mPanCardLayout, mAAadharCardLayout;
 	private TextView mbtnSelectCity;
-	private String selectedProductAdId, mPrice, mProductDescription, mQuantity,
+	private String selectedProductAdId, mPrice,mMonthPrice,mWeekPrice, mProductDescription, mQuantity,
 			mStartDate, mEndDate, mLocationId;
 
 	@Override
@@ -54,6 +54,8 @@ public class AddressDocumentsActivity extends BaseActivity {
 			if (mBundle != null) {
 				selectedProductAdId = mBundle.getString("selectedAdId");
 				mPrice = mBundle.getString("productPrice");
+				mMonthPrice = mBundle.getString("productPriceMonth");
+				mWeekPrice = mBundle.getString("productPriceweek");
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
 				mLocationId = mBundle.getString("locationId");
@@ -198,6 +200,8 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mBundle.putString("locationId", mLocationId);
 		mBundle.putString("quantity", mQuantity);
 		mBundle.putString("productPrice", mPrice);
+		mBundle.putString("productPriceMonth", mMonthPrice);
+		mBundle.putString("productPriceWeek", mWeekPrice);
 		mBundle.putString("address", meditAdress.getText().toString());
 		mBundle.putString("city", mbtnSelectCity.getText().toString());
 		mBundle.putString("state", meditState.getText().toString());

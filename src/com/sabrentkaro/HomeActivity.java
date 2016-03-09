@@ -2,6 +2,7 @@ package com.sabrentkaro;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.DialogInterface;
@@ -41,6 +42,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private HomeAdapter mAdapter;
 	private TextView mbtnSearchProducts, mbtnPostAd;
+	private String deviceUdId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,22 +53,26 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		loadReferences();
 		addClickListeners();
 		setAdapter();
-		// initDeviceEntryApi();
+		if (StorageClass.getInstance(this).getAccessToken().length() == 0)
+			initDeviceEntryApi();
 	}
 
 	private void initDeviceEntryApi() {
-		final String deviceUdId = Secure.getString(getContentResolver(),
-				Secure.ANDROID_ID);
+		deviceUdId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 		showProgressLayout();
 		JSONObject params = new JSONObject();
-
+		try {
+			params.put("DeviceId", deviceUdId);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		JsonObjectRequest mObjReq = new JsonObjectRequest(
 				ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {
 						hideProgressLayout();
-						showToast(response.toString());
+						responseForDeviceToken(response);
 					}
 
 				}, new ErrorListener() {
@@ -79,17 +85,18 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 				}) {
 
-			@Override
-			public byte[] getBody() {
-				super.getBody();
-				return deviceUdId.getBytes();
-			}
-
 		};
 
 		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
 		mQueue.add(mObjReq);
 
+	}
+
+	private void responseForDeviceToken(JSONObject response) {
+		if (response != null) {
+			String token = response.optString("AccessToken");
+			StorageClass.getInstance(this).setAccessToken(token);
+		}
 	}
 
 	private void loadAlert() {

@@ -1,15 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     android:padding="5dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <com.utils.CustomTextView
@@ -43,67 +44,184 @@
             android:textSize="15sp"
             android:visibility="gone"
             custom:fonttype="trebuchet_ms" />
+    </LinearLayout>
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" >
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" >
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical" >
 
-            <LinearLayout
+            <com.utils.CustomTextView
+                android:id="@+id/btnSignUpFb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical" >
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/fb_button_selector"
+                android:clickable="true"
+                android:drawableLeft="@drawable/facebook"
+                android:drawableStart="@drawable/facebook"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/facebook"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnSignupGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/google_button_selector"
+                android:clickable="true"
+                android:drawableLeft="@drawable/google"
+                android:drawableStart="@drawable/google"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/google"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnSignUpEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="15dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/signup_with_email"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:id="@+id/commonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <com.utils.CustomTextView
-                    android:id="@+id/btnSignUpFb"
+                    android:id="@+id/btnSelectUserType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/fb_button_selector"
-                    android:clickable="true"
-                    android:drawableLeft="@drawable/facebook"
-                    android:drawableStart="@drawable/facebook"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:gravity="center"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="5dp"
-                    android:scrollHorizontally="true"
+                    android:padding="10dp"
                     android:singleLine="true"
-                    android:text="@string/facebook"
-                    android:textColor="@color/white"
+                    android:text="@string/select_user_type"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <com.utils.CustomTextView
-                    android:id="@+id/btnSignupGoogle"
+                <EditText
+                    android:id="@+id/displayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/google_button_selector"
-                    android:clickable="true"
-                    android:drawableLeft="@drawable/google"
-                    android:drawableStart="@drawable/google"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:gravity="center"
+                    android:layout_margin="5dp"
+                    android:hint="@string/display_name"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/emailId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:hint="@string/enter_email_id"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:hint="@string/enter_password"
+                    android:inputType="textPassword" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnSelectCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/blue_button_selector"
+                    android:drawableEnd="@drawable/ic_arrow_down_"
+                    android:drawableRight="@drawable/ic_arrow_down_"
+                    android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="5dp"
-                    android:scrollHorizontally="true"
+                    android:padding="10dp"
                     android:singleLine="true"
-                    android:text="@string/google"
-                    android:textColor="@color/white"
+                    android:text="@string/select_city"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <com.utils.CustomTextView
-                    android:id="@+id/btnSignUpEmail"
+                <EditText
+                    android:id="@+id/mobileNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:hint="@string/enter_mobile_number"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/editPanCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_pan_card_number"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/checkTerms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:checked="false"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/i_accept_to_the_terms_of_use_listing_policy_and_renting_policy_of_sabrentkaro"
+                    android:textSize="14sp" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnGenerateOtp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/blue_custom_button_selector"
                     android:clickable="true"
@@ -111,132 +229,15 @@
                     android:fadingEdge="horizontal"
                     android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@string/signup_with_email"
+                    android:text="@string/submit"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     custom:fonttype="trebuchet_ms" />
-
-                <LinearLayout
-                    android:id="@+id/commonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone" >
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnSelectUserType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/blue_button_selector"
-                        android:drawableEnd="@drawable/ic_arrow_down_"
-                        android:drawableRight="@drawable/ic_arrow_down_"
-                        android:gravity="center_vertical"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:padding="10dp"
-                        android:singleLine="true"
-                        android:text="@string/select_user_type"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        custom:fonttype="trebuchet_ms" />
-
-                    <EditText
-                        android:id="@+id/displayName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:hint="@string/display_name"
-                        android:inputType="text" />
-
-                    <EditText
-                        android:id="@+id/emailId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:hint="@string/enter_email_id"
-                        android:inputType="text" />
-
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:hint="@string/enter_password"
-                        android:inputType="textPassword" />
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnSelectCountry"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/blue_button_selector"
-                        android:drawableEnd="@drawable/ic_arrow_down_"
-                        android:drawableRight="@drawable/ic_arrow_down_"
-                        android:gravity="center_vertical"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:padding="10dp"
-                        android:singleLine="true"
-                        android:text="@string/select_city"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        custom:fonttype="trebuchet_ms" />
-
-                    <EditText
-                        android:id="@+id/mobileNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:hint="@string/enter_mobile_number"
-                        android:inputType="number" />
-
-                    <EditText
-                        android:id="@+id/editPanCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/enter_pan_card_number"
-                        android:inputType="text"
-                        android:maxLength="10"
-                        android:visibility="gone" />
-
-                    <CheckBox
-                        android:id="@+id/checkTerms"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:checked="false"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:text="@string/i_accept_to_the_terms_of_use_listing_policy_and_renting_policy_of_sabrentkaro"
-                        android:textSize="14sp" />
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnGenerateOtp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/blue_custom_button_selector"
-                        android:clickable="true"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:padding="10dp"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:text="@string/submit"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        custom:fonttype="trebuchet_ms" />
-                </LinearLayout>
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
-</FrameLayout>
+</LinearLayout>

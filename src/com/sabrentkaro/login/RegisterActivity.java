@@ -1,6 +1,7 @@
 package com.sabrentkaro.login;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.json.JSONException;
@@ -8,8 +9,10 @@ import org.json.JSONObject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
@@ -40,8 +43,11 @@ import com.models.CityModel;
 import com.models.FbUserInfo;
 import com.models.GPlusUserInfo;
 import com.sabrentkaro.BaseActivity;
+import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
+import com.sabrentkaro.postad.PostAdDocumentActivity;
+import com.sabrentkaro.search.RentDatesActivity;
 import com.utils.ApiUtils;
 import com.utils.GetSocialDetails;
 import com.utils.GetSocialDetails.IFbLoginCallBack;
@@ -69,6 +75,28 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 	private FbUserInfo mFbUserInfo;
 	private GetSocialDetails mSocial;
 
+	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice,
+			mProductDescription, mQuantity;
+
+	private String mCategory;
+	private String mSubCategory;
+	private String mAdTitle;
+	private String mProductDesc;
+	private String mProductCondition;
+	private String mProductPurchasedPrice;
+	private String mUserInstructions;
+	private String mAdditionalStuff;
+	private String mDailyCost;
+	private String mMonthCost;
+	private String mProductAdId;
+	private String mSecurityDeposit;
+	private String mFilePath;
+	private String mWeekCost;
+	private String mtxtRating;
+	private String mtxtCondName;
+	private boolean hasBundle = false;
+	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +106,44 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 		hideSoftKeyboard();
 		// getAccountsRegisteredOnDevice();
 		initGoogleApiClient();
+		mbtnGenerateOtp.setVisibility(View.VISIBLE);
+	}
+
+	private void getDetails() {
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			Bundle mBundle = getIntent().getExtras();
+			if (mBundle != null && mBundle.containsKey("isPostAd")) {
+				hasBundle = true;
+				mCategory = mBundle.getString("category");
+				mSubCategory = mBundle.getString("subCategory");
+				mAdTitle = mBundle.getString("adTitle");
+				mProductDesc = mBundle.getString("productDescription");
+				mAdditionalStuff = mBundle.getString("additionalStuff");
+				mUserInstructions = mBundle.getString("userInstructions");
+				mProductPurchasedPrice = mBundle
+						.getString("productPurchasedPrice");
+				mDailyCost = mBundle.getString("dailyCost");
+				mMonthCost = mBundle.getString("monthlyCost");
+				mWeekCost = mBundle.getString("weekCost");
+				mQuantity = mBundle.getString("quantity");
+				mFilePath = mBundle.getString("filePath");
+				mSecurityDeposit = mBundle.getString("securityDeposit");
+				mProductAdId = mBundle.getString("productAdId");
+				mtxtRating = mBundle.getString("productCondition");
+				mtxtCondName = mBundle.getString("productConditionName");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
+			} else {
+				hasBundle = true;
+				selectedProductAdId = mBundle.getString("selectedAdId");
+				mPrice = mBundle.getString("productPrice");
+				mMonthPrice = mBundle.getString("productPriceMonth");
+				;
+				mWeekPrice = mBundle.getString("productPriceweek");
+				mProductDescription = mBundle.getString("productDescription");
+				mQuantity = mBundle.getString("quantity");
+			}
+		}
 	}
 
 	private void getAccountsRegisteredOnDevice() {
@@ -182,24 +248,27 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 	}
 
 	private void btnSingUpViaGPlusClicked() {
-		StaticUtils.expandCollapse(mbtnSignUpFb, false);
-		StaticUtils.expandCollapse(mbtnSingupEmail, false);
-		gplusClicked = true;
-		btnGoogleClicked();
+		// StaticUtils.expandCollapse(mbtnSignUpFb, false);
+		// StaticUtils.expandCollapse(mbtnSingupEmail, false);
+		// gplusClicked = true;
+		// btnGoogleClicked();
+		showToast("Will be available in Next Release");
 	}
 
 	private void btnSingUpViaFbClicked() {
-		StaticUtils.expandCollapse(mbtnSignupGplus, false);
-		StaticUtils.expandCollapse(mbtnSingupEmail, false);
-		gplusClicked = false;
-		loginViaFb();
+		// StaticUtils.expandCollapse(mbtnSignupGplus, false);
+		// StaticUtils.expandCollapse(mbtnSingupEmail, false);
+		showToast("Will be available in Next Release");
+		// gplusClicked = false;
+		// loginViaFb();
 	}
 
 	private void btnSignUpViaEmailClicked() {
 		StaticUtils.expandCollapse(mbtnSignupGplus, false);
 		StaticUtils.expandCollapse(mbtnSignUpFb, false);
-		gplusClicked = false;
+		// gplusClicked = false;
 		StaticUtils.expandCollapse(mlayoutCommonFields, true);
+		mbtnGenerateOtp.setVisibility(View.VISIBLE);
 	}
 
 	private void btnSelectUserTypeClicked() {
@@ -234,14 +303,16 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 								mbtnSelectUser.setText(mUserTypes[which]);
 								if (mUserTypes[which]
 										.equalsIgnoreCase("Business")) {
-									StaticUtils.expandCollapse(
-											mEditPanCardNumber, true);
+									mEditPanCardNumber
+											.setVisibility(View.VISIBLE);
 								} else {
 									if (mEditPanCardNumber.getVisibility() == View.VISIBLE) {
-										StaticUtils.expandCollapse(
-												mEditPanCardNumber, false);
+										mEditPanCardNumber
+												.setVisibility(View.GONE);
 									}
 								}
+								StaticUtils.expandCollapse(mlayoutCommonFields,
+										true);
 							}
 						});
 				alert.show();
@@ -318,15 +389,15 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 			JSONObject mLogin = new JSONObject();
 			mLogin.put("Email", mEditEmail.getText().toString());
 			mLogin.put("MobileNumber", mEditMobileNumber.getText().toString());
-			mLogin.put("IsClaims", "false");
-			if (fbClicked) {
-				mLogin.put("Provider", "FB");
-				mLogin.put("ProviderKey", mFbUserInfo.getId());
-			}
-			if (gplusClicked) {
-				mLogin.put("Provider", "Google");
-				mLogin.put("ProviderKey", mGPlusUserInfo.getId());
-			}
+			// mLogin.put("IsClaims", "false");
+			// if (fbClicked) {
+			// mLogin.put("Provider", "FB");
+			// mLogin.put("ProviderKey", mFbUserInfo.getId());
+			// }
+			// if (gplusClicked) {
+			// mLogin.put("Provider", "Google");
+			// mLogin.put("ProviderKey", mGPlusUserInfo.getId());
+			// }
 			if (mbtnSelectUser.getText().toString()
 					.equalsIgnoreCase("Individual")) {
 				mLogin.put("UserTypeId", "1");
@@ -354,15 +425,12 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 				e.printStackTrace();
 			}
 
-			JSONObject mPassword = new JSONObject();
+			JSONObject mVerifications = new JSONObject();
+			mVerifications.put("MobileAccessToken",
+					StorageClass.getInstance(this).getAccessToken());
+			mVerifications.put("Password", mCurrentPassword);
 			try {
-				mPassword.put("Password", mCurrentPassword);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				mUserProfileParams.put("Verifications", mPassword);
+				mUserProfileParams.put("Verifications", mVerifications);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -379,7 +447,7 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 					@Override
 					public void onResponse(JSONObject response) {
 						hideProgressLayout();
-						showToast("Success");
+						responseForRegisterApi(response);
 					}
 
 				}, new ErrorListener() {
@@ -433,6 +501,92 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 				alert.show();
 			}
 		}
+	}
+
+	private void responseForRegisterApi(JSONObject response) {
+		String userName = "";
+		if (response != null) {
+			String mInformation = response.optString("Information");
+			if (mInformation == null || mInformation.contains("null")
+					|| mInformation.length() == 0) {
+
+				JSONObject mObjUser = response.optJSONObject("User");
+				if (mObjUser != null) {
+					String authenticationHeader = mObjUser.optJSONObject(
+							"UserTransactions").optString(
+							"AuthenticationHeader");
+					JSONObject mObjUserProfile = mObjUser
+							.optJSONObject("UserProfile");
+					if (mObjUserProfile != null) {
+						userName = mObjUserProfile.optString("Name");
+					}
+					JSONObject mObjUserAdress = (JSONObject) mObjUser
+							.optJSONArray("Addresses").opt(0);
+					if (mObjUserAdress != null) {
+						try {
+							String addressLine = mObjUserAdress
+									.getString("AddressLine1")
+									+ " "
+									+ mObjUserAdress.getString("AddressLine2");
+							String city = mObjUserAdress.getString("City");
+							String state = mObjUserAdress.getString("State");
+							String country = mObjUserAdress
+									.getString("Country");
+							String pincode = mObjUserAdress
+									.getString("PinCode");
+							String mobileNumber = mObjUserAdress
+									.getString("MobileNo");
+
+							StorageClass.getInstance(this).setUserCity(city);
+
+							StorageClass.getInstance(this).setUserState(state);
+							StorageClass.getInstance(this).setUserCountry(
+									country);
+							StorageClass.getInstance(this).setPinCode(pincode);
+							StorageClass.getInstance(this).setMobileNumber(
+									mobileNumber);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					StorageClass.getInstance(this).setUserName(userName);
+					StorageClass.getInstance(this).setAuthHeader(
+							authenticationHeader);
+				}
+				if (hasBundle) {
+					if (selectedProductAdId == null
+							|| selectedProductAdId.length() == 0) {
+						navigateToPostAdDocuments();
+					} else {
+						navigateToRentDates();
+					}
+				} else {
+					navigateToHome();
+				}
+
+			} else {
+				showAlert(mInformation);
+			}
+		}
+	}
+
+	private void showAlert(String message) {
+		new AlertDialog.Builder(this)
+				.setTitle("Error")
+				.setMessage(message)
+				.setOnDismissListener(new OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						dialog.cancel();
+					}
+				})
+				.setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).create().show();
 	}
 
 	private void initGoogleApiClient() {
@@ -566,7 +720,7 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 				mEditEmail.setText(userEmail);
 				mEditEmail.setEnabled(false);
 				mEditDisplayName.setText(mGPlusUserInfo.getUserName());
-
+				mbtnGenerateOtp.setVisibility(View.VISIBLE);
 				StaticUtils.expandCollapse(mbtnSignupGplus, false);
 				mtxtMessage
 						.setText("You've successfully authenticated with Google. Please enter the details below to complete your one time registration with us");
@@ -625,9 +779,10 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 
 			StaticUtils.expandCollapse(mlayoutCommonFields, true);
 			mEditEmail.setText(email);
-			mEditEmail.setEnabled(false);
+			if (email != null && email.length() > 0)
+				mEditEmail.setEnabled(false);
 			mEditDisplayName.setText(name);
-
+			mbtnGenerateOtp.setVisibility(View.VISIBLE);
 			StaticUtils.expandCollapse(mbtnSignUpFb, false);
 			mtxtMessage
 					.setText("You've successfully authenticated with Facebook. Please enter the details below to complete your one time registration with us");
@@ -648,5 +803,51 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 	private void logoutFb() {
 		if (mSocial != null)
 			mSocial.logoutFb();
+	}
+
+	private void navigateToHome() {
+		Intent mIntent = new Intent(this, HomeActivity.class);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(mIntent);
+	}
+
+	private void navigateToPostAdDocuments() {
+		Intent mIntent = new Intent(this, PostAdDocumentActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("category", mCategory);
+		mBundle.putString("subCategory", mSubCategory);
+		mBundle.putString("adTitle", mAdTitle);
+		mBundle.putString("productDescription", mProductDesc);
+		mBundle.putString("productCondition", "");
+		mBundle.putString("userInstructions", mUserInstructions);
+		mBundle.putString("additionalStuff", mAdditionalStuff);
+		mBundle.putString("productPurchasedPrice", mProductPurchasedPrice);
+		mBundle.putString("dailyCost", mDailyCost);
+		mBundle.putString("productAdId", mProductAdId);
+		mBundle.putString("weekCost", mWeekCost);
+		mBundle.putString("monthlyCost", mMonthCost);
+		mBundle.putString("productCondition", mtxtRating);
+		mBundle.putString("filePath", mFilePath);
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("securityDeposit", mSecurityDeposit);
+		mBundle.putString("productConditionName", mtxtCondName);
+		mBundle.putSerializable("controlLayouts", controlLayouts);
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+		finish();
+	}
+
+	private void navigateToRentDates() {
+		Intent intent = new Intent(this, RentDatesActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("selectedAdId", selectedProductAdId);
+		mBundle.putString("productPrice", mPrice);
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("productPriceMonth", mMonthPrice);
+		mBundle.putString("productPriceWeek", mWeekPrice);
+		mBundle.putString("productDescription", mProductDescription);
+		intent.putExtras(mBundle);
+		startActivity(intent);
+		finish();
 	}
 }

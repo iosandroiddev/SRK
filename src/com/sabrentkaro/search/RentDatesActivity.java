@@ -41,7 +41,7 @@ public class RentDatesActivity extends BaseActivity implements
 		IDatePickListener {
 
 	private TextView mtxtStartDate, mtxtEndDate, mbtnNext;
-	private String selectedProductAdId, mPrice, mProductDescription, mQuantity;
+	private String selectedProductAdId, mPrice, mProductDescription, mQuantity, mMonthPrice, mWeekPrice;
 	private final SimpleDateFormat isoFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 	private TextView mtxtDateField;
@@ -73,6 +73,8 @@ public class RentDatesActivity extends BaseActivity implements
 			if (mBundle != null) {
 				selectedProductAdId = mBundle.getString("selectedAdId");
 				mPrice = mBundle.getString("productPrice");
+				mMonthPrice = mBundle.getString("productPriceMonth");;
+				mWeekPrice = mBundle.getString("productPriceweek");
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
 			}
@@ -353,6 +355,8 @@ public class RentDatesActivity extends BaseActivity implements
 		mBundle.putString("quantity", mQuantity);
 		mBundle.putString("locationId", mLocValue);
 		mBundle.putString("productPrice", mPrice);
+		mBundle.putString("productPriceMonth", mMonthPrice);
+		mBundle.putString("productPriceWeek", mWeekPrice);
 		mBundle.putString("productDescription", mProductDescription);
 		intent.putExtras(mBundle);
 		startActivity(intent);
