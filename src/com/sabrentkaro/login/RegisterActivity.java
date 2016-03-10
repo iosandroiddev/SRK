@@ -523,35 +523,41 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 					}
 					JSONArray mAddressArray = (JSONArray) mObjUser
 							.optJSONArray("Addresses");
-					if(mAddressArray!=null){
-					JSONObject mObjUserAdress = (JSONObject) mAddressArray.opt(0);
-					if (mObjUserAdress != null) {
-						try {
-							String addressLine = mObjUserAdress
-									.getString("AddressLine1")
-									+ " "
-									+ mObjUserAdress.getString("AddressLine2");
-							String city = mObjUserAdress.getString("City");
-							String state = mObjUserAdress.getString("State");
-							String country = mObjUserAdress
-									.getString("Country");
-							String pincode = mObjUserAdress
-									.getString("PinCode");
-							String mobileNumber = mObjUserAdress
-									.getString("MobileNo");
+					if (mAddressArray != null) {
+						JSONObject mObjUserAdress = (JSONObject) mAddressArray
+								.opt(0);
+						if (mObjUserAdress != null) {
+							try {
+								String addressLine = mObjUserAdress
+										.getString("AddressLine1")
+										+ " "
+										+ mObjUserAdress
+												.getString("AddressLine2");
+								String city = mObjUserAdress.getString("City");
+								String state = mObjUserAdress
+										.getString("State");
+								String country = mObjUserAdress
+										.getString("Country");
+								String pincode = mObjUserAdress
+										.getString("PinCode");
+								String mobileNumber = mObjUserAdress
+										.getString("MobileNo");
 
-							StorageClass.getInstance(this).setUserCity(city);
+								StorageClass.getInstance(this)
+										.setUserCity(city);
 
-							StorageClass.getInstance(this).setUserState(state);
-							StorageClass.getInstance(this).setUserCountry(
-									country);
-							StorageClass.getInstance(this).setPinCode(pincode);
-							StorageClass.getInstance(this).setMobileNumber(
-									mobileNumber);
-						} catch (JSONException e) {
-							e.printStackTrace();
+								StorageClass.getInstance(this).setUserState(
+										state);
+								StorageClass.getInstance(this).setUserCountry(
+										country);
+								StorageClass.getInstance(this).setPinCode(
+										pincode);
+								StorageClass.getInstance(this).setMobileNumber(
+										mobileNumber);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
-					}
 					}
 					StorageClass.getInstance(this).setUserName(userName);
 					StorageClass.getInstance(this).setAuthHeader(

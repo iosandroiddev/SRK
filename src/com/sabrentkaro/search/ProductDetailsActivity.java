@@ -291,7 +291,13 @@ public class ProductDetailsActivity extends BaseActivity {
 				mtxtTitle.setText(mItemObj.optString("Title"));
 				mtxtValue.setText(mItemObj.optString("Value"));
 
-				mLayoutFiedlsValues.addView(mView);
+				if (mItemObj.optString("title") == null
+						|| mItemObj.optString("title").contains("null")
+						|| mItemObj.optString("title").length() == 0) {
+
+				} else {
+					mLayoutFiedlsValues.addView(mView);
+				}
 
 				if (mItemObj.optString("Title").equalsIgnoreCase("Brand")) {
 					mBrand = mItemObj.optString("Value");

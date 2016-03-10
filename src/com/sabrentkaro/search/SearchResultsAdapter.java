@@ -154,7 +154,13 @@ public class SearchResultsAdapter extends BaseAdapter {
 				mtxtView.setSelected(true);
 				mtxtView.setEllipsize(TruncateAt.MARQUEE);
 				mtxtView.setSingleLine(true);
-				mHolder.mRootFiedlsLayout.addView(mtxtView);
+				if (mCatTonObj.optString("title") == null
+						|| mCatTonObj.optString("title").contains("null")
+						|| mCatTonObj.optString("title").length() == 0) {
+
+				} else {
+					mHolder.mRootFiedlsLayout.addView(mtxtView);
+				}
 			}
 		}
 

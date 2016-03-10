@@ -170,7 +170,8 @@ public class SplashActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		}
-		initSubCategoriesApi();
+		// initSubCategoriesApi();
+		initCityListApi();
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class SplashActivity extends FragmentActivity implements
 			}
 
 		}
-		initCityListApi();
+
 	}
 
 	private void showToast(String mString) {

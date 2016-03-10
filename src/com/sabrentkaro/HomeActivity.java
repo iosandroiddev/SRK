@@ -2,6 +2,7 @@ package com.sabrentkaro;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +19,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.adapters.HomeAdapter;
+import com.android.jsonclasses.IArrayParseListener;
+import com.android.jsonclasses.JSONArrayRequestResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -30,9 +33,12 @@ import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchActivity;
 import com.sabrentkaro.search.SearchResultsActivity;
 import com.utils.ApiUtils;
+import com.utils.MiscUtils;
+import com.utils.StaticData;
 import com.utils.StorageClass;
 
-public class HomeActivity extends BaseActivity implements OnItemClickListener {
+public class HomeActivity extends BaseActivity implements OnItemClickListener,
+		IArrayParseListener {
 
 	private GridView mGridView;
 	private ArrayList<ProductModel> mProductsArray = new ArrayList<ProductModel>();
@@ -53,8 +59,22 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		loadReferences();
 		addClickListeners();
 		setAdapter();
-		if (StorageClass.getInstance(this).getAccessToken().length() == 0)
+		if (StorageClass.getInstance(this).getAccessToken().length() == 0) {
 			initDeviceEntryApi();
+		} else {
+			initSubCategoriesApi();
+		}
+	}
+
+	private void initSubCategoriesApi() {
+		showProgressLayout();
+		JSONArrayRequestResponse mJsonRequestResponse = new JSONArrayRequestResponse(
+				this);
+		mJsonRequestResponse.setPostMethod(true);
+		Bundle params = new Bundle();
+		mJsonRequestResponse.getResponse(
+				MiscUtils.encodeUrl(ApiUtils.GETCATEGORYMAPPINGS, params),
+				StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE, this);
 	}
 
 	private void initDeviceEntryApi() {
@@ -71,7 +91,6 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						hideProgressLayout();
 						responseForDeviceToken(response);
 					}
 
@@ -97,6 +116,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			String token = response.optString("AccessToken");
 			StorageClass.getInstance(this).setAccessToken(token);
 		}
+		initSubCategoriesApi();
 	}
 
 	private void loadAlert() {
@@ -275,6 +295,54 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		mBundle.putSerializable("categoriesMapping", mCateogoryMappingsArray);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
+	}
+
+	@Override
+	public void ErrorResponse(VolleyError error, int requestCode) {
+		switch (requestCode) {
+		case StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE:
+			showToast("Something went Wrong at Category Mappings  Api");
+			finish();
+			break;
+		}
+	}
+
+	@Override
+	public void SuccessResponse(JSONArray response, int requestCode) {
+
+		switch (requestCode) {
+		case StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE:
+			responseForAllSubCategoriesApi(response);
+			break;
+		}
+	}
+
+	private void responseForAllSubCategoriesApi(JSONArray response) {
+		if (response != null && response.length() > 0) {
+			for (int i = 0; i < response.length(); i++) {
+				try {
+					JSONObject mCatObj = response.getJSONObject(i);
+					CategoryModel mModel = new CategoryModel();
+					mModel.setCode(mCatObj.optString("Code"));
+					mModel.setCategory(mCatObj.optString("Category"));
+					mModel.setTitle(mCatObj.optString("Title"));
+					mCateogoryMappingsArray.add(mModel);
+
+					if (!(mCategoriesArray.contains(mCatObj
+							.optString("Category")))) {
+						mCategoriesArray.add(mCatObj.optString("Category"));
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		InternalApp mApp = (InternalApp) getApplication();
+		if (mApp != null) {
+			mApp.setCategoryMappingArray(mCateogoryMappingsArray);
+		}
+
 	}
 
 }
