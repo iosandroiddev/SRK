@@ -318,6 +318,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	private void responseForAllSubCategoriesApi(JSONArray response) {
+		hideProgressLayout();
 		if (response != null && response.length() > 0) {
 			for (int i = 0; i < response.length(); i++) {
 				try {

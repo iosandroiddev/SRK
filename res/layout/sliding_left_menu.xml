@@ -5,37 +5,61 @@
     android:layout_height="match_parent"
     android:background="@drawable/slider_gradient" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:orientation="vertical" >
+        android:scrollbars="none" >
 
         <LinearLayout
-            android:id="@+id/layouLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center_horizontal"
+            android:background="@color/transparent"
             android:orientation="vertical" >
 
-            <com.utils.CircleImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/missing_avatar"
-                android:visibility="gone"
-                custom:border_color="@color/white"
-                custom:border_width="2dp" />
+            <LinearLayout
+                android:id="@+id/layouLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <com.utils.CircleImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/missing_avatar"
+                    android:visibility="gone"
+                    custom:border_color="@color/white"
+                    custom:border_width="2dp" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/txtLoginUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:clickable="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
 
             <com.utils.CustomTextView
-                android:id="@+id/txtLoginUserName"
+                android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
                 android:clickable="true"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
@@ -44,105 +68,221 @@
                 android:padding="10dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
+                android:text="@string/login"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/home"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnPostAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/post_an_ad"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnSearchProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/search_products"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnAboutUs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/about_us"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnHelp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_button_selector"
+                android:clickable="true"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/help"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:id="@+id/helpLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="-7dp"
+                android:background="@drawable/custom_border_white"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:visibility="gone" >
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnTermsOfUse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/white_circle_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/white_circle_selector"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/terms_of_use"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnLegalDisclaimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/white_circle_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/white_circle_selector"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/legal_disclaimer"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/white_circle_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/white_circle_selector"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnListingPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/white_circle_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/white_circle_selector"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/listing_policy"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <com.utils.CustomTextView
+                    android:id="@+id/btnRentingPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/white_circle_selector"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/white_circle_selector"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/renting_policy"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
+            </LinearLayout>
         </LinearLayout>
-
-        <com.utils.CustomTextView
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
-
-        <com.utils.CustomTextView
-            android:id="@+id/btnHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/home"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
-
-        <com.utils.CustomTextView
-            android:id="@+id/btnPostAd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/post_an_ad"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
-
-        <com.utils.CustomTextView
-            android:id="@+id/btnSearchProducts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/search_products"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
-        
-        <com.utils.CustomTextView
-            android:id="@+id/btnTermsConditions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button_selector"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/terms_conditions"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            custom:fonttype="trebuchet_ms" />
-    </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

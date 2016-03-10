@@ -174,5 +174,12 @@
     <string name="signup_with_email">Sign up with Email</string>
     <string name="proceed_to_continue">Proceed to Continue</string>
     <string name="terms_conditions">Terms &amp; Conditions</string>
+    <string name="help">Help</string>
+    <string name="about_us">About Us</string>
+    <string name="terms_of_use">Terms Of Use</string>
+    <string name="legal_disclaimer">Legal Disclaimer</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="listing_policy">Listing Policy</string>
+    <string name="renting_policy">Renting Policy</string>
 
 </resources>

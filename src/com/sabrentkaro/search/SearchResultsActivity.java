@@ -23,6 +23,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.internal.mm;
 import com.models.CityModel;
 import com.models.SearchModel;
 import com.sabrentkaro.BaseActivity;
@@ -174,6 +175,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 						mModel.setAdTitle(resultObj.optString("adTitle"));
 						mModel.setAdDescription(resultObj
 								.optString("adDescription"));
+						mModel.setVerified(resultObj.optBoolean("isVerified"));
 						mModel.setCoverImagePath(resultObj
 								.optString("coverImagePath"));
 						mModel.setPostedBy(resultObj.optString("postedByName"));

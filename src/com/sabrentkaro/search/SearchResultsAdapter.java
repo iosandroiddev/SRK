@@ -76,6 +76,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 		TextView mtxtTitle, mtxtPostedBy, mbtnRent, mtxtLocation, mtxtPrice;
 		LinearLayout mRootFiedlsLayout;
 		ImageView mItemImg;
+		View mVerifiedView;
 	}
 
 	@SuppressLint("NewApi")
@@ -100,6 +101,8 @@ public class SearchResultsAdapter extends BaseAdapter {
 					.findViewById(R.id.btnRent);
 			mHolder.mRootFiedlsLayout = (LinearLayout) convertView
 					.findViewById(R.id.rootFields);
+			mHolder.mVerifiedView = (View) convertView
+					.findViewById(R.id.verfiedView);
 			convertView.setTag(mHolder);
 		} else {
 			mHolder = (Holder) convertView.getTag();
@@ -110,6 +113,12 @@ public class SearchResultsAdapter extends BaseAdapter {
 		mHolder.mtxtTitle.setSelected(true);
 		mHolder.mtxtPostedBy.setText(mModel.getPostedBy());
 		mHolder.mtxtLocation.setText(mModel.getLocation());
+
+		if (mModel.isVerified()) {
+			mHolder.mVerifiedView.setVisibility(View.VISIBLE);
+		} else {
+			mHolder.mVerifiedView.setVisibility(View.GONE);
+		}
 
 		if (mModel.getPricePerDay().equalsIgnoreCase("0")
 				|| mModel.getPricePerDay().length() == 0) {

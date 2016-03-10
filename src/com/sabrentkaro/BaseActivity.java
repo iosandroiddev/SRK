@@ -29,6 +29,7 @@ import com.models.CityModel;
 import com.sabrentkaro.login.LoginActivity;
 import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchActivity;
+import com.utils.StaticUtils;
 import com.utils.StorageClass;
 import com.utils.slidingmenu.SlidingMenu;
 import com.utils.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -43,8 +44,10 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public TextView mtxtLocation;
 	private TextView mbtnLogin, mtxtTitle;
 	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName,
-			mbtnTermsConditions;
-	private LinearLayout mLoginLayout;
+			mbtnTermsConditions, mbtnLegalDisc, mbtnPrivacyPolicy,
+			mbtnListingPolicy, mbtnRentingPolicy, mbtnAboutUs, mbtnHelp;
+	private LinearLayout mLoginLayout, mHelpLayout;
+	private boolean isHelpClicked = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,13 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mbtnSearchProducts.setOnClickListener(this);
 		mbtnHome.setOnClickListener(this);
 		mbtnTermsConditions.setOnClickListener(this);
+		mbtnLegalDisc.setOnClickListener(this);
+		mbtnRentingPolicy.setOnClickListener(this);
+		mbtnListingPolicy.setOnClickListener(this);
+		mbtnPrivacyPolicy.setOnClickListener(this);
+		mbtnAboutUs.setOnClickListener(this);
+		mbtnHelp.setOnClickListener(this);
+
 	}
 
 	private void getLayoutReferences() {
@@ -85,7 +95,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mtxtLocation = (TextView) findViewById(R.id.txtLocation);
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
-		mbtnTermsConditions = (TextView) findViewById(R.id.btnTermsConditions);
+
+		mHelpLayout = (LinearLayout) findViewById(R.id.helpLayout);
 		mtxtTitle = (TextView) findViewById(R.id.txtTitle);
 		mtxtTitle.setOnClickListener(new OnClickListener() {
 
@@ -99,6 +110,20 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mbtnHome = (TextView) findViewById(R.id.btnHome);
 		mLoginLayout = (LinearLayout) findViewById(R.id.layouLogin);
 		mtxtUserName = (TextView) findViewById(R.id.txtLoginUserName);
+
+		mbtnTermsConditions = (TextView) findViewById(R.id.btnTermsOfUse);
+		mbtnHelp = (TextView) findViewById(R.id.btnHelp);
+		mbtnLegalDisc = (TextView) findViewById(R.id.btnLegalDisclaimer);
+		mbtnListingPolicy = (TextView) findViewById(R.id.btnListingPolicy);
+		mbtnPrivacyPolicy = (TextView) findViewById(R.id.btnPrivacyPolicy);
+		mbtnRentingPolicy = (TextView) findViewById(R.id.btnRentingPolicy);
+		mbtnAboutUs = (TextView) findViewById(R.id.btnAboutUs);
+
+		mbtnTermsConditions.setSelected(true);
+		mbtnLegalDisc.setSelected(true);
+		mbtnListingPolicy.setSelected(true);
+		mbtnPrivacyPolicy.setSelected(true);
+		mbtnRentingPolicy.setSelected(true);
 	}
 
 	private void setSlidingMenu() {
@@ -140,20 +165,104 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		case R.id.btnHome:
 			btnHomeClicked();
 			break;
-		case R.id.btnTermsConditions:
+		case R.id.btnTermsOfUse:
 			btnTermsConditionsClicked();
+			break;
+		case R.id.btnHelp:
+			btnHelpClicked();
+			break;
+		case R.id.btnListingPolicy:
+			btnListingPolicyClicked();
+			break;
+		case R.id.btnLegalDisclaimer:
+			btnLegalDiscClicked();
+			break;
+		case R.id.btnPrivacyPolicy:
+			btnPrivacyPolicyClicked();
+			break;
+		case R.id.btnRentingPolicy:
+			btnRentingPolicyClicked();
+			break;
+		case R.id.btnAboutUs:
+			btnAboutUsClicked();
 			break;
 		default:
 			break;
 		}
 	}
 
+	private void btnAboutUsClicked() {
+		btnMenuClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("viewToLoad", "aboutUs");
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+	}
+
+	private void btnRentingPolicyClicked() {
+		btnMenuClicked();
+		btnHelpClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("viewToLoad", "rentingPolicy");
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+	}
+
+	private void btnPrivacyPolicyClicked() {
+		btnMenuClicked();
+		btnHelpClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("viewToLoad", "privacyPolicy");
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+	}
+
+	private void btnLegalDiscClicked() {
+		btnMenuClicked();
+		btnHelpClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		mBundle.putString("viewToLoad", "legalDisc");
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+	}
+
+	private void btnListingPolicyClicked() {
+		btnMenuClicked();
+		btnHelpClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("viewToLoad", "listingPolicy");
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
+
+	}
+
+	private void btnHelpClicked() {
+		if (isHelpClicked) {
+			isHelpClicked = false;
+		} else {
+			isHelpClicked = true;
+		}
+		StaticUtils.expandCollapse(mHelpLayout, isHelpClicked);
+	}
+
 	private void btnTermsConditionsClicked() {
 		btnMenuClicked();
-		mbtnTermsConditions.setSelected(true);
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-				Uri.parse("http://allrental.co.in/documents/termsofuse"));
-		startActivity(browserIntent);
+		btnHelpClicked();
+		Intent mIntent = new Intent(this, WebActivity.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("viewToLoad", "terms");
+		mIntent.putExtras(mBundle);
+		startActivity(mIntent);
 	}
 
 	private void btnPostAdClicked() {

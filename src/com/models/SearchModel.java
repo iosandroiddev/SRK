@@ -29,7 +29,7 @@ public class SearchModel implements Serializable {
 	private String capacity;
 
 	private JSONArray mCatTonArray;
-
+	private boolean verified;
 	private String postedBy;
 
 	public String getAdId() {
@@ -170,6 +170,14 @@ public class SearchModel implements Serializable {
 	public String getPostedBy() {
 		return this.postedBy;
 
+	}
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
 	}
 
 }
