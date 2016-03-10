@@ -1,5 +1,7 @@
 package com.sabrentkaro;
 
+import com.utils.StaticUtils;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.webkit.WebView;
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends BaseActivity {
 	private WebView mWebView;
+	private String loadText = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,9 @@ public class WebActivity extends BaseActivity {
 			} else if (mViewtoLoad.equalsIgnoreCase("listingPolicy")) {
 				mWebView.loadUrl("http://allrental.co.in/documents/rentingpolicy");
 			}
-
 		}
+
+		// StaticUtils.loadHtmlContent(mWebView, loadText, 15);
 	}
 
 	private void loadLayoutReferences() {

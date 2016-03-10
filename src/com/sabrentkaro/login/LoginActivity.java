@@ -271,7 +271,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 			}
 		} else {
 		}
-		startActivity(mIntent);
+		startActivityForResult(mIntent, 143);
 	}
 
 	private void btnLoginUserClicked() {
@@ -427,16 +427,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 							StorageClass.getInstance(this).setAddress(
 									addressLine);
 
-							if (hasBundle) {
-								if (selectedProductAdId == null
-										|| selectedProductAdId.length() == 0) {
-									navigateToPostAdDocuments();
-								} else {
-									navigateToRentDates();
-								}
-							} else {
-								navigateToHome();
-							}
+							navigation();
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -454,10 +445,24 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 		}
 	}
 
+	private void navigation() {
+		if (hasBundle) {
+			if (selectedProductAdId == null
+					|| selectedProductAdId.length() == 0) {
+				navigateToPostAdDocuments();
+			} else {
+				navigateToRentDates();
+			}
+		} else {
+			navigateToHome();
+		}
+	}
+
 	private void navigateToHome() {
 		Intent mIntent = new Intent(this, HomeActivity.class);
 		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);
+		finish();
 	}
 
 	private void navigateToPostAdDocuments() {
@@ -625,6 +630,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 10) {
 			if (resultCode != RESULT_OK) {
 				mSignInClicked = false;
@@ -632,6 +638,10 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 			mIntentInProgress = false;
 			if (!mGoogleApiClient.isConnecting()) {
 				mGoogleApiClient.connect();
+			}
+		} else if (requestCode == 143) {
+			if (resultCode == RESULT_OK) {
+				navigation();
 			}
 		}
 	}
@@ -706,4 +716,5 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 		}
 
 	}
+
 }

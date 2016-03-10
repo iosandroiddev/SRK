@@ -563,16 +563,19 @@ public class RegisterActivity extends BaseActivity implements IFbLoginCallBack,
 					StorageClass.getInstance(this).setAuthHeader(
 							authenticationHeader);
 				}
-				if (hasBundle) {
-					if (selectedProductAdId == null
-							|| selectedProductAdId.length() == 0) {
-						navigateToPostAdDocuments();
-					} else {
-						navigateToRentDates();
-					}
-				} else {
-					navigateToHome();
-				}
+				// if (hasBundle) {
+				// if (selectedProductAdId == null
+				// || selectedProductAdId.length() == 0) {
+				// navigateToPostAdDocuments();
+				// } else {
+				// navigateToRentDates();
+				// }
+				// } else {
+				// navigateToHome();
+				// }
+				showToast("Registered Successfully Done!");
+				setResult(RESULT_OK);
+				finish();
 
 			} else {
 				showAlert(mInformation);
