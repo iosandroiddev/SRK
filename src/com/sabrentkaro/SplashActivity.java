@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
 import android.widget.TextView;
@@ -60,14 +61,7 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	private void initiateHandler() {
-		new Handler().postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				navigateToMainActivity();
-			}
-
-		}, StaticData.SPLASH_ACTIVITY_DURATION);
+		navigateToMainActivity();
 	}
 
 	private void navigateToMainActivity() {
@@ -171,7 +165,18 @@ public class SplashActivity extends FragmentActivity implements
 			}
 		}
 		// initSubCategoriesApi();
-		initCityListApi();
+//		if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
+			initCityListApi();
+		// } else {
+		// ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+		// .getCityList();
+		// if (mCityArray == null || mCityArray.size() == 0) {
+		// initCityListApi();
+		// } else {
+		// initiateHandler();
+		// }
+		// }
+
 	}
 
 	@Override
