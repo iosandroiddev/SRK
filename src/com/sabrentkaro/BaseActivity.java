@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -21,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 			mbtnListingPolicy, mbtnRentingPolicy, mbtnAboutUs, mbtnHelp;
 	private LinearLayout mLoginLayout, mHelpLayout;
 	private boolean isHelpClicked = false;
+	private ProgressBar mProgressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		mtxtLocation = (TextView) findViewById(R.id.txtLocation);
 		mbtnLogin = (TextView) findViewById(R.id.btnLogin);
 		mbtnPostAd = (TextView) findViewById(R.id.btnPostAd);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		mHelpLayout = (LinearLayout) findViewById(R.id.helpLayout);
 		mtxtTitle = (TextView) findViewById(R.id.txtTitle);
@@ -306,6 +310,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void showProgressLayout() {
+		mProgressBar.getIndeterminateDrawable().setColorFilter(
+				getResources().getColor(R.color.pink), PorterDuff.Mode.SRC_IN);
 		mProgressLayout.setVisibility(View.VISIBLE);
 	}
 

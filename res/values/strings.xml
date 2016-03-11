@@ -181,5 +181,6 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="listing_policy">Listing Policy</string>
     <string name="renting_policy">Renting Policy</string>
+    <string name="policy_info">Policy Info</string>
 
 </resources>

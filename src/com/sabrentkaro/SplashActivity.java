@@ -10,16 +10,16 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +56,10 @@ public class SplashActivity extends FragmentActivity implements
 		} catch (NameNotFoundException e) {
 			Log.w(this.getClass().getName(), e.getMessage());
 		}
+		((ProgressBar) findViewById(R.id.splashProgress))
+				.getIndeterminateDrawable().setColorFilter(
+						getResources().getColor(R.color.pink),
+						PorterDuff.Mode.SRC_IN);
 		initProductsApi();
 
 	}
@@ -165,8 +169,8 @@ public class SplashActivity extends FragmentActivity implements
 			}
 		}
 		// initSubCategoriesApi();
-//		if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
-			initCityListApi();
+		// if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
+		initCityListApi();
 		// } else {
 		// ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
 		// .getCityList();

@@ -163,7 +163,7 @@
                 android:padding="10dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@string/help"
+                android:text="@string/policy_info"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />
