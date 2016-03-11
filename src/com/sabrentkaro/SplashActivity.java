@@ -211,7 +211,14 @@ public class SplashActivity extends FragmentActivity implements
 				}
 			}
 		}
-		StorageClass.getInstance(this).setCityList(mCityArray);
+		if (mCityArray.size() == 0) {
+			if (StorageClass.getInstance(this).getCityList() != null
+					&& StorageClass.getInstance(this).getCityList().size() != 0) {
+
+			}
+		} else {
+			StorageClass.getInstance(this).setCityList(mCityArray);
+		}
 		initiateHandler();
 	}
 
