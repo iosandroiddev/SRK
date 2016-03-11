@@ -92,7 +92,13 @@ public class SearchActivity extends BaseActivity implements
 				mObj.setImage(R.drawable.watch);
 				break;
 			case 14:
-				mObj.setImage(R.drawable.suits);
+				mObj.setImage(R.drawable.kidsfurniture);
+				break;
+			case 15:
+				mObj.setImage(R.drawable.camcorder);
+				break;
+			case 16:
+				mObj.setImage(R.drawable.house);
 				break;
 			default:
 				mObj.setImage(R.drawable.suits);
