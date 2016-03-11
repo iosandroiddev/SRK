@@ -32,13 +32,13 @@ public class WebActivity extends BaseActivity {
 			} else if (mViewtoLoad.equalsIgnoreCase("aboutUs")) {
 				mWebView.loadUrl("http://allrental.co.in/documents/aboutus");
 			} else if (mViewtoLoad.equalsIgnoreCase("rentingPolicy")) {
-				mWebView.loadUrl("file:///android_asset/About Us.html");
+				mWebView.loadUrl("http://allrental.co.in/documents/rentingpolicy");
 			} else if (mViewtoLoad.equalsIgnoreCase("privacyPolicy")) {
 				mWebView.loadUrl("http://allrental.co.in/documents/privacypolicy");
 			} else if (mViewtoLoad.equalsIgnoreCase("legalDisc")) {
 				mWebView.loadUrl("http://allrental.co.in/documents/legaldisclaimer");
 			} else if (mViewtoLoad.equalsIgnoreCase("listingPolicy")) {
-				mWebView.loadUrl("http://allrental.co.in/documents/rentingpolicy");
+				mWebView.loadUrl("http://allrental.co.in/documents/listingpolicy");
 			}
 		}
 
@@ -53,7 +53,7 @@ public class WebActivity extends BaseActivity {
 				WebSettings.RenderPriority.HIGH);
 		mWebView.setFocusable(false);
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.setFocusableInTouchMode(false);
+		mWebView.setFocusableInTouchMode(true);
 
 	}
 
