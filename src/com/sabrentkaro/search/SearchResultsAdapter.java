@@ -76,7 +76,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 		TextView mtxtTitle, mtxtPostedBy, mbtnRent, mtxtLocation, mtxtPrice;
 		LinearLayout mRootFiedlsLayout;
 		ImageView mItemImg;
-		View mVerifiedView;
+		ImageView mVerifiedView;
 	}
 
 	@SuppressLint("NewApi")
@@ -101,7 +101,7 @@ public class SearchResultsAdapter extends BaseAdapter {
 					.findViewById(R.id.btnRent);
 			mHolder.mRootFiedlsLayout = (LinearLayout) convertView
 					.findViewById(R.id.rootFields);
-			mHolder.mVerifiedView = (View) convertView
+			mHolder.mVerifiedView = (ImageView) convertView
 					.findViewById(R.id.verfiedView);
 			convertView.setTag(mHolder);
 		} else {

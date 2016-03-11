@@ -127,7 +127,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <View
                 android:layout_width="0dp"
@@ -167,7 +168,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:paddingTop="10dp" >
+            android:paddingTop="10dp"
+            android:visibility="gone" >
 
             <com.utils.CustomTextView
                 android:id="@+id/btnFb"
@@ -186,8 +188,8 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:padding="5dp"
                 android:scrollHorizontally="true"
-                android:text="@string/facebook"
                 android:singleLine="true"
+                android:text="@string/facebook"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 custom:fonttype="trebuchet_ms" />

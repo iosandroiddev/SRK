@@ -28,24 +28,36 @@ public class WebActivity extends BaseActivity {
 			Bundle mBundle = getIntent().getExtras();
 			String mViewtoLoad = mBundle.getString("viewToLoad");
 			if (mViewtoLoad.equalsIgnoreCase("terms")) {
-				mWebView.loadUrl("file:///android_asset/terms.html");
+				loadText = "file:///android_asset/terms.html";
+				mWebView.loadUrl(loadText);
 			} else if (mViewtoLoad.equalsIgnoreCase("aboutUs")) {
-				mWebView.loadUrl("file:///android_asset/index.html");
+				loadText = "file:///android_asset/index.html";
+
 			} else if (mViewtoLoad.equalsIgnoreCase("rentingPolicy")) {
-				mWebView.loadUrl("file:///android_asset/RentingPolicy.html");
+				loadText = "file:///android_asset/RentingPolicy.html";
 			} else if (mViewtoLoad.equalsIgnoreCase("privacyPolicy")) {
-				mWebView.loadUrl("file:///android_asset/PrivacyPolicy.html");
+				loadText = "file:///android_asset/PrivacyPolicy.html";
 			} else if (mViewtoLoad.equalsIgnoreCase("legalDisc")) {
-				mWebView.loadUrl("file:///android_asset/LegalDisclaimer.html");
+				loadText = "file:///android_asset/LegalDisclaimer.html";
 			} else if (mViewtoLoad.equalsIgnoreCase("listingPolicy")) {
-				mWebView.loadUrl("file:///android_asset/ListingPolicy.html");
+				loadText = "file:///android_asset/ListingPolicy.html";
 			}
+
+			mWebView.loadUrl(loadText);
 		}
 
 		mWebView.setWebViewClient(new WebViewClient() {
 
 			public void onPageFinished(WebView view, String url) {
 				hideProgressLayout();
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				if (url.equals(loadText)) {
+					view.loadUrl(url);
+				}
+				return true;
 			}
 		});
 

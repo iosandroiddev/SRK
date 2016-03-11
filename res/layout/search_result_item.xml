@@ -31,48 +31,47 @@
                     android:layout_height="100dp"
                     android:background="#55000000" >
 
-                    <com.utils.SquareImageView
-                        android:id="@+id/itemProduct"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_loading" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <com.utils.SquareImageView
+                            android:id="@+id/itemProduct"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_loading" />
+
+                        <ImageView
+                            android:id="@+id/verfiedView"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/app_name"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/verified" >
+                        </ImageView>
+                    </FrameLayout>
                 </LinearLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
+                <com.utils.CustomTextView
+                    android:id="@+id/btnRent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
-
-                    <com.utils.CustomTextView
-                        android:id="@+id/btnRent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="2dp"
-                        android:background="@drawable/blue_custom_button_selector"
-                        android:clickable="true"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:padding="10dp"
-                        android:scrollHorizontally="true"
-                        android:text="@string/rent"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        custom:fonttype="trebuchet_ms" />
-
-                    <View
-                        android:id="@+id/verfiedView"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginStart="5dp"
-                        android:background="@drawable/circle_green" >
-                    </View>
-                </FrameLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/blue_custom_button_selector"
+                    android:clickable="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:text="@string/rent"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:fonttype="trebuchet_ms" />
             </LinearLayout>
 
             <LinearLayout
