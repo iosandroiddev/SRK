@@ -47,8 +47,8 @@
                             android:id="@+id/verfiedView"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:contentDescription="@string/app_name"
                             android:layout_margin="5dp"
+                            android:contentDescription="@string/app_name"
                             android:src="@drawable/verified" >
                         </ImageView>
                     </FrameLayout>
@@ -233,6 +233,72 @@
 
                     <com.utils.CustomTextView
                         android:id="@+id/txtPricePerDay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutWeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:text="@string/price_per_week"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtPricePerWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutMonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:text="@string/price_per_month"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtPricePerMonth"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"

@@ -200,7 +200,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		Intent mIntent = new Intent(this, WebActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("viewToLoad", "aboutUs");
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -211,7 +210,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		Intent mIntent = new Intent(this, WebActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("viewToLoad", "rentingPolicy");
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -222,7 +220,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		Intent mIntent = new Intent(this, WebActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("viewToLoad", "privacyPolicy");
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -232,7 +229,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		btnHelpClicked();
 		Intent mIntent = new Intent(this, WebActivity.class);
 		Bundle mBundle = new Bundle();
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mBundle.putString("viewToLoad", "legalDisc");
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
@@ -244,7 +240,6 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		Intent mIntent = new Intent(this, WebActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("viewToLoad", "listingPolicy");
-		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 

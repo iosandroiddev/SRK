@@ -73,8 +73,9 @@ public class SearchResultsAdapter extends BaseAdapter {
 	}
 
 	private class Holder {
-		TextView mtxtTitle, mtxtPostedBy, mbtnRent, mtxtLocation, mtxtPrice;
-		LinearLayout mRootFiedlsLayout;
+		TextView mtxtTitle, mtxtPostedBy, mbtnRent, mtxtLocation, mtxtPrice,
+				mtxtPriceWeek, mtxtPriceMonth;
+		LinearLayout mRootFiedlsLayout, mWeekLayout, mMonthLayout;
 		ImageView mItemImg;
 		ImageView mVerifiedView;
 	}
@@ -95,12 +96,21 @@ public class SearchResultsAdapter extends BaseAdapter {
 					.findViewById(R.id.txtLocation);
 			mHolder.mtxtPrice = (TextView) convertView
 					.findViewById(R.id.txtPricePerDay);
+			mHolder.mtxtPriceMonth = (TextView) convertView
+					.findViewById(R.id.txtPricePerMonth);
+			mHolder.mtxtPriceWeek = (TextView) convertView
+					.findViewById(R.id.txtPricePerWeek);
 			mHolder.mItemImg = (ImageView) convertView
 					.findViewById(R.id.itemProduct);
 			mHolder.mbtnRent = (TextView) convertView
 					.findViewById(R.id.btnRent);
 			mHolder.mRootFiedlsLayout = (LinearLayout) convertView
 					.findViewById(R.id.rootFields);
+			mHolder.mWeekLayout = (LinearLayout) convertView
+					.findViewById(R.id.layoutWeek);
+			mHolder.mMonthLayout = (LinearLayout) convertView
+					.findViewById(R.id.layoutMonth);
+
 			mHolder.mVerifiedView = (ImageView) convertView
 					.findViewById(R.id.verfiedView);
 			convertView.setTag(mHolder);
@@ -135,6 +145,22 @@ public class SearchResultsAdapter extends BaseAdapter {
 			}
 		} else {
 			mHolder.mtxtPrice.setText(mModel.getPricePerDay());
+		}
+
+		if (mModel.getPricePerWeek().equalsIgnoreCase("0")
+				|| mModel.getPricePerWeek().length() == 0) {
+			mHolder.mWeekLayout.setVisibility(View.GONE);
+		} else {
+			mHolder.mtxtPriceWeek.setText(mModel.getPricePerWeek());
+			mHolder.mWeekLayout.setVisibility(View.VISIBLE);
+		}
+
+		if (mModel.getPricePerMonth().equalsIgnoreCase("0")
+				|| mModel.getPricePerMonth().length() == 0) {
+			mHolder.mMonthLayout.setVisibility(View.GONE);
+		} else {
+			mHolder.mtxtPriceMonth.setText(mModel.getPricePerMonth());
+			mHolder.mMonthLayout.setVisibility(View.VISIBLE);
 		}
 
 		mHolder.mtxtLocation.setSelected(true);

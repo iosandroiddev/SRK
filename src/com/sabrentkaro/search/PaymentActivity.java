@@ -7,18 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -60,54 +61,12 @@ public class PaymentActivity extends BaseActivity {
 		addContentLayout(R.layout.web_layout);
 		// getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		webView = (WebView) findViewById(R.id.webView);
-		JSONObject productInfoObj = new JSONObject();
-		JSONArray productPartsArr = new JSONArray();
-		JSONObject productPartsObj1 = new JSONObject();
-		JSONObject paymentIdenfierParent = new JSONObject();
-		JSONArray paymentIdentifiersArr = new JSONArray();
-		JSONObject paymentPartsObj1 = new JSONObject();
-		JSONObject paymentPartsObj2 = new JSONObject();
-		try {
-			// Payment Parts
-			productPartsObj1.put("name", "abc");
-			productPartsObj1.put("description", "abcd");
-			productPartsObj1.put("value", "1000");
-			productPartsObj1.put("isRequired", "true");
-			productPartsObj1.put("settlementEvent", "EmailConfirmation");
-			productPartsArr.put(productPartsObj1);
-			productInfoObj.put("paymentParts", productPartsArr);
 
-			// Payment Identifiers
-			paymentPartsObj1.put("field", "CompletionDate");
-			paymentPartsObj1.put("value", "31/10/2012");
-			paymentIdentifiersArr.put(paymentPartsObj1);
+		String hashSequence1 = merchant_key + "|" + txnid + "|" + amount + "|"
+				+ productInfo + "|" + firstName + "|" + emailId + "|||||||||||"
+				+ salt;
 
-			paymentPartsObj2.put("field", "TxnId");
-			paymentPartsObj2.put("value", txnid);
-			paymentIdentifiersArr.put(paymentPartsObj2);
-
-			paymentIdenfierParent.put("paymentIdentifiers",
-					paymentIdentifiersArr);
-			productInfoObj.put("", paymentIdenfierParent);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		productInfo = productInfoObj.toString();
-
-		Log.e("TAG", productInfoObj.toString());
-
-		Random rand = new Random();
-		String rndm = Integer.toString(rand.nextInt())
-				+ (System.currentTimeMillis() / 1000L);
-		txnid = hashCal("SHA-256", rndm).substring(0, 20);
-
-		hash = hashCal("SHA-512", merchant_key + "|" + txnid + "|" + amount
-				+ "|" + productInfo + "|" + firstName + "|" + emailId
-				+ "|||||||||||" + salt);
-
-		action1 = base_url.concat("/_payment");
+		hash = hashCal("SHA-512", hashSequence1);
 
 		webView.setWebViewClient(new WebViewClient() {
 
@@ -115,6 +74,8 @@ public class PaymentActivity extends BaseActivity {
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
 				// TODO Auto-generated method stub
+				System.out
+						.println(">>>>>>>>>>>>>>onReceivedError>>>>>>>>>>>>>>>>>>");
 				Toast.makeText(PaymentActivity.this, "Oh no! " + description,
 						Toast.LENGTH_SHORT).show();
 			}
@@ -123,6 +84,8 @@ public class PaymentActivity extends BaseActivity {
 			public void onReceivedSslError(WebView view,
 					SslErrorHandler handler, SslError error) {
 				// TODO Auto-generated method stub
+				System.out
+						.println(">>>>>>>>>>>>>>onReceivedSslError>>>>>>>>>>>>>>>>>>");
 				Toast.makeText(PaymentActivity.this, "SslError! " + error,
 						Toast.LENGTH_SHORT).show();
 				handler.proceed();
@@ -130,25 +93,29 @@ public class PaymentActivity extends BaseActivity {
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				Toast.makeText(PaymentActivity.this, "Page Started! " + url,
-						Toast.LENGTH_SHORT).show();
-				if (url.equals(SUCCESS_URL)) {
-					Toast.makeText(PaymentActivity.this, "Success! " + url,
-							Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(PaymentActivity.this, "Failure! " + url,
-							Toast.LENGTH_SHORT).show();
-				}
-				return super.shouldOverrideUrlLoading(view, url);
+				// TODO Auto-generated method stub
+				System.out
+						.println(">>>>>>>>>>>>>>shouldOverrideUrlLoading>>>>>>>>>>>>>>>>>>");
+				return true;
+
 			}
-			//
-			// @Override
-			// public void onPageFinished(WebView view, String url) {
-			// super.onPageFinished(view, url);
-			//
-			// Toast.makeText(PayMentGateWay.this, "" + url,
-			// Toast.LENGTH_SHORT).show();
-			// }
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				// TODO Auto-generated method stub
+				System.out
+						.println(">>>>>>>>>>>>>>onPageFinished>>>>>>>>>>>>>>>>>>");
+
+				super.onPageFinished(view, url);
+
+			}
+
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				super.onPageStarted(view, url, favicon);
+				System.out
+						.println(">>>>>>>>>>>>>>onPageStarted>>>>>>>>>>>>>>>>>>");
+			}
 		});
 
 		webView.setVisibility(View.VISIBLE);
@@ -159,43 +126,157 @@ public class PaymentActivity extends BaseActivity {
 		webView.clearCache(true);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setSupportZoom(true);
-		webView.getSettings().setUseWideViewPort(false);
-		webView.getSettings().setLoadWithOverviewMode(false);
+		webView.getSettings().setUseWideViewPort(true);
+		webView.getSettings().setLoadWithOverviewMode(true);
 
-		webView.addJavascriptInterface(new PayUJavaScriptInterface(
-				PaymentActivity.this), "PayUMoney");
-		Map<String, String> mapParams = new HashMap<String, String>();
-		mapParams.put("key", merchant_key);
-		mapParams.put("hash", hash);
-		mapParams.put("txnid", txnid);
-		mapParams.put("service_provider", "payu_paisa");
-		mapParams.put("amount", amount);
-		mapParams.put("firstname", firstName);
-		mapParams.put("email", emailId);
-		mapParams.put("phone", phone);
+		webView.addJavascriptInterface(new PayUJavaScriptInterface(this),
+				"PayUMoney");
 
-		mapParams.put("productinfo", productInfo);
-		mapParams.put("surl", SUCCESS_URL);
-		mapParams.put("furl", FAILED_URL);
-		mapParams.put("lastname", "Vijayakumar");
+		String post_Data = "hash=" + hash + "&key=" + merchant_key + "&txnid="
+				+ txnid + "&amount=" + amount + "&productinfo=" + productInfo
+				+ "&firstname=" + firstName + "&email=" + emailId + "&phone="
+				+ phone + "&surl=" + SUCCESS_URL + "&furl=" + FAILED_URL
+				+ "&service_provider=" + "payu_paisa";
 
-		mapParams.put("address1", "");
-		mapParams.put("address2", "");
-		mapParams.put("city", "");
-		mapParams.put("state", "");
+		webView.postUrl("https://secure.payu.in/_payment",
+				EncodingUtils.getBytes(post_Data, "base64"));
 
-		mapParams.put("country", "");
-		mapParams.put("zipcode", "");
-		mapParams.put("udf1", "");
-		mapParams.put("udf2", "");
-
-		mapParams.put("udf3", "");
-		mapParams.put("udf4", "");
-		mapParams.put("udf5", "");
+		// JSONObject productInfoObj = new JSONObject();
+		// JSONArray productPartsArr = new JSONArray();
+		// JSONObject productPartsObj1 = new JSONObject();
+		// JSONObject paymentIdenfierParent = new JSONObject();
+		// JSONArray paymentIdentifiersArr = new JSONArray();
+		// JSONObject paymentPartsObj1 = new JSONObject();
+		// JSONObject paymentPartsObj2 = new JSONObject();
+		// try {
+		// // Payment Parts
+		// productPartsObj1.put("name", "abc");
+		// productPartsObj1.put("description", "abcd");
+		// productPartsObj1.put("value", "1000");
+		// productPartsObj1.put("isRequired", "true");
+		// productPartsObj1.put("settlementEvent", "EmailConfirmation");
+		// productPartsArr.put(productPartsObj1);
+		// productInfoObj.put("paymentParts", productPartsArr);
+		//
+		// // Payment Identifiers
+		// paymentPartsObj1.put("field", "CompletionDate");
+		// paymentPartsObj1.put("value", "31/10/2012");
+		// paymentIdentifiersArr.put(paymentPartsObj1);
+		//
+		// paymentPartsObj2.put("field", "TxnId");
+		// paymentPartsObj2.put("value", txnid);
+		// paymentIdentifiersArr.put(paymentPartsObj2);
+		//
+		// paymentIdenfierParent.put("paymentIdentifiers",
+		// paymentIdentifiersArr);
+		// productInfoObj.put("", paymentIdenfierParent);
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// productInfo = productInfoObj.toString();
+		//
+		// Log.e("TAG", productInfoObj.toString());
+		//
+		// Random rand = new Random();
+		// String rndm = Integer.toString(rand.nextInt())
+		// + (System.currentTimeMillis() / 1000L);
+		// txnid = hashCal("SHA-256", rndm).substring(0, 20);
+		//
+		// hash = hashCal("SHA-512", merchant_key + "|" + txnid + "|" + amount
+		// + "|" + productInfo + "|" + firstName + "|" + emailId
+		// + "|||||||||||" + salt);
+		//
+		// action1 = base_url.concat("/_payment");
+		//
+		// webView.setWebViewClient(new WebViewClient() {
+		//
+		// @Override
+		// public void onReceivedError(WebView view, int errorCode,
+		// String description, String failingUrl) {
+		// // TODO Auto-generated method stub
+		// Toast.makeText(PaymentActivity.this, "Oh no! " + description,
+		// Toast.LENGTH_SHORT).show();
+		// }
+		//
+		// @Override
+		// public void onReceivedSslError(WebView view,
+		// SslErrorHandler handler, SslError error) {
+		// // TODO Auto-generated method stub
+		// Toast.makeText(PaymentActivity.this, "SslError! " + error,
+		// Toast.LENGTH_SHORT).show();
+		// handler.proceed();
+		// }
+		//
+		// @Override
+		// public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		// Toast.makeText(PaymentActivity.this, "Page Started! " + url,
+		// Toast.LENGTH_SHORT).show();
+		// if (url.equals(SUCCESS_URL)) {
+		// Toast.makeText(PaymentActivity.this, "Success! " + url,
+		// Toast.LENGTH_SHORT).show();
+		// } else {
+		// Toast.makeText(PaymentActivity.this, "Failure! " + url,
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// return super.shouldOverrideUrlLoading(view, url);
+		// }
+		// //
+		// // @Override
+		// // public void onPageFinished(WebView view, String url) {
+		// // super.onPageFinished(view, url);
+		// //
+		// // Toast.makeText(PayMentGateWay.this, "" + url,
+		// // Toast.LENGTH_SHORT).show();
+		// // }
+		// });
+		//
+		// webView.setVisibility(View.VISIBLE);
+		// webView.getSettings().setBuiltInZoomControls(true);
+		// webView.getSettings().setCacheMode(2);
+		// webView.getSettings().setDomStorageEnabled(true);
+		// webView.clearHistory();
+		// webView.clearCache(true);
+		// webView.getSettings().setJavaScriptEnabled(true);
+		// webView.getSettings().setSupportZoom(true);
+		// webView.getSettings().setUseWideViewPort(false);
+		// webView.getSettings().setLoadWithOverviewMode(false);
+		//
+		// webView.addJavascriptInterface(new PayUJavaScriptInterface(
+		// PaymentActivity.this), "PayUMoney");
+		// Map<String, String> mapParams = new HashMap<String, String>();
+		// mapParams.put("key", merchant_key);
+		// mapParams.put("hash", hash);
+		// mapParams.put("txnid", txnid);
+		// mapParams.put("service_provider", "payu_paisa");
+		// mapParams.put("amount", amount);
+		// mapParams.put("firstname", firstName);
+		// mapParams.put("email", emailId);
+		// mapParams.put("phone", phone);
+		//
+		// mapParams.put("productinfo", productInfo);
+		// mapParams.put("surl", SUCCESS_URL);
+		// mapParams.put("furl", FAILED_URL);
+		// mapParams.put("lastname", "Vijayakumar");
+		//
+		// mapParams.put("address1", "");
+		// mapParams.put("address2", "");
+		// mapParams.put("city", "");
+		// mapParams.put("state", "");
+		//
+		// mapParams.put("country", "");
+		// mapParams.put("zipcode", "");
+		// mapParams.put("udf1", "");
+		// mapParams.put("udf2", "");
+		//
+		// mapParams.put("udf3", "");
+		// mapParams.put("udf4", "");
+		// mapParams.put("udf5", "");
 		// mapParams.put("pg", (empty(PayMentGateWay.this.params.get("pg"))) ?
 		// ""
 		// : PayMentGateWay.this.params.get("pg"));
-		webview_ClientPost(webView, action1, mapParams.entrySet());
+		// webview_ClientPost(webView, action1, mapParams.entrySet());
 
 	}
 
@@ -234,7 +315,10 @@ public class PaymentActivity extends BaseActivity {
 					item.getKey(), item.getValue()));
 		}
 		sb.append("</form></body></html>");
-		webView.loadData(sb.toString(), "text/html", "utf-8");
+		// webView.loadData(sb.toString(), "text/html", "utf-8");
+
+		webView.postUrl("https://secure.payu.in/_payment",
+				EncodingUtils.getBytes(sb.toString(), "base64"));
 	}
 
 	public boolean empty(String s) {

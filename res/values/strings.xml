@@ -182,5 +182,7 @@
     <string name="listing_policy">Listing Policy</string>
     <string name="renting_policy">Renting Policy</string>
     <string name="policy_info">Policy Info</string>
+    <string name="price_per_week">Price per Week</string>
+    <string name="price_per_month">Price per Month</string>
 
 </resources>
