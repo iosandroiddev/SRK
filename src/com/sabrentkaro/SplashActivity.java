@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
@@ -47,6 +48,10 @@ public class SplashActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		InternalApp application = (InternalApp) getApplication();
+		if (!application.isTabletLayout()) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		setContentView(R.layout.activity_splash);
 		try {
 			PackageInfo pi = getPackageManager().getPackageInfo(
