@@ -109,7 +109,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		JSONObject mPagingInputs = new JSONObject();
 		try {
 			mPagingInputs.put("PageNumber", index);
-			mPagingInputs.put("PageSize", "50");
+			mPagingInputs.put("PageSize", "25");
 			mPagingInputs.put("UserId", null);
 		} catch (JSONException e) {
 			e.printStackTrace();

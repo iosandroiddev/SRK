@@ -32,15 +32,16 @@ public class PaymentActivity extends BaseActivity {
 
 	WebView webView;
 
-	String merchant_key = ":payutest@payu.in";
+	String merchant_key = "JBZaLc";
 	String salt = "GQs7yium";
 	String action1 = "";
-	String base_url = "https://secure.payu.in";
+//	String base_url = "https://secure.payu.in";
+	String base_url = "https://test.payu.in/_payment";
 	// int error = 0;
 	// String hashString = "";
 	// Map<String, String> params;
 	String txnid = "TXN8367286482920";
-	String amount = "1000";
+	String amount = "10";
 	String productInfo = "";
 	String firstName = "Rajesh";
 	String emailId = "rajeshmcashc10@gmail.com";
@@ -138,7 +139,7 @@ public class PaymentActivity extends BaseActivity {
 				+ phone + "&surl=" + SUCCESS_URL + "&furl=" + FAILED_URL
 				+ "&service_provider=" + "payu_paisa";
 
-		webView.postUrl("https://secure.payu.in/_payment",
+		webView.postUrl(base_url,
 				EncodingUtils.getBytes(post_Data, "base64"));
 
 		// JSONObject productInfoObj = new JSONObject();

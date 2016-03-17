@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.ActivityInfo;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -133,6 +133,10 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	private void setSlidingMenu() {
 		setBehindContentView(R.layout.sliding_left_menu);
 		setSlidingActionBarEnabled(true);
+		InternalApp application = (InternalApp) getApplication();
+		if (!application.isTabletLayout()) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		setContentView(R.layout.base_layout);
 		mSlidingMenu = getSlidingMenu();
 		mSlidingMenu.setShadowWidthRes(R.dimen.slider_shadow_width);
@@ -145,6 +149,10 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public void addContentLayout(int id) {
 		LayoutInflater mInflater = LayoutInflater.from(this);
 		View view = mInflater.inflate(id, null);
+		InternalApp application = (InternalApp) getApplication();
+		if (!application.isTabletLayout()) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		mMiddleLayout.addView(view);
 	}
 
