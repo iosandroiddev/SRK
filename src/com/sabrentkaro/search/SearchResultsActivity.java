@@ -179,6 +179,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 						mModel.setCoverImagePath(resultObj
 								.optString("coverImagePath"));
 						mModel.setPostedBy(resultObj.optString("postedByName"));
+						mModel.setPostedById(resultObj.optString("postedBy"));
 						mModel.setProductCategory(resultObj
 								.optString("productcategory"));
 						mModel.setLocation(resultObj.optString("location"));
@@ -271,11 +272,18 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	@Override
 	public void onRentButtonClicked(int pos) {
 		SearchModel mModel = mAdapter.getItem(pos);
-		Intent mIntent = new Intent(this, ProductDetailsActivity.class);
-		Bundle mBundle = new Bundle();
-		mBundle.putString("selectedProductAdId", mModel.getAdId());
-		mIntent.putExtras(mBundle);
-		startActivity(mIntent);
+		String postedById = mModel.getPostedById();
+		int postedUserId = Integer.parseInt(postedById);
+		if (postedUserId == StorageClass.getInstance(this).getUserId()) {
+			showToast("Own product renting is not possible");
+		} else {
+			Intent mIntent = new Intent(this, ProductDetailsActivity.class);
+			Bundle mBundle = new Bundle();
+			mBundle.putString("selectedProductAdId", mModel.getAdId());
+			mIntent.putExtras(mBundle);
+			startActivity(mIntent);
+		}
+
 	}
 
 	private void showCityAlert() {

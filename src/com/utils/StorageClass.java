@@ -49,6 +49,7 @@ public class StorageClass {
 	public String getUserName() {
 		return sh.getString("username", "");
 	}
+	
 
 	public void setBrandName(String membertype) {
 		edit.putString("brand_name", membertype).commit();

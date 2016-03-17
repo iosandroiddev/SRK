@@ -31,6 +31,7 @@ public class SearchModel implements Serializable {
 	private JSONArray mCatTonArray;
 	private boolean verified;
 	private String postedBy;
+	private String postedById;
 
 	public String getAdId() {
 		return adId;
@@ -178,6 +179,14 @@ public class SearchModel implements Serializable {
 
 	public void setVerified(boolean verified) {
 		this.verified = verified;
+	}
+
+	public String getPostedById() {
+		return postedById;
+	}
+
+	public void setPostedById(String postedById) {
+		this.postedById = postedById;
 	}
 
 }

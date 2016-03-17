@@ -390,6 +390,12 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 					|| response.optString("Information").length() == 0) {
 				JSONObject mObjUser = response.optJSONObject("User");
 				if (mObjUser != null) {
+					JSONObject mLogin = mObjUser.optJSONObject("Login");
+					if (mLogin != null) {
+						String mloginId = mLogin.optString("LoginId");
+						StorageClass.getInstance(this).setUserId(
+								Integer.parseInt(mloginId));
+					}
 					String authenticationHeader = mObjUser.optJSONObject(
 							"UserTransactions").optString(
 							"AuthenticationHeader");
