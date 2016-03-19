@@ -16,6 +16,9 @@ public class ApiUtils {
 	public static final String FETCHSEARCHRESULTS = BASE_URL
 			+ "Search/FetchSearchResults";
 
+	public static final String FETCHSEARCHRESULTSFROMFILTER = BASE_URL
+			+ "Search/FetchSearchResultsFromFilter";
+	
 	public static final String LOADADDETAILS = BASE_URL
 			+ "Search/LoadAdDetails";
 

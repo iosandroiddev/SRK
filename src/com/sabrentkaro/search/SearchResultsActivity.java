@@ -88,8 +88,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		JSONArray minputs = new JSONArray();
 		JSONObject mObj = new JSONObject();
 		try {
-			mObj.put("SearchText", selectedCategory);
-			mObj.put("SearchType", "category");
+			mObj.put("SearchText", "");
+			mObj.put("SearchType", "");
 			mObj.put("SearchCondition", "OR");
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -100,12 +100,22 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 			String mlocation = StorageClass.getInstance(this).getCity();
 			mObj.put("SearchText", mlocation);
 			mObj.put("SearchType", "location");
+			mObj.put("SearchCondition", "OR");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		minputs.put(mObj);
+		mObj = new JSONObject();
+		try {
+			mObj.put("SearchText", selectedCategory);
+			mObj.put("SearchType", "productcategory.na");
+			mObj.put("SearchCode", selectedCategory);
+			mObj.put("pcSearchType", "");
 			mObj.put("SearchCondition", "AND");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		minputs.put(mObj);
-
 		JSONObject mPagingInputs = new JSONObject();
 		try {
 			mPagingInputs.put("PageNumber", index);
@@ -118,29 +128,24 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		JSONArray mSortKeys = new JSONArray();
 		JSONObject mSortKeysObj = new JSONObject();
 		try {
-			mSortKeysObj.put("SearchText", "");
-			mSortKeysObj.put("SearchType", "");
-			mSortKeysObj.put("SearchCode", "");
-			mSortKeysObj.put("pcSearchType", null);
-			mSortKeysObj.put("SearchCondition", null);
+			mSortKeysObj.put("pcSearchType", "null");
+			mSortKeysObj.put("SearchCondition", "null");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 		mSortKeys.put(mSortKeysObj);
-
 		try {
 			params.put("Inputs", minputs);
 			params.put("PagingInput", mPagingInputs);
 			params.put("SortKeys", mSortKeys);
 			params.put("SearchText", null);
-			params.put("SearchType", "Category");
+			params.put("SearchType", "");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 		JsonObjectRequest mObjReq = new JsonObjectRequest(
-				ApiUtils.FETCHSEARCHRESULTS, params,
+				ApiUtils.FETCHSEARCHRESULTSFROMFILTER, params,
 				new Listener<JSONObject>() {
 
 					@Override

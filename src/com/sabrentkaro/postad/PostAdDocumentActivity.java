@@ -53,7 +53,6 @@ public class PostAdDocumentActivity extends BaseActivity implements
 	private String mFilePath;
 	private String mWeekCost;
 	private String mQuantity;
-	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
 	private String mtxtRating;
 	private String mtxtCondName;
 	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
@@ -416,7 +415,6 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		Bundle mBundle = new Bundle();
 		mBundle.putString("category", mCategory);
 		mBundle.putString("subCategory", mSubCategory);
-		mBundle.putSerializable("arrayFields", mArrayFields);
 		mBundle.putString("adTitle", mAdTitle);
 		mBundle.putString("productDescription", mProductDesc);
 		mBundle.putString("productCondition", "");

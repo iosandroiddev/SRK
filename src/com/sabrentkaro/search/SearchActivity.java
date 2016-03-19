@@ -117,7 +117,7 @@ public class SearchActivity extends BaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Intent mIntent = new Intent(this, SearchResultsActivity.class);
+		Intent mIntent = new Intent(this, SubSearchActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("selectedCategory", mAdapter.getItem(position)
 				.getTitle());

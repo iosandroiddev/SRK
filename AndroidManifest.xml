@@ -124,6 +124,11 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sabrentkaro.search.SubSearchActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="com.google.android.gms.version"
