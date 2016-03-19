@@ -89,7 +89,7 @@ public class PostAdActivity extends BaseActivity implements
 	private ArrayList<CityModel> mCityArray = new ArrayList<CityModel>();
 
 	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
-	private LinearLayout mSelectLayout, mlayoutFields;
+	private LinearLayout mSelectLayout, mlayoutFields, mlayoutRents;
 
 	private HashMap<String, String> mControlLayouts = new HashMap<String, String>();
 	final static int CAMERA_SELECT_CODE = 1;
@@ -98,7 +98,7 @@ public class PostAdActivity extends BaseActivity implements
 	private String mImageProfilePicPath = "";
 	private String[] mStringSelectValues;
 	private TextView mbtnSelectRating;
-
+	private String rentalPeriod = "";
 	private String productAdId;
 	private String mtxtRating;
 	private String productCode;
@@ -437,6 +437,7 @@ public class PostAdActivity extends BaseActivity implements
 		InternalApp mApp = (InternalApp) getApplication();
 		mApp.setUriArray(mUriArray);
 		mApp.setImageFilesArray(mImageFileArray);
+		mApp.setArray(mArrayFields);
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			startLoginActivity();
 		} else {
@@ -474,6 +475,10 @@ public class PostAdActivity extends BaseActivity implements
 	}
 
 	private void startLoginActivity() {
+		InternalApp mApp = (InternalApp) getApplication();
+		mApp.setUriArray(mUriArray);
+		mApp.setImageFilesArray(mImageFileArray);
+		mApp.setArray(mArrayFields);
 		Intent mIntent = new Intent(this, LoginActivity.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("isPostAd", "yes");
@@ -719,7 +724,7 @@ public class PostAdActivity extends BaseActivity implements
 			mtxtFields.setText(mTitles);
 		}
 
-//		StaticUtils.expandCollapse(mSelectLayout, true);
+		// StaticUtils.expandCollapse(mSelectLayout, true);
 		StaticUtils.expandCollapse(mlayoutFields, true);
 	}
 

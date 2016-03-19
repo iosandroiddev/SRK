@@ -32,11 +32,11 @@ public class PaymentActivity extends BaseActivity {
 
 	WebView webView;
 
-	String merchant_key = "JBZaLc";
-	String salt = "GQs7yium";
+	String merchant_key = "HYEHlXI4";
+	String salt = "2ZkP3MefpI";
 	String action1 = "";
-//	String base_url = "https://secure.payu.in";
-	String base_url = "https://test.payu.in/_payment";
+	String base_url = "https://secure.payu.in/_payment";
+//	String base_url = "https://test.payu.in/_payment";
 	// int error = 0;
 	// String hashString = "";
 	// Map<String, String> params;

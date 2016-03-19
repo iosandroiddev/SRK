@@ -78,7 +78,6 @@ public class HomeAdapter extends BaseAdapter {
 		mHolder.mItemName.setText(mDataHolder.getTitle());
 		mHolder.mItemName.setSelected(true);
 		mQuery.id(mHolder.mItemImg).image(mDataHolder.getImage());
-
 		return convertView;
 	}
 }

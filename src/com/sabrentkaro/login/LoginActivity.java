@@ -1,5 +1,6 @@
 package com.sabrentkaro.login;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -32,6 +33,7 @@ import com.google.android.gms.plus.Plus.PlusOptions;
 import com.google.android.gms.plus.model.people.Person;
 import com.models.FbUserInfo;
 import com.models.GPlusUserInfo;
+import com.models.PostAdModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
@@ -71,6 +73,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 	private String mtxtRating;
 	private String mtxtCondName;
 	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
+	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
 	private String fbAccessToken = "";
 	private String fbId = "";
 	private String gPlusId = "";
@@ -128,6 +131,8 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 				mtxtCondName = mBundle.getString("productConditionName");
 				controlLayouts = (HashMap<String, String>) mBundle
 						.getSerializable("controlLayouts");
+				mArrayFields = (ArrayList<PostAdModel>) mBundle
+						.getSerializable("arrayFields");
 			} else {
 				hasBundle = true;
 				selectedProductAdId = mBundle.getString("selectedAdId");

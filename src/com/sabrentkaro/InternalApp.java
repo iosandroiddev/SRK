@@ -9,6 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.examples.toolbox.MyVolley;
 import com.android.volley.toolbox.Volley;
 import com.models.CategoryModel;
+import com.models.PostAdModel;
 import com.models.ProductModel;
 
 import android.app.Application;
@@ -27,6 +28,7 @@ public class InternalApp extends Application {
 	private ArrayList<Uri> mArrayBitmaps;
 
 	private ArrayList<File> mFileImagesArray;
+	private ArrayList<PostAdModel> mArrayFields;
 
 	@Override
 	public void onCreate() {
@@ -40,7 +42,8 @@ public class InternalApp extends Application {
 	}
 
 	public boolean isTabletLayout() {
-		int screenLayout = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		int screenLayout = getResources().getConfiguration().screenLayout
+				& Configuration.SCREENLAYOUT_SIZE_MASK;
 		return screenLayout != Configuration.SCREENLAYOUT_SIZE_SMALL
 				&& screenLayout != Configuration.SCREENLAYOUT_SIZE_NORMAL;
 	}
@@ -72,7 +75,8 @@ public class InternalApp extends Application {
 
 	}
 
-	public void setCategoryMappingArray(ArrayList<CategoryModel> mCateogoryMappingsArray) {
+	public void setCategoryMappingArray(
+			ArrayList<CategoryModel> mCateogoryMappingsArray) {
 		this.mCateogoryMappingsArray = mCateogoryMappingsArray;
 
 	}
@@ -106,5 +110,13 @@ public class InternalApp extends Application {
 
 	public ArrayList<File> getImageFilesArray() {
 		return this.mFileImagesArray;
+	}
+
+	public void setArray(ArrayList<PostAdModel> mArrayFields) {
+		this.mArrayFields = mArrayFields;
+	}
+
+	public ArrayList<PostAdModel> getArray() {
+		return this.mArrayFields;
 	}
 }

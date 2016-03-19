@@ -43,6 +43,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.models.CategoryModel;
+import com.models.PostAdModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
@@ -64,6 +65,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mtxtRating, mtxtInstructions, mtxtStuff, mtxtQuanity,
 			mtxtPurchasedCost, mtxtDailyCost, mtxtWeekCost, mtxtMonthCost,
 			mtxtSecurityDeposit;
+	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
 
 	private TextView mbtnSubmit, mbtnBack;
 	private String filePath, absFilePath;
@@ -292,6 +294,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		StaticUtils.expandCollapse(mSelectLayout, true);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getDetails() {
 		mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
 		if (getIntent() != null && getIntent().getExtras() != null) {
@@ -325,7 +328,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mtxtCondName = mBundle.getString("productConditionName");
 				controlLayouts = (HashMap<String, String>) mBundle
 						.getSerializable("controlLayouts");
-
+				InternalApp mApp = (InternalApp) getApplication();
+				mArrayFields = mApp.getArray();
 				if (mBundle.getString("displayCurrent").equalsIgnoreCase(
 						"false")) {
 					showCurrentAdrees = false;
@@ -534,27 +538,37 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mProdcutsObj.put("ItemMedia", mItemMediaArray);
 
 			JSONArray mItemDeatilsArray = new JSONArray();
-			JSONObject mItemDeatilsObj = new JSONObject();
-			mItemDeatilsObj.put("Title", "Brand");
-			mItemDeatilsObj.put("Type", "");
-			mItemDeatilsObj.put("Value", "Brand");
-			mItemDeatilsArray.put(mItemDeatilsObj);
-			mItemDeatilsObj = new JSONObject();
-			mItemDeatilsObj.put("Title", "Model");
-			mItemDeatilsObj.put("Type", "");
-			mItemDeatilsObj.put("Value", "Model");
-			mItemDeatilsArray.put(mItemDeatilsObj);
-			mItemDeatilsObj = new JSONObject();
-			mItemDeatilsObj.put("Title", "");
-			mItemDeatilsObj.put("Type", "");
-			mItemDeatilsObj.put("Value", "");
-			mItemDeatilsArray.put(mItemDeatilsObj);
-			mItemDeatilsObj = new JSONObject();
-			mItemDeatilsObj.put("Title", "");
-			mItemDeatilsObj.put("Type", "");
-			mItemDeatilsObj.put("Value", "");
-			mItemDeatilsArray.put(mItemDeatilsObj);
-
+			if (controlLayouts != null) {
+				for (Map.Entry<String, String> entry : controlLayouts
+						.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					JSONObject mItemDeatilsObj = new JSONObject();
+					String type = "";
+					if (mArrayFields != null) {
+						for (int k = 0; k < mArrayFields.size(); k++) {
+							PostAdModel mObjModel = mArrayFields.get(k);
+							if (mObjModel != null) {
+								if (mObjModel.getFieldTitle().equalsIgnoreCase(
+										key)) {
+									if (mObjModel.getValues() == null) {
+										if (mObjModel.getValues().length() == 0)
+											type = "text";
+										else
+											type = "select";
+									} else {
+										type = "";
+									}
+								}
+							}
+						}
+					}
+					mItemDeatilsObj.put("Title", key);
+					mItemDeatilsObj.put("Type", type);
+					mItemDeatilsObj.put("Value", value);
+					mItemDeatilsArray.put(mItemDeatilsObj);
+				}
+			}
 			mProdcutsObj.put("ItemDetails", mItemDeatilsArray.toString());
 			JSONArray mProdcutsArray = new JSONArray();
 			mProdcutsArray.put(mProdcutsObj);

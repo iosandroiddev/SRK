@@ -44,7 +44,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	int index = 1;
 	private int preLast = 0;
 	private boolean isloading = false;
-
+	private boolean finsihedCalledApi = false;
 	int currentFirstVisibleItem = 0;
 	int currentVisibleItemCount = 0;
 	int totalItemCount = 0;
@@ -168,6 +168,9 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 			if (resultsArray != null) {
 				mSearchResultsArray = new ArrayList<SearchModel>();
 				for (int i = 0; i < resultsArray.length(); i++) {
+					if (resultsArray.length() < 25) {
+						finsihedCalledApi = true;
+					}
 					JSONObject resultObj = resultsArray.optJSONObject(i);
 					if (resultObj != null) {
 						SearchModel mModel = new SearchModel();
@@ -349,11 +352,14 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		if (this.currentVisibleItemCount > 0
 				&& this.currentScrollState == SCROLL_STATE_IDLE
 				&& this.totalItemCount == (currentFirstVisibleItem + currentVisibleItemCount)) {
-			if (!isloading) {
-				isloading = true;
-				index = index + 1;
-				initSearchResultsApi(index);
+			if (!finsihedCalledApi) {
+				if (!isloading) {
+					isloading = true;
+					index = index + 1;
+					initSearchResultsApi(index);
+				}
 			}
+
 		}
 	}
 
