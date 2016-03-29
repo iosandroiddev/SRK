@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,11 +25,13 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.internal.mm;
+import com.models.CategoryModel;
 import com.models.CityModel;
 import com.models.SearchModel;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
+import com.sabrentkaro.postad.PostAdActivity;
 import com.sabrentkaro.search.SearchResultsAdapter.IRentClick;
 import com.utils.ApiUtils;
 import com.utils.StorageClass;
@@ -41,6 +44,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	private String selectedCategory = "";
 	private TextView mtxtProductTitle;
 	private ListView mListView;
+	private TextView mbtnSubProductCategory;
 	int index = 1;
 	private int preLast = 0;
 	private boolean isloading = false;
@@ -49,19 +53,36 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	int currentVisibleItemCount = 0;
 	int totalItemCount = 0;
 	int currentScrollState = 0;
+	private ArrayList<CategoryModel> mCateogoryMappingsArray = new ArrayList<CategoryModel>();
+	private ArrayList<String> mSubProductsArray = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentLayout(R.layout.activity_search_results);
+		getDetails();
+		loadLayoutReferences();
+	}
 
+	private void getDetails() {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
 			selectedCategory = mBundle.getString("selectedCategory");
 		}
-		loadLayoutReferences();
-		initSearchResultsApi(index);
+		if (mCateogoryMappingsArray != null
+				&& mCateogoryMappingsArray.size() == 0) {
+			InternalApp mApp = (InternalApp) getApplication();
+			mCateogoryMappingsArray = mApp.getCategoryMappingArray();
+		}
 
+		if (mCateogoryMappingsArray != null) {
+			for (int i = 0; i < mCateogoryMappingsArray.size(); i++) {
+				CategoryModel mModel = mCateogoryMappingsArray.get(i);
+				if (mModel.getCategory().equalsIgnoreCase(selectedCategory)) {
+					mSubProductsArray.add(mModel.getTitle().toString());
+				}
+			}
+		}
 	}
 
 	private void loadLayoutReferences() {
@@ -71,6 +92,8 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		mtxtProductTitle.setText(selectedCategory);
 		mAdapter = new SearchResultsAdapter(this);
 		mAdapter.setCallback(this);
+		mbtnSubProductCategory = (TextView) findViewById(R.id.btnSelectSubProductCategory);
+		mbtnSubProductCategory.setOnClickListener(this);
 		mListView.setAdapter(mAdapter);
 		((TextView) (findViewById(R.id.txtLocation)))
 				.setOnClickListener(new OnClickListener() {
@@ -82,7 +105,58 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 				});
 	}
 
+	@Override
+	public void onClick(View v) {
+		super.onClick(v);
+		if (v.getId() == R.id.btnSelectSubProductCategory) {
+			btnSelectSubProductCategoryClicked();
+		}
+	}
+
+	private void btnSelectSubProductCategoryClicked() {
+		if (mSubProductsArray != null && mSubProductsArray.size() > 0) {
+			showaAlert(mSubProductsArray);
+		}
+	}
+
+	private void showaAlert(ArrayList<String> mSubCategories) {
+		hideProgressLayout();
+		int pos = -1;
+		if (mSubCategories != null) {
+			final String[] mSubCat = new String[mSubCategories.size()];
+			for (int i = 0; i < mSubCategories.size(); i++) {
+				mSubCat[i] = mSubCategories.get(i);
+				if (mbtnSubProductCategory.getText().toString()
+						.equalsIgnoreCase("Select Product Name")) {
+					pos = -1;
+				} else {
+					if (mSubCat[i].equalsIgnoreCase(mbtnSubProductCategory
+							.getText().toString())) {
+						pos = i;
+					}
+				}
+			}
+
+			AlertDialog.Builder alert = new AlertDialog.Builder(
+					SearchResultsActivity.this);
+			alert.setTitle("Select Product Name");
+			alert.setSingleChoiceItems(mSubCat, pos,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mbtnSubProductCategory.setText(mSubCat[which]);
+							dialog.dismiss();
+							index = 1;
+							initSearchResultsApi(index);
+						}
+
+					});
+			alert.show();
+		}
+	}
+
 	private void initSearchResultsApi(int index) {
+		selectedCategory = mbtnSubProductCategory.getText().toString();
 		showProgressLayout();
 		JSONObject params = new JSONObject();
 		JSONArray minputs = new JSONArray();

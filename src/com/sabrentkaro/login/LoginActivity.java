@@ -424,7 +424,7 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 									.getString("MobileNo");
 
 							StorageClass.getInstance(this).setUserCity(city);
-
+							StorageClass.getInstance(this).setUserEmail(mEditEmail.getText().toString());
 							StorageClass.getInstance(this).setUserState(state);
 							StorageClass.getInstance(this).setUserCountry(
 									country);

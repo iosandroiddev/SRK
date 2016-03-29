@@ -270,15 +270,11 @@ public class OrderDetailsActivity extends BaseActivity {
 	}
 
 	private void btnContinueClicked() {
-		// Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-		// Uri.parse("https://eazypay.icicibank.com/homePage"));
-		// startActivity(browserIntent);
-
-		Intent mIntent = new Intent(this, PaymentActivity.class);
+		Intent mIntent = new Intent(this, PayUIntegration.class);
+		Bundle mBundle = new Bundle();
+		mBundle.putString("amount", mtxtTotalCost.getText().toString());
+		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
-
-		// Intent mIntent = new Intent(this, PayUMoneyActivity.class);
-		// startActivity(mIntent);
 	}
 
 }
