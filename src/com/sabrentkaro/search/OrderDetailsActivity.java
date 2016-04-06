@@ -279,6 +279,9 @@ public class OrderDetailsActivity extends BaseActivity {
 		mBundle.putString("address", txtAddress);
 		mBundle.putString("productDescription", mProductDescription);
 		mBundle.putString("invoicePhone", mMobile);
+		mBundle.putString("logisticsCost", mtxtLogistics.getText().toString());
+		mBundle.putString("facilitationCost", mtxtFacilitaionCharges.getText().toString());
+		mBundle.putString("serviceTax", mtxtServiceTax.getText().toString());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}

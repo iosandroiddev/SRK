@@ -425,7 +425,13 @@ public class ProductDetailsActivity extends BaseActivity {
 		mBundle.putString("productPriceMonth", mMonthlyCost);
 		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
-		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
+		if (mBrand == null || mBrand.equalsIgnoreCase("null")
+				|| mBrand.length() == 0) {
+			mBundle.putString("productDescription", mProductCategory);
+		} else {
+			mBundle.putString("productDescription", mBrand + " "
+					+ mProductCategory);
+		}
 		intent.putExtras(mBundle);
 		startActivity(intent);
 	}
@@ -438,7 +444,13 @@ public class ProductDetailsActivity extends BaseActivity {
 		mBundle.putString("productPriceMonth", mMonthlyCost);
 		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
-		mBundle.putString("productDescription", mBrand + " " + mProductCategory);
+		if (mBrand == null || mBrand.equalsIgnoreCase("null")
+				|| mBrand.length() == 0) {
+			mBundle.putString("productDescription", mProductCategory);
+		} else {
+			mBundle.putString("productDescription", mBrand + " "
+					+ mProductCategory);
+		}
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}

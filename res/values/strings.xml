@@ -89,15 +89,15 @@
     <string name="post_ad">Post Ad</string>
     <string name="tonnage">Tonnage</string>
     <string name="post_my_ad">Post My Product</string>
-    <string name="what_would_you_like_to_post_an_ad_for_">What is your Product?</string>
+    <string name="what_would_you_like_to_post_an_ad_for_">What is your Product?<font fgcolor="#EC016D">*</font></string>
     <string name="select_product_category">Select Product Category</string>
     <string name="select_product_sub_category">Select Product Name</string>
-    <string name="title_for_your_ad_">Title for your Product*</string>
+    <string name="title_for_your_ad_">Title for your Product<font fgcolor="#EC016D">*</font></string>
     <string name="enter_title">Enter Title</string>
     <string name="upload_photos_of_your_product">Select Photos of your Product</string>
     <string name="short_descrption_of_your_product">Short Description of your Product</string>
     <string name="enter_short_description">Enter Short Description</string>
-    <string name="rate_your_product_condition">Rate your Product Condition</string>
+    <string name="rate_your_product_condition">Rate your Product Condition<font fgcolor="#EC016D">*</font></string>
     <string name="additional_details">Additional Details</string>
     <string name="any_instructions_to_be_followed_while_using_your_product_">Any instructions to be followed while using your product?</string>
     <string name="enter_instructions">Eg: Handle with care and ensure it is switched off after using</string>
@@ -107,10 +107,10 @@
     <string name="select_control">Select Control</string>
     <string name="select_type">Select Type</string>
     <string name="select_capacity">Select Capacity</string>
-    <string name="how_much_did_you_get_it_for_">How much did you get it for?*</string>
+    <string name="how_much_did_you_get_it_for_">How much did you get it for?<font fgcolor="#EC016D">*</font></string>
     <string name="enter_purchased_cost">Enter Purchased Cost</string>
-    <string name="how_much_do_you_want_to_rent_it_for_">How much do you want to rent it for?*</string>
-    <string name="how_much_quantity_do_you_want_to_put_for_rent_">Quantity available for rent?*</string>
+    <string name="how_much_do_you_want_to_rent_it_for_">How much do you want to rent it for?<font fgcolor="#EC016D">*</font></string>
+    <string name="how_much_quantity_do_you_want_to_put_for_rent_">Quantity available for rent?<font fgcolor="#EC016D">*</font></string>
     <string name="enter_rent_cost">Enter Rent Cost</string>
     <string name="enter_monthly_rent_cost">Monthly Cost</string>
     <string name="enter_weekly_rent_cost">Weekly Cost</string>
@@ -184,7 +184,7 @@
     <string name="policy_info">Policy Info</string>
     <string name="price_per_week">Price per Week</string>
     <string name="price_per_month">Price per Month</string>
-    <string name="your_preferred_minimum_period_for_rent">Your preferred Minimum Period for rent*</string>
+    <string name="your_preferred_minimum_period_for_rent">Your preferred Minimum Period for rent<font fgcolor="#EC016D">*</font></string>
     <string name="select_rent_period">Select Rent Period</string>
     <string name="rent_per_day">Rent per day</string>
     <string name="rent_per_day_if_rented_for_3_days_">Rent per day (if rented for 3 Days)</string>
@@ -195,8 +195,8 @@
     <string name="rent_per_month_if_rented_for_9_months_">Rent per month (if rented for 9 Months)</string>
     <string name="rent_per_month_if_rented_for_12_months_">Rent per month (if rented for 12 Months)</string>
     <string name="eg_in_between_1_the_price_of_purchase">Eg: In between 1 &amp; the price of purchase</string>
-	
-    <!--  Invoice page srings-->
+
+    <!-- Invoice page srings -->
     <string name="invoice_heading">Invoice</string>
     <string name="invoice_rental_start_date">Rental Start Date</string>
     <string name="invoice_rental_end_date">Rental End Date</string>
@@ -210,5 +210,5 @@
     <string name="invoice_amount">Invoice Amount</string>
     <string name="invoice_done">Done</string>
     <string name="driving_license">Driving License</string>
-    
+
 </resources>

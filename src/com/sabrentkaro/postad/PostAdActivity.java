@@ -1110,16 +1110,13 @@ public class PostAdActivity extends BaseActivity implements
 						}
 					}
 					mImageView.setTag(mUri);
-					mImageView
-							.setOnLongClickListener(new OnLongClickListener() {
+					mImageView.setOnClickListener(new OnClickListener() {
 
-								@Override
-								public boolean onLongClick(View v) {
-									showAlert(mImageView);
-									return true;
-								}
-
-							});
+						@Override
+						public void onClick(View v) {
+							showAlert(mImageView);
+						}
+					});
 					mLayoutAttachments.addView(mPhotoView, 300, 300);
 				}
 			}
