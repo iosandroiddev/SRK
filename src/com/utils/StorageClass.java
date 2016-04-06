@@ -49,7 +49,6 @@ public class StorageClass {
 	public String getUserName() {
 		return sh.getString("username", "");
 	}
-	
 
 	public void setBrandName(String membertype) {
 		edit.putString("brand_name", membertype).commit();
@@ -316,4 +315,19 @@ public class StorageClass {
 		edit.putString("auth_header", userState).commit();
 	}
 
+	public String getServiceTitle() {
+		return sh.getString("service_title", "");
+	}
+
+	public void setServiceTitle(String title) {
+		edit.putString("service_title", title).commit();
+	}
+
+	public String getServiceValue() {
+		return sh.getString("service_value", "");
+	}
+
+	public void setServiceValue(String value) {
+		edit.putString("service_value", value).commit();
+	}
 }

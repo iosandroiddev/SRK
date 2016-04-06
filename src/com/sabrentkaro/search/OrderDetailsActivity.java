@@ -273,6 +273,12 @@ public class OrderDetailsActivity extends BaseActivity {
 		Intent mIntent = new Intent(this, PayUIntegration.class);
 		Bundle mBundle = new Bundle();
 		mBundle.putString("amount", mtxtTotalCost.getText().toString());
+		mBundle.putString("quantity", mQuantity);
+		mBundle.putString("startDate", mStartDate);
+		mBundle.putString("endDate", mEndDate);
+		mBundle.putString("address", txtAddress);
+		mBundle.putString("productDescription", mProductDescription);
+		mBundle.putString("invoicePhone", mMobile);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}

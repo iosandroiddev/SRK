@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
     android:id="@+id/login_view"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/blue_custom_button_selector"
     android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:orientation="vertical"
@@ -17,7 +17,7 @@
 
         <EditText
             android:id="@+id/editText"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="start"
@@ -29,12 +29,12 @@
     </LinearLayout>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="0.5dp"
         android:background="@color/white" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:gravity="center"

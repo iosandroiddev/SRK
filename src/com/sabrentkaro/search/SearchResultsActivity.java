@@ -62,6 +62,7 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 		addContentLayout(R.layout.activity_search_results);
 		getDetails();
 		loadLayoutReferences();
+		initSearchResultsApi(index);
 	}
 
 	private void getDetails() {
@@ -156,7 +157,11 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	}
 
 	private void initSearchResultsApi(int index) {
-		selectedCategory = mbtnSubProductCategory.getText().toString();
+		if (mbtnSubProductCategory.getText().toString().contains("Select")) {
+
+		} else {
+			selectedCategory = mbtnSubProductCategory.getText().toString();
+		}
 		showProgressLayout();
 		JSONObject params = new JSONObject();
 		JSONArray minputs = new JSONArray();

@@ -8,22 +8,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sabrentkaro.HomeActivity;
+import com.sabrentkaro.R;
+import com.utils.StorageClass;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.sabrentkaro.HomeActivity;
-import com.sabrentkaro.R;
-import com.utils.StorageClass;
 
 public class PayUIntegration extends FragmentActivity {
 
@@ -34,6 +31,7 @@ public class PayUIntegration extends FragmentActivity {
 	WebView mwebview;
 	TextView txtview;
 	private String amount;
+	private String orderId;
 
 	/*
 	 * protected void writeStatus(String str){ txtview.setText(str); }
@@ -52,10 +50,8 @@ public class PayUIntegration extends FragmentActivity {
 		webviewPayment.getSettings().setUseWideViewPort(true);
 		webviewPayment.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		webviewPayment.getSettings().setSupportMultipleWindows(true);
-		webviewPayment.getSettings().setJavaScriptCanOpenWindowsAutomatically(
-				true);
-		webviewPayment.addJavascriptInterface(new PayUJavaScriptInterface(),
-				"PayUMoney");
+		webviewPayment.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		webviewPayment.addJavascriptInterface(new PayUJavaScriptInterface(), "PayUMoney");
 		// webviewPayment.loadUrl("http://www.google.com");
 		/*
 		 * webviewPayment .loadUrl(
@@ -66,14 +62,13 @@ public class PayUIntegration extends FragmentActivity {
 		// webviewPayment.loadUrl("http://timesofindia.com/");
 		StringBuilder url_s = new StringBuilder();
 		// http://merirakhi.com/processor/payment/endpoint?order_id=aAbBcC&amount=10&currency=USD
-		url_s.append("https://test.payu.in/_payment");
-
+		// url_s.append("https://test.payu.in/_payment");
+		url_s.append("https://secure.payu.in/_payment");
 		Log.e(TAG, "call url " + url_s);
 
 		// webviewPayment.loadUrl(url_s.toString());
 		// String postData = "username=my_username&password=my_password";
-		webviewPayment.postUrl(url_s.toString(),
-				EncodingUtils.getBytes(getPostString(), "utf-8"));
+		webviewPayment.postUrl(url_s.toString(), EncodingUtils.getBytes(getPostString(), "utf-8"));
 
 		// webviewPayment.loadUrl("http://128.199.193.113/rakhi/payment/endpoint?order_id=aAbBcC45&amount=0.10&currency=USD");
 
@@ -83,8 +78,7 @@ public class PayUIntegration extends FragmentActivity {
 				super.onPageFinished(view, url);
 				if (url.contains("https://www.payumoney.com/mobileapp/payumoney/success.php")) {
 					showSuccessPage();
-				} else if (url
-						.contains("https://www.payumoney.com/mobileapp/payumoney/failure.php")) {
+				} else if (url.contains("https://www.payumoney.com/mobileapp/payumoney/failure.php")) {
 					showFailurePage();
 				}
 			}
@@ -115,15 +109,36 @@ public class PayUIntegration extends FragmentActivity {
 		}
 
 		public void success(long id, final String paymentId) {
+			PayUIntegration.this.orderId = paymentId;
 			runOnUiThread(new Runnable() {
 				public void run() {
-
-					Toast.makeText(
-							PayUIntegration.this,
-							"Status is txn is success " + " payment id is "
-									+ paymentId, 8000).show();
+					// Toast.makeText(PayUIntegration.this, "Status is txn is
+					// success " + " payment id is " + paymentId,
+					// 8000).show();
 					// String
-					// str="Status is txn is success "+" payment id is "+paymentId;
+					// str="Status is txn is success "+" payment id is
+					// "+paymentId;
+					// new MainActivity().writeStatus(str);
+
+					// TextView txtview;
+					// txtview = (TextView) findViewById(R.id.textView1);
+					// txtview.setText("Status is txn is success "
+					// + " payment id is " + paymentId);
+
+				}
+			});
+		}
+
+		public void success() {
+			// PayUIntegration.this.orderId = paymentId;
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Toast.makeText(PayUIntegration.this, "Status is txn is
+					// success " + " payment id is " + "", 8000)
+					// .show();
+					// String
+					// str="Status is txn is success "+" payment id is
+					// "+paymentId;
 					// new MainActivity().writeStatus(str);
 
 					// TextView txtview;
@@ -138,9 +153,25 @@ public class PayUIntegration extends FragmentActivity {
 	}
 
 	private void showSuccessPage() {
-		Toast.makeText(PayUIntegration.this, "Transaction Success",
-				Toast.LENGTH_LONG).show();
-		navigateToHome();
+		// Toast.makeText(PayUIntegration.this, "Transaction Success",
+		// Toast.LENGTH_LONG).show();
+		navigateToInvoice();
+	}
+
+	public void navigateToInvoice() {
+		Bundle mBundle = getIntent().getExtras();
+		Intent mIntent = new Intent(this, InvoiceDetailsActivity.class);
+		Bundle invoicePageData = new Bundle();
+		invoicePageData.putString("orderId", orderId);
+		invoicePageData.putString("amount", mBundle.getString("amount"));
+		invoicePageData.putString("quantity", mBundle.getString("quantity"));
+		invoicePageData.putString("startDate", mBundle.getString("startDate"));
+		invoicePageData.putString("endDate", mBundle.getString("endDate"));
+		invoicePageData.putString("address", mBundle.getString("address"));
+		invoicePageData.putString("productDescription", mBundle.getString("productDescription"));
+		invoicePageData.putString("invoicePhone", mBundle.getString("invoicePhone"));
+		mIntent.putExtras(invoicePageData);
+		startActivity(mIntent);
 	}
 
 	public void navigateToHome() {
@@ -151,14 +182,16 @@ public class PayUIntegration extends FragmentActivity {
 	}
 
 	private void showFailurePage() {
-		Toast.makeText(PayUIntegration.this, "Transaction Failure",
-				Toast.LENGTH_LONG).show();
+		// Toast.makeText(PayUIntegration.this, "Transaction Failure",
+		// Toast.LENGTH_LONG).show();
 		finish();
 	}
 
 	private String getPostString() {
-		String key = "OygoFs";
-		String salt = "BV1QBwCv";
+		// String key = "OygoFs";
+		String key = "v8zzo2Bg";
+		// String salt = "BV1QBwCv";
+		String salt = "5UkdKIu29m";
 		String txnid = "TXN_1";
 		String amnnt = amount;
 		String firstname = StorageClass.getInstance(this).getUserName();
@@ -196,8 +229,8 @@ public class PayUIntegration extends FragmentActivity {
 
 		StringBuilder checkSumStr = new StringBuilder();
 		/*
-		 * =sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4
-		 * |udf5||||||salt)
+		 * =sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|
+		 * udf4 |udf5||||||salt)
 		 */
 		MessageDigest digest = null;
 		String hash;

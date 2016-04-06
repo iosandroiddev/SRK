@@ -195,5 +195,20 @@
     <string name="rent_per_month_if_rented_for_9_months_">Rent per month (if rented for 9 Months)</string>
     <string name="rent_per_month_if_rented_for_12_months_">Rent per month (if rented for 12 Months)</string>
     <string name="eg_in_between_1_the_price_of_purchase">Eg: In between 1 &amp; the price of purchase</string>
-
+	
+    <!--  Invoice page srings-->
+    <string name="invoice_heading">Invoice</string>
+    <string name="invoice_rental_start_date">Rental Start Date</string>
+    <string name="invoice_rental_end_date">Rental End Date</string>
+    <string name="invoice_rental_period">Rental Period in Days</string>
+    <string name="invoice_quantity">Quantity</string>
+    <string name="invoice_phone">Phone Number</string>
+    <string name="invoice_brand">Brand</string>
+    <string name="invoice_product_category">Product Category</string>
+    <string name="invoice_billing_address">Billing Address</string>
+    <string name="invoice_order_id">Order Id</string>
+    <string name="invoice_amount">Invoice Amount</string>
+    <string name="invoice_done">Done</string>
+    <string name="driving_license">Driving License</string>
+    
 </resources>

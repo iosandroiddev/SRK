@@ -58,13 +58,10 @@ import com.utils.PostAd.IPostAd;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
-public class PostAdPreview extends BaseActivity implements IImageUpload,
-		IPostAd {
+public class PostAdPreview extends BaseActivity implements IImageUpload, IPostAd {
 
-	private TextView mtxtCategory, mtxtSubCategory, mtxtTitle, mtxtDesc,
-			mtxtRating, mtxtInstructions, mtxtStuff, mtxtQuanity,
-			mtxtPurchasedCost, mtxtDailyCost, mtxtWeekCost, mtxtMonthCost,
-			mtxtSecurityDeposit;
+	private TextView mtxtCategory, mtxtSubCategory, mtxtTitle, mtxtDesc, mtxtRating, mtxtInstructions, mtxtStuff,
+			mtxtQuanity, mtxtPurchasedCost, mtxtDailyCost, mtxtWeekCost, mtxtMonthCost, mtxtSecurityDeposit;
 	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
 
 	private TextView mbtnSubmit, mbtnBack;
@@ -148,8 +145,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 		loadAttachments();
 
-		mtxtPurchasedCost.setText(getString(R.string.rupeeone) + " "
-				+ mProductPurchasedPrice);
+		mtxtPurchasedCost.setText(getString(R.string.rupeeone) + " " + mProductPurchasedPrice);
 		if (mDailyCost.length() == 0) {
 			mtxtDailyCost.setVisibility(View.GONE);
 		} else {
@@ -166,25 +162,18 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mtxtWeekCost.setVisibility(View.VISIBLE);
 		}
 
-		String dailyCost = "<font color='black'>" + "Daily Cost:"
-				+ " </font> <font color='#EC016D'>"
+		String dailyCost = "<font color='black'>" + "Daily Cost:" + " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mDailyCost + "</font>";
-		String monthCost = "<font color='black'>" + "Monthly Cost:"
-				+ " </font> <font color='#EC016D'>"
+		String monthCost = "<font color='black'>" + "Monthly Cost:" + " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mMonthCost + "</font>";
-		String weekCost = "<font color='black'>" + "Weekly Cost:"
-				+ " </font> <font color='#EC016D'>"
+		String weekCost = "<font color='black'>" + "Weekly Cost:" + " </font> <font color='#EC016D'>"
 				+ getString(R.string.rupeeone) + " " + mWeekCost + "</font>";
 
-		mtxtDailyCost.setText(Html.fromHtml(dailyCost),
-				TextView.BufferType.SPANNABLE);
-		mtxtMonthCost.setText(Html.fromHtml(monthCost),
-				TextView.BufferType.SPANNABLE);
+		mtxtDailyCost.setText(Html.fromHtml(dailyCost), TextView.BufferType.SPANNABLE);
+		mtxtMonthCost.setText(Html.fromHtml(monthCost), TextView.BufferType.SPANNABLE);
 		mtxtQuanity.setText(mQuantity);
-		mtxtWeekCost.setText(Html.fromHtml(weekCost),
-				TextView.BufferType.SPANNABLE);
-		mtxtSecurityDeposit.setText(getString(R.string.rupeeone) + " "
-				+ mSecurityDeposit);
+		mtxtWeekCost.setText(Html.fromHtml(weekCost), TextView.BufferType.SPANNABLE);
+		mtxtSecurityDeposit.setText(getString(R.string.rupeeone) + " " + mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
 		// mtxtAddress.setText("Address:" + " " + mAddress);
@@ -213,51 +202,36 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtPurchasedCost.setTextColor(getResources().getColor(R.color.pink));
 		mtxtRating.setTextColor(getResources().getColor(R.color.pink));
 
-		String address = "<font color='black'>Address: </font> <font color='#EC016D'>"
-				+ mAddress + "</font>";
-		mtxtAddress.setText(Html.fromHtml(address),
-				TextView.BufferType.SPANNABLE);
+		String address = "<font color='black'>Address: </font> <font color='#EC016D'>" + mAddress + "</font>";
+		mtxtAddress.setText(Html.fromHtml(address), TextView.BufferType.SPANNABLE);
 
-		String city = "<font color='black'>City: </font> <font color='#EC016D'>"
-				+ mCity + "</font>";
+		String city = "<font color='black'>City: </font> <font color='#EC016D'>" + mCity + "</font>";
 		mtxtCity.setText(Html.fromHtml(city), TextView.BufferType.SPANNABLE);
 
-		String state = "<font color='black'>State: </font> <font color='#EC016D'>"
-				+ mState + "</font>";
+		String state = "<font color='black'>State: </font> <font color='#EC016D'>" + mState + "</font>";
 		mtxtState.setText(Html.fromHtml(state), TextView.BufferType.SPANNABLE);
 
-		String pib = "<font color='black'>Pincode: </font> <font color='#EC016D'>"
-				+ mPinCode + "</font>";
+		String pib = "<font color='black'>Pincode: </font> <font color='#EC016D'>" + mPinCode + "</font>";
 		mtxtPincode.setText(Html.fromHtml(pib), TextView.BufferType.SPANNABLE);
 
-		String mob = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>"
-				+ mMobileNubmer + "</font>";
+		String mob = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>" + mMobileNubmer + "</font>";
 		mtxtMobile.setText(Html.fromHtml(mob), TextView.BufferType.SPANNABLE);
 
-		String addressUser = "<font color='black'>Address: </font> <font color='#EC016D'>"
-				+ mAddressUser + "</font>";
-		mtxtUserAddress.setText(Html.fromHtml(addressUser),
-				TextView.BufferType.SPANNABLE);
+		String addressUser = "<font color='black'>Address: </font> <font color='#EC016D'>" + mAddressUser + "</font>";
+		mtxtUserAddress.setText(Html.fromHtml(addressUser), TextView.BufferType.SPANNABLE);
 
-		String cityUser = "<font color='black'>City: </font> <font color='#EC016D'>"
-				+ mCityUser + "</font>";
-		mtxtUserCity.setText(Html.fromHtml(cityUser),
-				TextView.BufferType.SPANNABLE);
+		String cityUser = "<font color='black'>City: </font> <font color='#EC016D'>" + mCityUser + "</font>";
+		mtxtUserCity.setText(Html.fromHtml(cityUser), TextView.BufferType.SPANNABLE);
 
-		String stateUser = "<font color='black'>State: </font> <font color='#EC016D'>"
-				+ mStateUser + "</font>";
-		mtxtUserState.setText(Html.fromHtml(stateUser),
-				TextView.BufferType.SPANNABLE);
+		String stateUser = "<font color='black'>State: </font> <font color='#EC016D'>" + mStateUser + "</font>";
+		mtxtUserState.setText(Html.fromHtml(stateUser), TextView.BufferType.SPANNABLE);
 
-		String pinUser = "<font color='black'>Pincode: </font> <font color='#EC016D'>"
-				+ mPinCodeUser + "</font>";
-		mtxtUserPincode.setText(Html.fromHtml(pinUser),
-				TextView.BufferType.SPANNABLE);
+		String pinUser = "<font color='black'>Pincode: </font> <font color='#EC016D'>" + mPinCodeUser + "</font>";
+		mtxtUserPincode.setText(Html.fromHtml(pinUser), TextView.BufferType.SPANNABLE);
 
-		String mobUser = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>"
-				+ mMobileNubmerUser + "</font>";
-		mtxtUserMobile.setText(Html.fromHtml(mobUser),
-				TextView.BufferType.SPANNABLE);
+		String mobUser = "<font color='black'>Mobile Number: </font> <font color='#EC016D'>" + mMobileNubmerUser
+				+ "</font>";
+		mtxtUserMobile.setText(Html.fromHtml(mobUser), TextView.BufferType.SPANNABLE);
 
 		if (showCurrentAdrees) {
 			mLayoutCurrentAddress.setVisibility(View.VISIBLE);
@@ -275,19 +249,14 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			for (Map.Entry<String, String> entry : controlLayouts.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
-				final TextView mtxtView = (TextView) LayoutInflater.from(this)
-						.inflate(R.layout.showcontrol, null);
+				final TextView mtxtView = (TextView) LayoutInflater.from(this).inflate(R.layout.showcontrol, null);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-						new LayoutParams(LayoutParams.MATCH_PARENT,
-								LayoutParams.WRAP_CONTENT));
+						new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				params.setMargins(20, 10, 10, 10);
 				mtxtView.setPadding(20, 10, 10, 10);
 				mtxtView.setLayoutParams(params);
-				String mtxt = "<font color='black'>" + key
-						+ " : </font> <font color='#EC016D'>" + value
-						+ "</font>";
-				mtxtView.setText(Html.fromHtml(mtxt),
-						TextView.BufferType.SPANNABLE);
+				String mtxt = "<font color='black'>" + key + " : </font> <font color='#EC016D'>" + value + "</font>";
+				mtxtView.setText(Html.fromHtml(mtxt), TextView.BufferType.SPANNABLE);
 				mSelectLayout.addView(mtxtView);
 			}
 		}
@@ -306,8 +275,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mProductDesc = mBundle.getString("productDescription");
 				mAdditionalStuff = mBundle.getString("additionalStuff");
 				mUserInstructions = mBundle.getString("userInstructions");
-				mProductPurchasedPrice = mBundle
-						.getString("productPurchasedPrice");
+				mProductPurchasedPrice = mBundle.getString("productPurchasedPrice");
 				mDailyCost = mBundle.getString("dailyCost");
 				mMonthCost = mBundle.getString("monthlyCost");
 				mWeekCost = mBundle.getString("weekCost");
@@ -326,12 +294,10 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mAadthrNumber = mBundle.getString("aadharCardNumber");
 				mMobileNubmer = mBundle.getString("mobileNumber");
 				mtxtCondName = mBundle.getString("productConditionName");
-				controlLayouts = (HashMap<String, String>) mBundle
-						.getSerializable("controlLayouts");
+				controlLayouts = (HashMap<String, String>) mBundle.getSerializable("controlLayouts");
 				InternalApp mApp = (InternalApp) getApplication();
 				mArrayFields = mApp.getArray();
-				if (mBundle.getString("displayCurrent").equalsIgnoreCase(
-						"false")) {
+				if (mBundle.getString("displayCurrent").equalsIgnoreCase("false")) {
 					showCurrentAdrees = false;
 				} else {
 					showCurrentAdrees = true;
@@ -427,8 +393,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	}
 
 	private void startPhotUpload(int pos, InternalApp mApp) {
-		PhotoUpload mUpload = new PhotoUpload(this,
-				mApp.getUriArray().get(pos), mProductAdId, this);
+		PhotoUpload mUpload = new PhotoUpload(this, mApp.getUriArray().get(pos), mProductAdId, this);
 		mUpload.startExexcution();
 	}
 
@@ -539,8 +504,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 			JSONArray mItemDeatilsArray = new JSONArray();
 			if (controlLayouts != null) {
-				for (Map.Entry<String, String> entry : controlLayouts
-						.entrySet()) {
+				for (Map.Entry<String, String> entry : controlLayouts.entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
 					JSONObject mItemDeatilsObj = new JSONObject();
@@ -549,8 +513,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 						for (int k = 0; k < mArrayFields.size(); k++) {
 							PostAdModel mObjModel = mArrayFields.get(k);
 							if (mObjModel != null) {
-								if (mObjModel.getFieldTitle().equalsIgnoreCase(
-										key)) {
+								if (mObjModel.getFieldTitle().equalsIgnoreCase(key)) {
 									if (mObjModel.getValues() == null) {
 										if (mObjModel.getValues().length() == 0)
 											type = "text";
@@ -579,12 +542,18 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			if (mPanCard.length() == 0) {
 				mserviceField.put("panId", mPanCard);
 			} else {
-				mserviceField.put("panId", mPanCard);
+				if (mAadthrNumber.length() == 0) {
+					mserviceField.put("panId", mPanCard);
+				}
 			}
 			JSONObject mserviceProvider = new JSONObject();
 			if (mPanCard.length() == 0) {
-				mserviceProvider.put("Code", "PAN");
-				mserviceProvider.put("Title", "null");
+				if (mAadthrNumber.length() == 0) {
+					mserviceProvider.put("Code", "AADHAAR");
+					mserviceProvider.put("Title", "null");
+				} else {
+
+				}
 			} else {
 				mserviceProvider.put("Code", "PAN");
 				mserviceProvider.put("Title", "null");
@@ -682,9 +651,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		// + "01/01/1900"
 		// + ",\"Owners\":[{\"IsPrimary\":null,"
 		// +
-		// "\"IsBusiness\":null,\"LastName\":\" \",\"DateOfBirth\":null,\"MiddleName\":null,\"Location\":{\"Longitude\":\" "
+		// "\"IsBusiness\":null,\"LastName\":\"
+		// \",\"DateOfBirth\":null,\"MiddleName\":null,\"Location\":{\"Longitude\":\"
+		// "
 		// +
-		// "\",\"Latitude\":\" \"},\"Role\":null,\"Addresses\":[{\"AddressLine1\":\""
+		// "\",\"Latitude\":\"
+		// \"},\"Role\":null,\"Addresses\":[{\"AddressLine1\":\""
 		// + mAddress
 		// + "\",\"AddressLine2\":\"\","
 		// + "\"State\":\""
@@ -727,7 +699,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		// +
 		// "\"Type\":\"select\",\"Value\":\"\"},{\"Title\":\"Type\",\"Type\":\"select\",\"Value\":\"\"},"
 		// +
-		// "{\"Title\":\"Washing Capacity\",\"Type\":\"select\",\"Value\":\"\"}]\",\"ItemMedia\":[{\"Filepath\":"
+		// "{\"Title\":\"Washing
+		// Capacity\",\"Type\":\"select\",\"Value\":\"\"}]\",\"ItemMedia\":[{\"Filepath\":"
 		// +
 		// "\"http://www.allrental.co.in/BusinessServices/ImageStore/AC/818/A/818_71bca978-7de7-4fd5-8c5c-02f04cb8a3c2.png\","
 		// +
@@ -741,11 +714,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		// + "{\"Price\":\""
 		// + mWeekCost
 		// +
-		// "\",\"UnitCode\":\"PerWeek\",\"UnitTitle\":\"Per Week\"},{\"Price\":\""
+		// "\",\"UnitCode\":\"PerWeek\",\"UnitTitle\":\"Per
+		// Week\"},{\"Price\":\""
 		// + mMonthCost
 		// + "\",\"UnitCode\":"
 		// +
-		// "\"PerMonth\",\"UnitTitle\":\"Per Month\"}]}],\"AdAddress\":{\"AddressLine1\":\""
+		// "\"PerMonth\",\"UnitTitle\":\"Per
+		// Month\"}]}],\"AdAddress\":{\"AddressLine1\":\""
 		// + mAddress
 		// + "\","
 		// + "\"AddressLine2\":\"\",\"City\":\""
@@ -762,25 +737,31 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		// +
 		// "\"ConsumedDate\":null,\"OtpStatus\":null},\"Tags\":[],\"Business\":null,"
 		// +
-		// "\"AdSettings\":[{\"ProductCategorySpecification\":{\"Code\":\"RULES\",\"Title\":\"Rules of usage\"},"
+		// "\"AdSettings\":[{\"ProductCategorySpecification\":{\"Code\":\"RULES\",\"Title\":\"Rules
+		// of usage\"},"
 		// + "\"Value\":\""
 		// + mProductDesc
 		// +
-		// "\",\"Id\":\"2\"},{\"ProductCategorySpecification\":{\"Code\":\"INTHEBOX\",\"Title\":\"In the box\"},"
+		// "\",\"Id\":\"2\"},{\"ProductCategorySpecification\":{\"Code\":\"INTHEBOX\",\"Title\":\"In
+		// the box\"},"
 		// + "\"Value\":\""
 		// + mProductDesc
 		// + "\",\"Id\":\"1\"},"
 		// +
-		// "{\"ProductCategorySpecification\":{\"Code\":\"location\",\"Title\":\"Location Preferences\"},\"Value\":\""
+		// "{\"ProductCategorySpecification\":{\"Code\":\"location\",\"Title\":\"Location
+		// Preferences\"},\"Value\":\""
 		// + StorageClass.getInstance(this).getUserCity()
 		// + "\",\"Id\":\"5\"},"
 		// +
-		// "{\"ProductCategorySpecification\":{\"Code\":\"LOGISTICS\",\"Title\":\"Logistics Preferences\"},"
+		// "{\"ProductCategorySpecification\":{\"Code\":\"LOGISTICS\",\"Title\":\"Logistics
+		// Preferences\"},"
 		// + "\"Value\":\"\",\"Id\":3},"
 		// +
-		// "{\"ProductCategorySpecification\":{\"Code\":\"INSURANCE\",\"Title\":\"Insurance Preferences\"},\"Value\":,\"Id\":4},"
+		// "{\"ProductCategorySpecification\":{\"Code\":\"INSURANCE\",\"Title\":\"Insurance
+		// Preferences\"},\"Value\":,\"Id\":4},"
 		// +
-		// "{\"ProductCategorySpecification\":{\"Code\":\"CALENDAR\",\"Title\":\"Calendar Preferences\"},\"Value\":\"\",\"Id\":\"6\"}],"
+		// "{\"ProductCategorySpecification\":{\"Code\":\"CALENDAR\",\"Title\":\"Calendar
+		// Preferences\"},\"Value\":\"\",\"Id\":\"6\"}],"
 		// + "\"AdCalendars\":[{\"DateFrom\":\""
 		// + "01/01/1900"
 		// + "\",\"DateTo\":\""
@@ -795,24 +776,23 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 		// callPostAdApi(ent);
 
-		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTANAD,
-				params, new Listener<JSONObject>() {
+		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTANAD, params, new Listener<JSONObject>() {
 
-					@Override
-					public void onResponse(JSONObject response) {
-						hideProgressLayout();
-						showToast("Success");
-						showAlert();
-					}
+			@Override
+			public void onResponse(JSONObject response) {
+				hideProgressLayout();
+				showToast("Success");
+				showAlert();
+			}
 
-				}, new ErrorListener() {
+		}, new ErrorListener() {
 
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						hideProgressLayout();
-						showToast("Failure");
-					}
-				}) {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				hideProgressLayout();
+				showToast("Failure");
+			}
+		}) {
 
 			public String getBodyContentType() {
 				return "application/json; charset=" + getParamsEncoding();
@@ -835,9 +815,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	}
 
 	private void showAlert() {
-		new AlertDialog.Builder(this)
-				.setTitle("Success")
-				.setMessage("Product Posted Successfully!")
+		new AlertDialog.Builder(this).setTitle("Success").setMessage("Product Posted Successfully!")
 				.setOnDismissListener(new OnDismissListener() {
 
 					@Override
@@ -845,13 +823,11 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 						dialog.cancel();
 						navigateToHome();
 					}
-				})
-				.setPositiveButton(android.R.string.ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						}).create().show();
+				}).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				}).create().show();
 	}
 
 	private void navigateToHome() {
@@ -907,18 +883,15 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			for (int i = 0; i < mUriArray.size(); i++) {
 				Uri mUri = mUriArray.get(i);
 				if (mUri != null) {
-					final LinearLayout mPhotoView = (LinearLayout) LayoutInflater
-							.from(this).inflate(R.layout.layoutphoto, null);
-					final SquareImageView mImageView = (SquareImageView) mPhotoView
-							.findViewById(R.id.imgProduct);
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							new LayoutParams(300, 300));
+					final LinearLayout mPhotoView = (LinearLayout) LayoutInflater.from(this)
+							.inflate(R.layout.layoutphoto, null);
+					final SquareImageView mImageView = (SquareImageView) mPhotoView.findViewById(R.id.imgProduct);
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LayoutParams(300, 300));
 					params.setMargins(10, 10, 10, 10);
 					mImageView.setLayoutParams(params);
 
 					String mime = getMimeType(mUri);
-					int xy = (int) (200 * getResources().getDimension(
-							R.dimen.one_dp));
+					int xy = (int) (200 * getResources().getDimension(R.dimen.one_dp));
 					Point size = new Point(xy, xy);
 					if (mime != null && mime.startsWith("image")) {
 						Bitmap bmp = getResizedBitmap(mUri, size);
@@ -953,8 +926,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > IMAGE_MAX_SIZE) {
 				scale++;
 			}
-			Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth
-					+ ", orig-height: " + o.outHeight);
+			Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
 
 			Bitmap b = null;
 			in = getContentResolver().openInputStream(uri);
@@ -969,15 +941,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				// resize to desired dimensions
 				int height = b.getHeight();
 				int width = b.getWidth();
-				Log.d("", "1th scale operation dimenions - width: " + width
-						+ ", height: " + height);
+				Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
 
-				double y = Math.sqrt(IMAGE_MAX_SIZE
-						/ (((double) width) / height));
+				double y = Math.sqrt(IMAGE_MAX_SIZE / (((double) width) / height));
 				double x = (y / height) * width;
 
-				Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
-						(int) y, true);
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x, (int) y, true);
 				b.recycle();
 				b = scaledBitmap;
 
@@ -987,9 +956,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			}
 			in.close();
 
-			Log.d("",
-					"bitmap size - width: " + b.getWidth() + ", height: "
-							+ b.getHeight());
+			Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " + b.getHeight());
 			return b;
 		} catch (IOException e) {
 			Log.e("", e.getMessage(), e);
@@ -1014,12 +981,10 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 
 	public String getPath(Uri uri) {
 		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = getContentResolver().query(uri, projection, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 		if (cursor == null)
 			return null;
-		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
 		String s = cursor.getString(column_index);
 		cursor.close();
@@ -1046,8 +1011,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		Bitmap bmp = null;
 		if (options.outHeight > 0 && options.outWidth > 0) {
 			// Calculate inSampleSize
-			options.inSampleSize = StaticUtils.calculateInSampleSize(options,
-					size.x, size.y);
+			options.inSampleSize = StaticUtils.calculateInSampleSize(options, size.x, size.y);
 			// Decode bitmap with inSampleSize set
 			options.inJustDecodeBounds = false;
 			try {
@@ -1065,9 +1029,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 					}
 				}
 			} catch (OutOfMemoryError oome) {
-				Log.e("Out Of Memory Error",
-						oome.getMessage() == null ? "OutOfMemory error: size "
-								+ size.x + "x" + size.y : oome.getMessage());
+				Log.e("Out Of Memory Error", oome.getMessage() == null
+						? "OutOfMemory error: size " + size.x + "x" + size.y : oome.getMessage());
 			}
 		}
 		return bmp;

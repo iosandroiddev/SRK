@@ -129,11 +129,17 @@
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
- <activity
+        <activity
+            android:name="com.sabrentkaro.search.InvoiceDetailsActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.sabrentkaro.search.PayUIntegration"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

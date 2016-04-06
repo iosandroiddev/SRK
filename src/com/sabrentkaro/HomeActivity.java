@@ -1,6 +1,8 @@
 package com.sabrentkaro;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,10 +23,13 @@ import android.widget.TextView;
 import com.adapters.HomeAdapter;
 import com.android.jsonclasses.IArrayParseListener;
 import com.android.jsonclasses.JSONArrayRequestResponse;
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.models.CategoryModel;
 import com.models.CityModel;
@@ -37,8 +42,7 @@ import com.utils.MiscUtils;
 import com.utils.StaticData;
 import com.utils.StorageClass;
 
-public class HomeActivity extends BaseActivity implements OnItemClickListener,
-		IArrayParseListener {
+public class HomeActivity extends BaseActivity implements OnItemClickListener, IArrayParseListener {
 
 	private GridView mGridView;
 	private ArrayList<ProductModel> mProductsArray = new ArrayList<ProductModel>();
@@ -64,16 +68,105 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		} else {
 			initSubCategoriesApi();
 		}
+
+	}
+
+	private void initServicerProvider() {
+		final String mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
+		showProgressLayout();
+		JSONObject mTpType = new JSONObject();
+		try {
+			mTpType.put("Code", "VERIFICATION");
+			mTpType.put("Title", "null");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject mTpProvider = new JSONObject();
+		try {
+			mTpProvider.put("Code", "JOCATA");
+			mTpProvider.put("Title", "null");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject mParams = new JSONObject();
+		try {
+			mParams.put("UserId", "null");
+			mParams.put("TpType", mTpType);
+			mParams.put("TpProvider", mTpProvider);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JsonArrayRequest mRequest = new JsonArrayRequest(ApiUtils.GETPROVIDERSERVICES, mParams,
+				new Response.Listener<JSONArray>() {
+
+					@Override
+					public void onResponse(JSONArray response) {
+						hideProgressLayout();
+						responseForProviderApi(response);
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast(error.toString());
+					}
+
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+
+				return map;
+			}
+
+		};
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mRequest);
+	}
+
+	private void responseForProviderApi(JSONArray response) {
+		if (response != null) {
+			for (int i = 0; i < response.length(); i++) {
+				JSONObject mObj = response.optJSONObject(i);
+				if (mObj != null) {
+					JSONArray mSpecificationsArray = mObj.optJSONArray("TpServiceInputSpecifications");
+					if (mSpecificationsArray != null) {
+						for (int j = 0; j < mSpecificationsArray.length(); j++) {
+							JSONObject mObjSpecifications = mSpecificationsArray.optJSONObject(i);
+							if (mObjSpecifications != null) {
+								if (mObjSpecifications.optString("UserValues") != null) {
+									StorageClass.getInstance(this)
+											.setServiceTitle(mObjSpecifications.optString("Title"));
+									StorageClass.getInstance(this)
+											.setServiceValue(mObjSpecifications.optString("UserValues"));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void initSubCategoriesApi() {
 		showProgressLayout();
-		JSONArrayRequestResponse mJsonRequestResponse = new JSONArrayRequestResponse(
-				this);
+		JSONArrayRequestResponse mJsonRequestResponse = new JSONArrayRequestResponse(this);
 		mJsonRequestResponse.setPostMethod(true);
 		Bundle params = new Bundle();
-		mJsonRequestResponse.getResponse(
-				MiscUtils.encodeUrl(ApiUtils.GETCATEGORYMAPPINGS, params),
+		mJsonRequestResponse.getResponse(MiscUtils.encodeUrl(ApiUtils.GETCATEGORYMAPPINGS, params),
 				StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE, this);
 	}
 
@@ -86,23 +179,22 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		JsonObjectRequest mObjReq = new JsonObjectRequest(
-				ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
+		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
 
-					@Override
-					public void onResponse(JSONObject response) {
-						responseForDeviceToken(response);
-					}
+			@Override
+			public void onResponse(JSONObject response) {
+				responseForDeviceToken(response);
+			}
 
-				}, new ErrorListener() {
+		}, new ErrorListener() {
 
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						hideProgressLayout();
-						showToast(error.toString());
-					}
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				hideProgressLayout();
+				showToast(error.toString());
+			}
 
-				}) {
+		}) {
 
 		};
 
@@ -128,8 +220,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	private void showCityAlert() {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
-				.getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
@@ -139,18 +230,15 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
 				alert.setCancelable(false);
-				alert.setSingleChoiceItems(mCities, -1,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								StorageClass.getInstance(HomeActivity.this)
-										.setCity(mCities[which]);
-								dialog.dismiss();
-								setLocation();
-								storeCityValue();
-							}
-						});
+				alert.setSingleChoiceItems(mCities, -1, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						StorageClass.getInstance(HomeActivity.this).setCity(mCities[which]);
+						dialog.dismiss();
+						setLocation();
+						storeCityValue();
+					}
+				});
 				alert.show();
 			}
 		}
@@ -172,12 +260,9 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 	private void getDatafromIntent() {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
-			mProductsArray = (ArrayList<ProductModel>) mBundle
-					.getSerializable("productsArray");
-			mCategoriesArray = (ArrayList<String>) mBundle
-					.getSerializable("categories");
-			mCateogoryMappingsArray = (ArrayList<CategoryModel>) mBundle
-					.getSerializable("categoriesMapping");
+			mProductsArray = (ArrayList<ProductModel>) mBundle.getSerializable("productsArray");
+			mCategoriesArray = (ArrayList<String>) mBundle.getSerializable("categories");
+			mCateogoryMappingsArray = (ArrayList<CategoryModel>) mBundle.getSerializable("categoriesMapping");
 		}
 
 		if (mProductsArray != null && mProductsArray.size() == 0) {
@@ -262,12 +347,10 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Intent mIntent = new Intent(this, SearchResultsActivity.class);
 		Bundle mBundle = new Bundle();
-		mBundle.putString("selectedCategory", mAdapter.getItem(position)
-				.getTitle());
+		mBundle.putString("selectedCategory", mAdapter.getItem(position).getTitle());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -335,8 +418,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 					mModel.setTitle(mCatObj.optString("Title"));
 					mCateogoryMappingsArray.add(mModel);
 
-					if (!(mCategoriesArray.contains(mCatObj
-							.optString("Category")))) {
+					if (!(mCategoriesArray.contains(mCatObj.optString("Category")))) {
 						mCategoriesArray.add(mCatObj.optString("Category"));
 					}
 				} catch (JSONException e) {
@@ -349,7 +431,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		if (mApp != null) {
 			mApp.setCategoryMappingArray(mCateogoryMappingsArray);
 		}
-
+		if (StorageClass.getInstance(this).getAuthHeader().length() != 0)
+			initServicerProvider();
 	}
 
 }

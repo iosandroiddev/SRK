@@ -2,12 +2,23 @@ package com.sabrentkaro;
 
 import java.util.ArrayList;
 
+import com.models.CityModel;
+import com.sabrentkaro.login.LoginActivity;
+import com.sabrentkaro.postad.PostAdActivity;
+import com.sabrentkaro.search.SearchActivity;
+import com.utils.StaticUtils;
+import com.utils.StorageClass;
+import com.utils.slidingmenu.SlidingMenu;
+import com.utils.slidingmenu.lib.app.SlidingFragmentActivity;
+
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -18,6 +29,8 @@ import android.text.style.MetricAffectingSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnSystemUiVisibilityChangeListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,17 +40,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.models.CityModel;
-import com.sabrentkaro.login.LoginActivity;
-import com.sabrentkaro.postad.PostAdActivity;
-import com.sabrentkaro.search.SearchActivity;
-import com.utils.StaticUtils;
-import com.utils.StorageClass;
-import com.utils.slidingmenu.SlidingMenu;
-import com.utils.slidingmenu.lib.app.SlidingFragmentActivity;
-
-public class BaseActivity extends SlidingFragmentActivity implements
-		OnClickListener {
+@SuppressLint("InlinedApi")
+public class BaseActivity extends SlidingFragmentActivity implements OnClickListener {
 
 	private SlidingMenu mSlidingMenu;
 	public FrameLayout mMiddleLayout;
@@ -45,12 +49,12 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	public RelativeLayout mProgressLayout;
 	public TextView mtxtLocation;
 	private TextView mbtnLogin, mtxtTitle;
-	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName,
-			mbtnTermsConditions, mbtnLegalDisc, mbtnPrivacyPolicy,
-			mbtnListingPolicy, mbtnRentingPolicy, mbtnAboutUs, mbtnHelp;
+	private TextView mbtnPostAd, mbtnSearchProducts, mbtnHome, mtxtUserName, mbtnTermsConditions, mbtnLegalDisc,
+			mbtnPrivacyPolicy, mbtnListingPolicy, mbtnRentingPolicy, mbtnAboutUs, mbtnHelp;
 	private LinearLayout mLoginLayout, mHelpLayout;
 	private boolean isHelpClicked = false;
 	private ProgressBar mProgressBar;
+	private View decorView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,17 @@ public class BaseActivity extends SlidingFragmentActivity implements
 		setClickListeners();
 		setLocation();
 		hideOrShowLogin();
+		getView();
+	}
+
+	private void getView() {
+		decorView = getWindow().getDecorView();
+		decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+			@Override
+			public void onSystemUiVisibilityChange(int i) {
+				int height = decorView.getHeight();
+			}
+		});
 	}
 
 	private void hideOrShowLogin() {
@@ -154,6 +169,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		mMiddleLayout.addView(view);
+
 	}
 
 	@Override
@@ -313,8 +329,8 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void showProgressLayout() {
-		mProgressBar.getIndeterminateDrawable().setColorFilter(
-				getResources().getColor(R.color.pink), PorterDuff.Mode.SRC_IN);
+		mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.pink),
+				PorterDuff.Mode.SRC_IN);
 		mProgressLayout.setVisibility(View.VISIBLE);
 	}
 
@@ -334,11 +350,9 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void showToast(String mString) {
-		Typeface font = Typeface.createFromAsset(getAssets(),
-				"fonts/Trebuchet_MS.ttf");
+		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Trebuchet_MS.ttf");
 		SpannableString efr = new SpannableString(mString);
-		efr.setSpan(new TypefaceSpan(font), 0, efr.length(),
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		efr.setSpan(new TypefaceSpan(font), 0, efr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		Toast.makeText(this, efr, Toast.LENGTH_SHORT).show();
 	}
 
@@ -363,17 +377,14 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	}
 
 	public void hideSoftKeyboard() {
-		if (getCurrentFocus() != null && getWindow() != null
-				&& getWindow().getDecorView() != null) {
+		if (getCurrentFocus() != null && getWindow() != null && getWindow().getDecorView() != null) {
 			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-			inputMethodManager.hideSoftInputFromWindow(getWindow()
-					.getDecorView().getWindowToken(), 0);
+			inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
 		}
 	}
 
 	private void showCityAlert() {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
-				.getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
 		int pos = -1;
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
@@ -381,11 +392,7 @@ public class BaseActivity extends SlidingFragmentActivity implements
 				if (TextUtils.isEmpty(StorageClass.getInstance(this).getCity())) {
 					pos = -1;
 				} else {
-					if (mCityArray
-							.get(i)
-							.getName()
-							.equalsIgnoreCase(
-									StorageClass.getInstance(this).getCity())) {
+					if (mCityArray.get(i).getName().equalsIgnoreCase(StorageClass.getInstance(this).getCity())) {
 						pos = i;
 					}
 				}
@@ -394,32 +401,26 @@ public class BaseActivity extends SlidingFragmentActivity implements
 			if (mCities != null) {
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
-				alert.setSingleChoiceItems(mCities, pos,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								StorageClass.getInstance(BaseActivity.this)
-										.setCity(mCities[which]);
-								storeCityValue();
-								dialog.dismiss();
-								setLocation();
-							}
+				alert.setSingleChoiceItems(mCities, pos, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						StorageClass.getInstance(BaseActivity.this).setCity(mCities[which]);
+						storeCityValue();
+						dialog.dismiss();
+						setLocation();
+					}
 
-						});
+				});
 				alert.show();
 			}
 		}
 	}
 
 	public void storeCityValue() {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
-				.getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
 		for (int i = 0; i < mCityArray.size(); i++) {
-			if (mCityArray.get(i).getName()
-					.equalsIgnoreCase(StorageClass.getInstance(this).getCity())) {
-				StorageClass.getInstance(this).setCityValue(
-						mCityArray.get(i).getValue());
+			if (mCityArray.get(i).getName().equalsIgnoreCase(StorageClass.getInstance(this).getCity())) {
+				StorageClass.getInstance(this).setCityValue(mCityArray.get(i).getValue());
 			}
 		}
 	}
@@ -428,6 +429,15 @@ public class BaseActivity extends SlidingFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		setLocation();
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) {
+			decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+		}
 	}
 
 }

@@ -5,7 +5,7 @@
 
     <com.utils.CustomTextView
         android:id="@+id/btnSelectUserType"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
         android:layout_margin="5dp"
@@ -23,7 +23,7 @@
 
     <EditText
         android:id="@+id/displayName"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/display_name"
@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/emailId"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/enter_email_id"
@@ -39,7 +39,7 @@
 
     <EditText
         android:id="@+id/confirmEmailId"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/confirm_email_id"
@@ -47,7 +47,7 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/enter_password"
@@ -55,7 +55,7 @@
 
     <com.utils.CustomTextView
         android:id="@+id/btnSelectCountry"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
         android:layout_margin="5dp"
@@ -73,7 +73,7 @@
 
     <EditText
         android:id="@+id/mobileNumber"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:hint="@string/enter_mobile_number"
@@ -81,7 +81,7 @@
 
     <EditText
         android:id="@+id/editPanCard"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_pan_card_number"
         android:inputType="text"
@@ -89,7 +89,7 @@
 
     <CheckBox
         android:id="@+id/checkTerms"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:checked="false"
