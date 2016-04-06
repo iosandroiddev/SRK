@@ -22,14 +22,18 @@ import com.utils.StorageClass;
 
 public class AddressDocumentsActivity extends BaseActivity {
 
-	private EditText meditAdress, meditState, mEditPinCode, mEditPhone, meditPanCardNumber, mEditAadharCardName,
-			mEditAadharCardNumber, mEditDrvingLicense, mEditDrvingState;
-	private TextView mbtnPanCard, mbtnAadharCard, mbtnContinue, mbtnDrivingLicense;
-	private boolean isPanCardSelected = false, isAadharCardSelected = false, isDrivingLicenseSelected = false;
-	private LinearLayout mPanCardLayout, mAAadharCardLayout, mDrivingLicenseLayout;
+	private EditText meditAdress, meditState, mEditPinCode, mEditPhone,
+			meditPanCardNumber, mEditAadharCardName, mEditAadharCardNumber,
+			mEditDrvingLicense, mEditDrvingState;
+	private TextView mbtnPanCard, mbtnAadharCard, mbtnContinue,
+			mbtnDrivingLicense;
+	private boolean isPanCardSelected = false, isAadharCardSelected = false,
+			isDrivingLicenseSelected = false;
+	private LinearLayout mPanCardLayout, mAAadharCardLayout,
+			mDrivingLicenseLayout;
 	private TextView mbtnSelectCity;
-	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice, mProductDescription, mQuantity, mStartDate,
-			mEndDate, mLocationId;
+	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice,
+			mProductDescription, mQuantity, mStartDate, mEndDate, mLocationId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +52,18 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mEditPhone.setText(StorageClass.getInstance(this).getMobileNumber());
 
 		if (StorageClass.getInstance(this).getServiceTitle().contains("PAN")) {
-			meditPanCardNumber.setText(StorageClass.getInstance(this).getServiceValue());
+			meditPanCardNumber.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnPanCardClicked();
-		} else if (StorageClass.getInstance(this).getServiceTitle().contains("Aadhaar")) {
-			mEditAadharCardNumber.setText(StorageClass.getInstance(this).getServiceValue());
+		} else if (StorageClass.getInstance(this).getServiceTitle()
+				.contains("Aadhaar")) {
+			mEditAadharCardNumber.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnAadharCardClicked();
-		} else if (StorageClass.getInstance(this).getServiceTitle().contains("Driving")) {
-			mEditDrvingLicense.setText(StorageClass.getInstance(this).getServiceValue());
+		} else if (StorageClass.getInstance(this).getServiceTitle()
+				.contains("Driving")) {
+			mEditDrvingLicense.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnDrivingLicenseClicked();
 		}
 	}
@@ -149,7 +158,8 @@ public class AddressDocumentsActivity extends BaseActivity {
 		if (meditAdress.getText().toString().length() == 0) {
 			showToast("Please Enter Address");
 		} else {
-			if (mbtnSelectCity.getText().toString().equalsIgnoreCase("Select City")) {
+			if (mbtnSelectCity.getText().toString()
+					.equalsIgnoreCase("Select City")) {
 				showToast("Please Select City");
 			} else {
 				if (meditState.getText().toString().length() == 0) {
@@ -167,37 +177,52 @@ public class AddressDocumentsActivity extends BaseActivity {
 								if (mEditPhone.getText().toString().length() != 10) {
 									showToast("Please Enter Valid Mobile Number");
 								} else {
-									if (!isPanCardSelected && !isAadharCardSelected && !isDrivingLicenseSelected) {
+									if (!isPanCardSelected
+											&& !isAadharCardSelected
+											&& !isDrivingLicenseSelected) {
 										showToast("Please Select Documents");
 									} else if (isPanCardSelected) {
-										if (TextUtils.isEmpty(meditPanCardNumber.getText().toString())) {
+										if (TextUtils
+												.isEmpty(meditPanCardNumber
+														.getText().toString())) {
 											showToast("Please Enter PAN Card Number");
 										} else {
-											if (meditPanCardNumber.getText().toString().length() != 10) {
+											if (meditPanCardNumber.getText()
+													.toString().length() != 10) {
 												showToast("Please Enter  Valid PAN Card Number");
 											} else {
 												startOrdersActivity();
 											}
 										}
 									} else if (isAadharCardSelected) {
-										if (TextUtils.isEmpty(mEditAadharCardName.getText().toString())) {
+										if (TextUtils
+												.isEmpty(mEditAadharCardName
+														.getText().toString())) {
 											showToast("Please Enter AadharCard Name");
-										} else if (TextUtils.isEmpty(mEditAadharCardNumber.getText().toString())) {
+										} else if (TextUtils
+												.isEmpty(mEditAadharCardNumber
+														.getText().toString())) {
 											showToast("Please Enter AadharCard Number");
 										} else {
-											if (mEditAadharCardNumber.getText().toString().length() != 12) {
+											if (mEditAadharCardNumber.getText()
+													.toString().length() != 12) {
 												showToast("Please Enter Valid AadharCard Number");
 											} else {
 												startOrdersActivity();
 											}
 										}
 									} else if (isDrivingLicenseSelected) {
-										if (TextUtils.isEmpty(mEditDrvingLicense.getText().toString())) {
+										if (TextUtils
+												.isEmpty(mEditDrvingLicense
+														.getText().toString())) {
 											showToast("Please Enter Driving License Number");
-										} else if (TextUtils.isEmpty(mEditDrvingState.getText().toString())) {
+										} else if (TextUtils
+												.isEmpty(mEditDrvingState
+														.getText().toString())) {
 											showToast("Please Enter Drving License State");
 										} else {
-											if (mEditDrvingLicense.getText().toString().length() != 16) {
+											if (mEditDrvingLicense.getText()
+													.toString().length() != 16) {
 												showToast("Please Enter Valid Driving License Number");
 											} else {
 												startOrdersActivity();
@@ -238,21 +263,25 @@ public class AddressDocumentsActivity extends BaseActivity {
 	private void btnPanCardClicked() {
 		if (isPanCardSelected) {
 			isPanCardSelected = false;
-			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mPanCardLayout, false);
 		} else {
 			isPanCardSelected = true;
-			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mPanCardLayout, true);
 			meditPanCardNumber.requestFocus();
 			if (isAadharCardSelected) {
 				isAadharCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mAAadharCardLayout, false);
 			}
 			if (isDrivingLicenseSelected) {
 				isDrivingLicenseSelected = false;
-				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 			}
 		}
@@ -261,21 +290,25 @@ public class AddressDocumentsActivity extends BaseActivity {
 	private void btnDrivingLicenseClicked() {
 		if (isDrivingLicenseSelected) {
 			isDrivingLicenseSelected = false;
-			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 		} else {
 			isDrivingLicenseSelected = true;
-			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mDrivingLicenseLayout, true);
-			meditPanCardNumber.requestFocus();
+			mEditDrvingLicense.requestFocus();
 			if (isAadharCardSelected) {
 				isAadharCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mAAadharCardLayout, false);
 			}
 			if (isPanCardSelected) {
 				isPanCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
 		}
@@ -284,37 +317,48 @@ public class AddressDocumentsActivity extends BaseActivity {
 	private void btnAadharCardClicked() {
 		if (isAadharCardSelected) {
 			isAadharCardSelected = false;
-			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, false);
 		} else {
 			if (isPanCardSelected) {
 				isPanCardSelected = false;
-				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
 			if (isDrivingLicenseSelected) {
 				isDrivingLicenseSelected = false;
-				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 			}
 			mEditAadharCardName.requestFocus();
 			isAadharCardSelected = true;
-			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, true);
 
 		}
 	}
 
 	private void showCityAlert(final TextView mtxtView) {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
 		int pos = -1;
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserCity())) {
+				if (TextUtils.isEmpty(StorageClass.getInstance(this)
+						.getUserCity())) {
 					pos = -1;
 				} else {
-					if (mCityArray.get(i).getName().equalsIgnoreCase(StorageClass.getInstance(this).getUserCity())) {
+					if (mCityArray
+							.get(i)
+							.getName()
+							.equalsIgnoreCase(
+									StorageClass.getInstance(this)
+											.getUserCity())) {
 						pos = i;
 					}
 				}
@@ -324,13 +368,15 @@ public class AddressDocumentsActivity extends BaseActivity {
 				StorageClass.getInstance(this).getUserCity();
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
-				alert.setSingleChoiceItems(mCities, pos, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mtxtView.setText(mCities[which]);
-						dialog.dismiss();
-					}
-				});
+				alert.setSingleChoiceItems(mCities, pos,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mtxtView.setText(mCities[which]);
+								dialog.dismiss();
+							}
+						});
 				alert.show();
 			}
 		}

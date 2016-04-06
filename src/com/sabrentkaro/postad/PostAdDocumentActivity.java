@@ -25,11 +25,13 @@ import com.sabrentkaro.R;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
-public class PostAdDocumentActivity extends BaseActivity implements OnCheckedChangeListener {
+public class PostAdDocumentActivity extends BaseActivity implements
+		OnCheckedChangeListener {
 
-	private EditText meditAdress, meditState, mEditPinCode, mEditPhone, meditPanCardNumber, mEditAadharCardName,
-			mEditAadharCardNumber, meditUserAdress, meditUserCity, meditUserState, mEditUserPinCode, mEditUserPhone,
-			mEditDrvingLicense, mEditDrvingState;;
+	private EditText meditAdress, meditState, mEditPinCode, mEditPhone,
+			meditPanCardNumber, mEditAadharCardName, mEditAadharCardNumber,
+			meditUserAdress, meditUserCity, meditUserState, mEditUserPinCode,
+			mEditUserPhone, mEditDrvingLicense, mEditDrvingState;;
 	private TextView mbtnNext, mbtnSelectCity, mbtnSelectUserCity, mbtnClear;
 	private LinearLayout mLayoutUserAddress;
 	private CheckBox mCheckAddress;
@@ -53,8 +55,10 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 	private HashMap<String, String> controlLayouts = new HashMap<String, String>();
 
 	private TextView mbtnPanCard, mbtnAadharCard, mbtnDrivingLicense;
-	private boolean isPanCardSelected = false, isAadharCardSelected = false, isDrivingLicenseSelected = false;
-	private LinearLayout mPanCardLayout, mAAadharCardLayout, mDrivingLicenseLayout;
+	private boolean isPanCardSelected = false, isAadharCardSelected = false,
+			isDrivingLicenseSelected = false;
+	private LinearLayout mPanCardLayout, mAAadharCardLayout,
+			mDrivingLicenseLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,8 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 				mProductDesc = mBundle.getString("productDescription");
 				mAdditionalStuff = mBundle.getString("additionalStuff");
 				mUserInstructions = mBundle.getString("userInstructions");
-				mProductPurchasedPrice = mBundle.getString("productPurchasedPrice");
+				mProductPurchasedPrice = mBundle
+						.getString("productPurchasedPrice");
 				mDailyCost = mBundle.getString("dailyCost");
 				mMonthCost = mBundle.getString("monthlyCost");
 				mWeekCost = mBundle.getString("weekCost");
@@ -87,7 +92,8 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 				mProductAdId = mBundle.getString("productAdId");
 				mtxtRating = mBundle.getString("productCondition");
 				mtxtCondName = mBundle.getString("productConditionName");
-				controlLayouts = (HashMap<String, String>) mBundle.getSerializable("controlLayouts");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
 			}
 		}
 	}
@@ -120,32 +126,41 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 			if (mSaver.isPanCardSelected()) {
 				isPanCardSelected = true;
 				isAadharCardSelected = false;
-				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_select, 0, 0, 0);
 			} else {
 				if (mSaver.isAaadharCardSelected()) {
 					isAadharCardSelected = true;
 					isPanCardSelected = false;
-					mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+					mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+							R.drawable.btn_select, 0, 0, 0);
 				} else {
 
 				}
 			}
 		} else {
 			meditAdress.setText(StorageClass.getInstance(this).getAddress());
-			mbtnSelectCity.setText(StorageClass.getInstance(this).getUserCity());
+			mbtnSelectCity
+					.setText(StorageClass.getInstance(this).getUserCity());
 			meditState.setText(StorageClass.getInstance(this).getUserState());
 			mEditPinCode.setText(StorageClass.getInstance(this).getPinCode());
-			mEditPhone.setText(StorageClass.getInstance(this).getMobileNumber());
+			mEditPhone
+					.setText(StorageClass.getInstance(this).getMobileNumber());
 		}
 
 		if (StorageClass.getInstance(this).getServiceTitle().contains("PAN")) {
-			meditPanCardNumber.setText(StorageClass.getInstance(this).getServiceValue());
+			meditPanCardNumber.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnPanCardClicked();
-		} else if (StorageClass.getInstance(this).getServiceTitle().contains("Aadhaar")) {
-			mEditAadharCardNumber.setText(StorageClass.getInstance(this).getServiceValue());
+		} else if (StorageClass.getInstance(this).getServiceTitle()
+				.contains("Aadhaar")) {
+			mEditAadharCardNumber.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnAadharCardClicked();
-		} else if (StorageClass.getInstance(this).getServiceTitle().contains("Driving")) {
-			mEditDrvingLicense.setText(StorageClass.getInstance(this).getServiceValue());
+		} else if (StorageClass.getInstance(this).getServiceTitle()
+				.contains("Driving")) {
+			mEditDrvingLicense.setText(StorageClass.getInstance(this)
+					.getServiceValue());
 			btnDrivingLicenseClicked();
 		}
 
@@ -281,40 +296,63 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 								if (mEditPhone.getText().toString().length() == 0) {
 									showToast("Please Enter Phone Number");
 								} else {
-									if (mEditPhone.getText().toString().length() != 10) {
+									if (mEditPhone.getText().toString()
+											.length() != 10) {
 										showToast("Please Enter Valid Phone Number");
 									} else {
-										if (!isPanCardSelected && !isAadharCardSelected) {
+										if (!isPanCardSelected
+												&& !isAadharCardSelected) {
 											showToast("Please Select Documents");
 										} else if (isPanCardSelected) {
-											if (TextUtils.isEmpty(meditPanCardNumber.getText().toString())) {
+											if (TextUtils
+													.isEmpty(meditPanCardNumber
+															.getText()
+															.toString())) {
 												showToast("Please Enter PAN Card Number");
 											} else {
-												if (meditPanCardNumber.getText().toString().length() != 10) {
+												if (meditPanCardNumber
+														.getText().toString()
+														.length() != 10) {
 													showToast("Please Enter Valid PAN Card Number");
 												} else {
 													navigateToPostPreview();
 												}
 											}
 										} else if (isAadharCardSelected) {
-											if (TextUtils.isEmpty(mEditAadharCardName.getText().toString())) {
+											if (TextUtils
+													.isEmpty(mEditAadharCardName
+															.getText()
+															.toString())) {
 												showToast("Please Enter AadharCard Name");
-											} else if (TextUtils.isEmpty(mEditAadharCardNumber.getText().toString())) {
+											} else if (TextUtils
+													.isEmpty(mEditAadharCardNumber
+															.getText()
+															.toString())) {
 												showToast("Please Enter AadharCard Number");
 											} else {
-												if (mEditAadharCardNumber.getText().toString().length() != 12) {
+												if (mEditAadharCardNumber
+														.getText().toString()
+														.length() != 12) {
 													showToast("Please Enter Valid AadharCard Number");
 												} else {
 													navigateToPostPreview();
 												}
 											}
 										} else if (isDrivingLicenseSelected) {
-											if (TextUtils.isEmpty(mEditDrvingLicense.getText().toString())) {
+											if (TextUtils
+													.isEmpty(mEditDrvingLicense
+															.getText()
+															.toString())) {
 												showToast("Please Enter Driving License Number");
-											} else if (TextUtils.isEmpty(mEditDrvingState.getText().toString())) {
+											} else if (TextUtils
+													.isEmpty(mEditDrvingState
+															.getText()
+															.toString())) {
 												showToast("Please Enter Drving License State");
 											} else {
-												if (mEditDrvingLicense.getText().toString().length() != 16) {
+												if (mEditDrvingLicense
+														.getText().toString()
+														.length() != 16) {
 													showToast("Please Enter Valid Driving License Number");
 												} else {
 													navigateToPostPreview();
@@ -346,28 +384,42 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 							if (mEditUserPinCode.getText().toString().length() != 6) {
 								showToast("Please Enter Valid Pincode");
 							} else {
-								if (mEditUserPhone.getText().toString().length() == 0) {
+								if (mEditUserPhone.getText().toString()
+										.length() == 0) {
 									showToast("Please Enter Phone Number");
 								} else {
-									if (mEditUserPhone.getText().toString().length() != 10) {
+									if (mEditUserPhone.getText().toString()
+											.length() != 10) {
 										showToast("Please Enter Valid Phone Number");
 									} else {
-										if (!isPanCardSelected && !isAadharCardSelected) {
+										if (!isPanCardSelected
+												&& !isAadharCardSelected) {
 											showToast("Please Select Documents");
 										} else if (isPanCardSelected) {
-											if (TextUtils.isEmpty(meditPanCardNumber.getText().toString())) {
+											if (TextUtils
+													.isEmpty(meditPanCardNumber
+															.getText()
+															.toString())) {
 												showToast("Please Enter PAN Card Number");
 											} else {
-												if (meditPanCardNumber.getText().toString().length() != 10) {
+												if (meditPanCardNumber
+														.getText().toString()
+														.length() != 10) {
 													showToast("Please Enter Valid PAN Card Number");
 												} else {
 													navigateToPostPreview();
 												}
 											}
 										} else if (isAadharCardSelected) {
-											if (TextUtils.isEmpty(mEditAadharCardName.getText().toString())) {
+											if (TextUtils
+													.isEmpty(mEditAadharCardName
+															.getText()
+															.toString())) {
 												showToast("Please Enter AadharCard Name");
-											} else if (TextUtils.isEmpty(mEditAadharCardNumber.getText().toString())) {
+											} else if (TextUtils
+													.isEmpty(mEditAadharCardNumber
+															.getText()
+															.toString())) {
 												showToast("Please Enter AadharCard Number");
 											} else {
 												navigateToPostPreview();
@@ -442,11 +494,16 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 		mBundle.putString("cityUser", mbtnSelectUserCity.getText().toString());
 		mBundle.putString("stateValueUser", meditUserState.getText().toString());
 		mBundle.putString("pincodeUser", mEditUserPinCode.getText().toString());
-		mBundle.putString("mobileNumberUser", mEditUserPhone.getText().toString());
+		mBundle.putString("mobileNumberUser", mEditUserPhone.getText()
+				.toString());
 
 		mBundle.putString("panCard", meditPanCardNumber.getText().toString());
-		mBundle.putString("aadharCardName", mEditAadharCardName.getText().toString());
-		mBundle.putString("aadharCardNumber", mEditAadharCardNumber.getText().toString());
+		mBundle.putString("drivinglicense", mEditDrvingLicense.getText()
+				.toString());
+		mBundle.putString("aadharCardName", mEditAadharCardName.getText()
+				.toString());
+		mBundle.putString("aadharCardNumber", mEditAadharCardNumber.getText()
+				.toString());
 		mBundle.putString("mobileNumber", mEditPhone.getText().toString());
 		mIntent.putExtras(mBundle);
 		startActivityForResult(mIntent, 100);
@@ -468,21 +525,25 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 	private void btnPanCardClicked() {
 		if (isPanCardSelected) {
 			isPanCardSelected = false;
-			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mPanCardLayout, false);
 		} else {
 			isPanCardSelected = true;
-			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mPanCardLayout, true);
 			meditPanCardNumber.requestFocus();
 			if (isAadharCardSelected) {
 				isAadharCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mAAadharCardLayout, false);
 			}
 			if (isDrivingLicenseSelected) {
 				isDrivingLicenseSelected = false;
-				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 			}
 		}
@@ -492,21 +553,25 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 	private void btnDrivingLicenseClicked() {
 		if (isDrivingLicenseSelected) {
 			isDrivingLicenseSelected = false;
-			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 		} else {
 			isDrivingLicenseSelected = true;
-			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mDrivingLicenseLayout, true);
 			meditPanCardNumber.requestFocus();
 			if (isAadharCardSelected) {
 				isAadharCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mAAadharCardLayout, false);
 			}
 			if (isPanCardSelected) {
 				isPanCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
 		}
@@ -516,22 +581,26 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 	private void btnAadharCardClicked() {
 		if (isAadharCardSelected) {
 			isAadharCardSelected = false;
-			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_unselect, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, false);
 		} else {
 			if (isPanCardSelected) {
 				isPanCardSelected = false;
-				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
 			if (isDrivingLicenseSelected) {
 				isDrivingLicenseSelected = false;
-				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_unselect, 0, 0, 0);
+				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mDrivingLicenseLayout, false);
 			}
 			mEditAadharCardName.requestFocus();
 			isAadharCardSelected = true;
-			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_select, 0, 0, 0);
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 			StaticUtils.expandCollapse(mAAadharCardLayout, true);
 		}
 		mAAadharCardLayout.invalidate();
@@ -547,15 +616,18 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 	}
 
 	private void showCityAlert(final TextView mtxtView) {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
 		int pos = -1;
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
-				if (mtxtView.getText().toString().equalsIgnoreCase("Seletct City")) {
+				if (mtxtView.getText().toString()
+						.equalsIgnoreCase("Seletct City")) {
 					pos = -1;
 				} else {
-					if (mCityArray.get(i).getName().equalsIgnoreCase(mtxtView.getText().toString())) {
+					if (mCityArray.get(i).getName()
+							.equalsIgnoreCase(mtxtView.getText().toString())) {
 						pos = i;
 					}
 				}
@@ -565,14 +637,16 @@ public class PostAdDocumentActivity extends BaseActivity implements OnCheckedCha
 				StorageClass.getInstance(this).getUserCity();
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
-				alert.setSingleChoiceItems(mCities, pos, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mtxtView.setText(mCities[which]);
-						dialog.dismiss();
-						setLocation();
-					}
-				});
+				alert.setSingleChoiceItems(mCities, pos,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mtxtView.setText(mCities[which]);
+								dialog.dismiss();
+								setLocation();
+							}
+						});
 				alert.show();
 			}
 		}
