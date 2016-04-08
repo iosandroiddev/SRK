@@ -64,8 +64,8 @@ public class PayUIntegration extends FragmentActivity {
 		// webviewPayment.loadUrl("http://timesofindia.com/");
 		StringBuilder url_s = new StringBuilder();
 		// http://merirakhi.com/processor/payment/endpoint?order_id=aAbBcC&amount=10&currency=USD
-		// url_s.append("https://test.payu.in/_payment");
-		url_s.append("https://secure.payu.in/_payment");
+		 url_s.append("https://test.payu.in/_payment");
+//		url_s.append("https://secure.payu.in/_payment");
 		Log.e(TAG, "call url " + url_s);
 
 		// webviewPayment.loadUrl(url_s.toString());
@@ -200,10 +200,10 @@ public class PayUIntegration extends FragmentActivity {
 	}
 
 	private String getPostString() {
-		// String key = "OygoFs";
-		String key = "v8zzo2Bg";
-		// String salt = "BV1QBwCv";
-		String salt = "5UkdKIu29m";
+		 String key = "OygoFs";
+//		String key = "v8zzo2Bg";
+		 String salt = "BV1QBwCv";
+//		String salt = "5UkdKIu29m";
 		String txnid = "TXN_1";
 		String amnnt = amount;
 		String firstname = StorageClass.getInstance(this).getUserName();

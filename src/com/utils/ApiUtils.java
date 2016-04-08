@@ -4,7 +4,7 @@ public class ApiUtils {
 
 	public static final String ONLINE_URL = "http://allrental.co.in/businessservices/api/";
 	public static final String ONLINE_LIVE_URL = "https://www.sabrentkaro.com/businessservices/api/";
-	public static final String BASE_URL = ONLINE_LIVE_URL;
+	public static final String BASE_URL = ONLINE_URL;
 
 	public static final String GETALLPRODUCTS = BASE_URL
 			+ "Product/GetAllProducts";

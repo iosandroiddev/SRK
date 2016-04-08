@@ -157,92 +157,166 @@ public class SearchResultsActivity extends BaseActivity implements IRentClick,
 	}
 
 	private void initSearchResultsApi(int index) {
+		boolean callFilterApi = false;
 		if (mbtnSubProductCategory.getText().toString().contains("Select")) {
-
+			callFilterApi = false;
 		} else {
 			selectedCategory = mbtnSubProductCategory.getText().toString();
+			callFilterApi = true;
 		}
 		showProgressLayout();
-		JSONObject params = new JSONObject();
-		JSONArray minputs = new JSONArray();
-		JSONObject mObj = new JSONObject();
-		try {
-			mObj.put("SearchText", "");
-			mObj.put("SearchType", "");
-			mObj.put("SearchCondition", "OR");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		minputs.put(mObj);
-		mObj = new JSONObject();
-		try {
-			String mlocation = StorageClass.getInstance(this).getCity();
-			mObj.put("SearchText", mlocation);
-			mObj.put("SearchType", "location");
-			mObj.put("SearchCondition", "OR");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		minputs.put(mObj);
-		mObj = new JSONObject();
-		try {
-			mObj.put("SearchText", selectedCategory);
-			mObj.put("SearchType", "productcategory.na");
-			mObj.put("SearchCode", selectedCategory);
-			mObj.put("pcSearchType", "");
-			mObj.put("SearchCondition", "AND");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		minputs.put(mObj);
-		JSONObject mPagingInputs = new JSONObject();
-		try {
-			mPagingInputs.put("PageNumber", index);
-			mPagingInputs.put("PageSize", "25");
-			mPagingInputs.put("UserId", null);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		if (callFilterApi) {
+			JSONObject params = new JSONObject();
+			JSONArray minputs = new JSONArray();
+			JSONObject mObj = new JSONObject();
+			try {
+				mObj.put("SearchText", "");
+				mObj.put("SearchType", "");
+				mObj.put("SearchCondition", "OR");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			minputs.put(mObj);
+			mObj = new JSONObject();
+			try {
+				String mlocation = StorageClass.getInstance(this).getCity();
+				mObj.put("SearchText", mlocation);
+				mObj.put("SearchType", "location");
+				mObj.put("SearchCondition", "OR");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			minputs.put(mObj);
+			mObj = new JSONObject();
+			try {
+				mObj.put("SearchText", selectedCategory);
+				mObj.put("SearchType", "productcategory.na");
+				mObj.put("SearchCode", selectedCategory);
+				mObj.put("pcSearchType", "");
+				mObj.put("SearchCondition", "AND");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			minputs.put(mObj);
+			JSONObject mPagingInputs = new JSONObject();
+			try {
+				mPagingInputs.put("PageNumber", index);
+				mPagingInputs.put("PageSize", "25");
+				mPagingInputs.put("UserId", null);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 
-		JSONArray mSortKeys = new JSONArray();
-		JSONObject mSortKeysObj = new JSONObject();
-		try {
-			mSortKeysObj.put("pcSearchType", "null");
-			mSortKeysObj.put("SearchCondition", "null");
-		} catch (JSONException e) {
-			e.printStackTrace();
+			JSONArray mSortKeys = new JSONArray();
+			JSONObject mSortKeysObj = new JSONObject();
+			try {
+				mSortKeysObj.put("pcSearchType", "null");
+				mSortKeysObj.put("SearchCondition", "null");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			mSortKeys.put(mSortKeysObj);
+			try {
+				params.put("Inputs", minputs);
+				params.put("PagingInput", mPagingInputs);
+				params.put("SortKeys", mSortKeys);
+				params.put("SearchText", null);
+				params.put("SearchType", "");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			JsonObjectRequest mObjReq = new JsonObjectRequest(
+					ApiUtils.FETCHSEARCHRESULTSFROMFILTER, params,
+					new Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							hideProgressLayout();
+							responseForResultsApi(response);
+						}
+
+					}, new ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							hideProgressLayout();
+						}
+					});
+
+			RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+			mQueue.add(mObjReq);
+		} else {
+			JSONObject params = new JSONObject();
+			JSONArray minputs = new JSONArray();
+			JSONObject mObj = new JSONObject();
+			try {
+				mObj.put("SearchText", selectedCategory);
+				mObj.put("SearchType", "category");
+				mObj.put("SearchCondition", "OR");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			minputs.put(mObj);
+			mObj = new JSONObject();
+			try {
+				String mlocation = StorageClass.getInstance(this).getCity();
+				mObj.put("SearchText", mlocation);
+				mObj.put("SearchType", "location");
+				mObj.put("SearchCondition", "AND");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			minputs.put(mObj);
+			JSONObject mPagingInputs = new JSONObject();
+			try {
+				mPagingInputs.put("PageNumber", index);
+				mPagingInputs.put("PageSize", "25");
+				mPagingInputs.put("UserId", null);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			JSONArray mSortKeys = new JSONArray();
+			JSONObject mSortKeysObj = new JSONObject();
+			try {
+				mSortKeysObj.put("pcSearchType", "null");
+				mSortKeysObj.put("SearchCondition", "null");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			mSortKeys.put(mSortKeysObj);
+			try {
+				params.put("Inputs", minputs);
+				params.put("PagingInput", mPagingInputs);
+				params.put("SortKeys", mSortKeys);
+				params.put("SearchText", "null");
+				params.put("SearchType", "");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			JsonObjectRequest mObjReq = new JsonObjectRequest(
+					ApiUtils.FETCHSEARCHRESULTS, params,
+					new Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							hideProgressLayout();
+							responseForResultsApi(response);
+						}
+
+					}, new ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							hideProgressLayout();
+						}
+					});
+
+			RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+			mQueue.add(mObjReq);
 		}
-		mSortKeys.put(mSortKeysObj);
-		try {
-			params.put("Inputs", minputs);
-			params.put("PagingInput", mPagingInputs);
-			params.put("SortKeys", mSortKeys);
-			params.put("SearchText", null);
-			params.put("SearchType", "");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		JsonObjectRequest mObjReq = new JsonObjectRequest(
-				ApiUtils.FETCHSEARCHRESULTSFROMFILTER, params,
-				new Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						hideProgressLayout();
-						responseForResultsApi(response);
-					}
-
-				}, new ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						hideProgressLayout();
-					}
-				});
-
-		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
-		mQueue.add(mObjReq);
 
 	}
 
