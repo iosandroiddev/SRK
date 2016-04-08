@@ -294,15 +294,16 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="vertical" >
 
                     <com.utils.CustomTextView
                         android:id="@+id/dailyCost"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:layout_weight="1"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
                         android:gravity="center_vertical"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:padding="3dp"
@@ -313,11 +314,12 @@
 
                     <com.utils.CustomTextView
                         android:id="@+id/weekCost"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:layout_weight="1"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
                         android:gravity="center_vertical"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:padding="3dp"
@@ -328,11 +330,12 @@
 
                     <com.utils.CustomTextView
                         android:id="@+id/monthCost"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:layout_weight="1"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
                         android:gravity="center_vertical"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:padding="3dp"

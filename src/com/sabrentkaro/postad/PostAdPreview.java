@@ -188,6 +188,9 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				+ mSecurityDeposit);
 		mtxtRating.setText(mtxtCondName);
 
+		mtxtDailyCost.setSelected(true);
+		mtxtMonthCost.setSelected(true);
+		mtxtWeekCost.setSelected(true);
 		// mtxtAddress.setText("Address:" + " " + mAddress);
 		// mtxtCity.setText("City:" + " " + mCity);
 		// mtxtState.setText("State:" + " " + mState);
@@ -584,20 +587,24 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				if (mAadthrNumber.length() == 0) {
 					mserviceField.put("panId", mPanCard);
 				}
+				mserviceField.put("panId", mPanCard);
 			}
+
 			JSONObject mserviceProvider = new JSONObject();
 			if (mPanCard.length() == 0) {
-				if (mAadthrNumber.length() == 0) {
-					if (mDrvingNumber.length() == 0) {
-
-					} else {
-						mserviceProvider.put("Code", "DL");
-						mserviceProvider.put("Title", "null");
-					}
-				} else {
-					mserviceProvider.put("Code", "AADHAAR");
-					mserviceProvider.put("Title", "null");
-				}
+				// if (mAadthrNumber.length() == 0) {
+				// if (mDrvingNumber.length() == 0) {
+				//
+				// } else {
+				// mserviceProvider.put("Code", "DL");
+				// mserviceProvider.put("Title", "null");
+				// }
+				// } else {
+				// mserviceProvider.put("Code", "AADHAAR");
+				// mserviceProvider.put("Title", "null");
+				// }
+				mserviceProvider.put("Code", "PAN");
+				mserviceProvider.put("Title", "null");
 			} else {
 				mserviceProvider.put("Code", "PAN");
 				mserviceProvider.put("Title", "null");
@@ -849,7 +856,6 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				map.put("x-auth", mAuthHeader);
 				map.put("Accept", "application/json");
 				map.put("Content-Type", "application/json; charset=UTF-8");
-
 				return map;
 			}
 

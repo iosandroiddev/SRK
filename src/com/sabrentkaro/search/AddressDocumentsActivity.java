@@ -54,18 +54,31 @@ public class AddressDocumentsActivity extends BaseActivity {
 		if (StorageClass.getInstance(this).getServiceTitle().contains("PAN")) {
 			meditPanCardNumber.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnPanCardClicked();
+			isPanCardSelected = true;
+			isAadharCardSelected = false;
+			isDrivingLicenseSelected = false;
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
-				.contains("Aadhaar")) {
+				.contains("AADHAAR")) {
 			mEditAadharCardNumber.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnAadharCardClicked();
+			isPanCardSelected = false;
+			isAadharCardSelected = true;
+			isDrivingLicenseSelected = false;
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
-				.contains("Driving")) {
+				.contains("DL")) {
 			mEditDrvingLicense.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnDrivingLicenseClicked();
+			isPanCardSelected = false;
+			isAadharCardSelected = false;
+			isDrivingLicenseSelected = true;
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		}
+
 	}
 
 	private void getDetails() {

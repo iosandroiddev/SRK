@@ -459,12 +459,13 @@
                     android:textSize="15sp"
                     custom:fonttype="trebuchet_ms" />
 
-                <EditText
+               <EditText
                     android:id="@+id/editDrivingLicense"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
-                    android:inputType="number"
+                    android:maxLength="16"
+                    android:inputType="text"
                     android:textSize="15sp" />
 
                 <com.utils.CustomTextView
@@ -482,7 +483,6 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:maxLength="12"
                     android:padding="3dp"
                     android:textSize="15sp" />
             </LinearLayout>

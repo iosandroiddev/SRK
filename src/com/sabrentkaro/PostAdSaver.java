@@ -27,6 +27,15 @@ public class PostAdSaver {
 	private boolean isProductAddressChecked = false;
 	private boolean isPanCardSelected = false;
 	private boolean isAaadharCardSelected = false;
+	private boolean isDrivingLicenseSelected = false;
+	
+	public boolean isDrivingLicenseSelected() {
+		return isDrivingLicenseSelected;
+	}
+
+	public void setDrivingLicenseSelected(boolean isPanCardSelected) {
+		this.isDrivingLicenseSelected = isPanCardSelected;
+	}
 
 	public boolean isPanCardSelected() {
 		return isPanCardSelected;

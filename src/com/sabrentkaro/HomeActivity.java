@@ -42,7 +42,8 @@ import com.utils.MiscUtils;
 import com.utils.StaticData;
 import com.utils.StorageClass;
 
-public class HomeActivity extends BaseActivity implements OnItemClickListener, IArrayParseListener {
+public class HomeActivity extends BaseActivity implements OnItemClickListener,
+		IArrayParseListener {
 
 	private GridView mGridView;
 	private ArrayList<ProductModel> mProductsArray = new ArrayList<ProductModel>();
@@ -72,7 +73,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 	}
 
 	private void initServicerProvider() {
-		final String mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
+		final String mAuthHeader = StorageClass.getInstance(this)
+				.getAuthHeader();
 		showProgressLayout();
 		JSONObject mTpType = new JSONObject();
 		try {
@@ -99,7 +101,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 			e.printStackTrace();
 		}
 
-		JsonArrayRequest mRequest = new JsonArrayRequest(ApiUtils.GETPROVIDERSERVICES, mParams,
+		JsonArrayRequest mRequest = new JsonArrayRequest(
+				ApiUtils.GETPROVIDERSERVICES, mParams,
 				new Response.Listener<JSONArray>() {
 
 					@Override
@@ -142,16 +145,24 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 			for (int i = 0; i < response.length(); i++) {
 				JSONObject mObj = response.optJSONObject(i);
 				if (mObj != null) {
-					JSONArray mSpecificationsArray = mObj.optJSONArray("TpServiceInputSpecifications");
+					JSONArray mSpecificationsArray = mObj
+							.optJSONArray("TpServiceInputSpecifications");
 					if (mSpecificationsArray != null) {
 						for (int j = 0; j < mSpecificationsArray.length(); j++) {
-							JSONObject mObjSpecifications = mSpecificationsArray.optJSONObject(i);
+							JSONObject mObjSpecifications = mSpecificationsArray
+									.optJSONObject(i);
 							if (mObjSpecifications != null) {
 								if (mObjSpecifications.optString("UserValues") != null) {
-									StorageClass.getInstance(this)
-											.setServiceTitle(mObjSpecifications.optString("Title"));
-									StorageClass.getInstance(this)
-											.setServiceValue(mObjSpecifications.optString("UserValues"));
+									StorageClass
+											.getInstance(this)
+											.setServiceTitle(
+													mObjSpecifications
+															.optString("ProviderServiceCode"));
+									StorageClass
+											.getInstance(this)
+											.setServiceValue(
+													mObjSpecifications
+															.optString("UserValues"));
 								}
 							}
 						}
@@ -163,10 +174,12 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 
 	private void initSubCategoriesApi() {
 		showProgressLayout();
-		JSONArrayRequestResponse mJsonRequestResponse = new JSONArrayRequestResponse(this);
+		JSONArrayRequestResponse mJsonRequestResponse = new JSONArrayRequestResponse(
+				this);
 		mJsonRequestResponse.setPostMethod(true);
 		Bundle params = new Bundle();
-		mJsonRequestResponse.getResponse(MiscUtils.encodeUrl(ApiUtils.GETCATEGORYMAPPINGS, params),
+		mJsonRequestResponse.getResponse(
+				MiscUtils.encodeUrl(ApiUtils.GETCATEGORYMAPPINGS, params),
 				StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE, this);
 	}
 
@@ -179,22 +192,23 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.POSTDEVICEENTRY, params, new Listener<JSONObject>() {
 
-			@Override
-			public void onResponse(JSONObject response) {
-				responseForDeviceToken(response);
-			}
+					@Override
+					public void onResponse(JSONObject response) {
+						responseForDeviceToken(response);
+					}
 
-		}, new ErrorListener() {
+				}, new ErrorListener() {
 
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				hideProgressLayout();
-				showToast(error.toString());
-			}
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast(error.toString());
+					}
 
-		}) {
+				}) {
 
 		};
 
@@ -220,7 +234,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 	}
 
 	private void showCityAlert() {
-		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this).getCityList();
+		ArrayList<CityModel> mCityArray = StorageClass.getInstance(this)
+				.getCityList();
 		if (mCityArray != null) {
 			final String[] mCities = new String[mCityArray.size()];
 			for (int i = 0; i < mCityArray.size(); i++) {
@@ -230,15 +245,18 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle("Select City");
 				alert.setCancelable(false);
-				alert.setSingleChoiceItems(mCities, -1, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						StorageClass.getInstance(HomeActivity.this).setCity(mCities[which]);
-						dialog.dismiss();
-						setLocation();
-						storeCityValue();
-					}
-				});
+				alert.setSingleChoiceItems(mCities, -1,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								StorageClass.getInstance(HomeActivity.this)
+										.setCity(mCities[which]);
+								dialog.dismiss();
+								setLocation();
+								storeCityValue();
+							}
+						});
 				alert.show();
 			}
 		}
@@ -260,9 +278,12 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 	private void getDatafromIntent() {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			Bundle mBundle = getIntent().getExtras();
-			mProductsArray = (ArrayList<ProductModel>) mBundle.getSerializable("productsArray");
-			mCategoriesArray = (ArrayList<String>) mBundle.getSerializable("categories");
-			mCateogoryMappingsArray = (ArrayList<CategoryModel>) mBundle.getSerializable("categoriesMapping");
+			mProductsArray = (ArrayList<ProductModel>) mBundle
+					.getSerializable("productsArray");
+			mCategoriesArray = (ArrayList<String>) mBundle
+					.getSerializable("categories");
+			mCateogoryMappingsArray = (ArrayList<CategoryModel>) mBundle
+					.getSerializable("categoriesMapping");
 		}
 
 		if (mProductsArray != null && mProductsArray.size() == 0) {
@@ -277,61 +298,44 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 	private void setImages() {
 		for (int i = 0; i < mProductsArray.size(); i++) {
 			ProductModel mObj = mProductsArray.get(i);
-			switch (i) {
-			case 0:
-				mObj.setImage(R.drawable.frigde);
-				break;
-			case 1:
-				mObj.setImage(R.drawable.sofas);
-				break;
-			case 2:
-				mObj.setImage(R.drawable.digicamera);
-				break;
-			case 3:
-				mObj.setImage(R.drawable.oven);
-				break;
-			case 4:
-				mObj.setImage(R.drawable.mobile_tablet);
-				break;
-			case 5:
-				mObj.setImage(R.drawable.laptop);
-				break;
-			case 6:
-				mObj.setImage(R.drawable.tv);
-				break;
-			case 7:
-				mObj.setImage(R.drawable.automobile);
-				break;
-			case 8:
-				mObj.setImage(R.drawable.musical);
-				break;
-			case 9:
-				mObj.setImage(R.drawable.sports);
-				break;
-			case 10:
-				mObj.setImage(R.drawable.toysgames);
-				break;
-			case 11:
-				mObj.setImage(R.drawable.games);
-				break;
-			case 12:
-				mObj.setImage(R.drawable.books);
-				break;
-			case 13:
+			if (mObj.getTitle().contains("Accessories")) {
 				mObj.setImage(R.drawable.watch);
-				break;
-			case 14:
+			} else if (mObj.getTitle().contains("Appliances")) {
+				mObj.setImage(R.drawable.frigde);
+			} else if (mObj.getTitle().contains("Automobiles")) {
+				mObj.setImage(R.drawable.automobile);
+			} else if (mObj.getTitle().contains("Books & Media")) {
+				mObj.setImage(R.drawable.books);
+			} else if (mObj.getTitle().contains("Baby products")) {
 				mObj.setImage(R.drawable.kidsfurniture);
-				break;
-			case 15:
+			} else if (mObj.getTitle().contains("Camera Equipment")) {
+				mObj.setImage(R.drawable.digicamera);
+			} else if (mObj.getTitle().contains("Festivals")) {
 				mObj.setImage(R.drawable.camcorder);
-				break;
-			case 16:
-				mObj.setImage(R.drawable.house);
-				break;
-			default:
+			} else if (mObj.getTitle().contains("Furniture")) {
+				mObj.setImage(R.drawable.sofas);
+			} else if (mObj.getTitle().contains("Gaming")) {
+				mObj.setImage(R.drawable.games);
+			} else if (mObj.getTitle().contains("Kitchenware")) {
+				mObj.setImage(R.drawable.oven);
+			} else if (mObj.getTitle().contains("Laptops & Computers")) {
+				mObj.setImage(R.drawable.laptop);
+			} else if (mObj.getTitle().contains("Mobiles & Tablets")) {
+				mObj.setImage(R.drawable.mobile_tablet);
+			} else if (mObj.getTitle().contains("Musical Instruments")) {
+				mObj.setImage(R.drawable.musical);
+			} else if (mObj.getTitle().contains("Packages")) {
 				mObj.setImage(R.drawable.suits);
-				break;
+			} else if (mObj.getTitle().contains("Sports & Fitness")) {
+				mObj.setImage(R.drawable.sports);
+			} else if (mObj.getTitle().contains("Toys & Games")) {
+				mObj.setImage(R.drawable.toysgames);
+			} else if (mObj.getTitle().contains("TV & Audio Video")) {
+				mObj.setImage(R.drawable.tv);
+			} else if (mObj.getTitle().contains("Vacation Homes")) {
+				mObj.setImage(R.drawable.house);
+			} else {
+				mObj.setImage(R.drawable.suits);
 			}
 			mProductsArray.set(i, mObj);
 		}
@@ -347,10 +351,12 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		Intent mIntent = new Intent(this, SearchResultsActivity.class);
 		Bundle mBundle = new Bundle();
-		mBundle.putString("selectedCategory", mAdapter.getItem(position).getTitle());
+		mBundle.putString("selectedCategory", mAdapter.getItem(position)
+				.getTitle());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -418,7 +424,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, I
 					mModel.setTitle(mCatObj.optString("Title"));
 					mCateogoryMappingsArray.add(mModel);
 
-					if (!(mCategoriesArray.contains(mCatObj.optString("Category")))) {
+					if (!(mCategoriesArray.contains(mCatObj
+							.optString("Category")))) {
 						mCategoriesArray.add(mCatObj.optString("Category"));
 					}
 				} catch (JSONException e) {

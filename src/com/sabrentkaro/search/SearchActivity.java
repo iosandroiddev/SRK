@@ -48,61 +48,44 @@ public class SearchActivity extends BaseActivity implements
 	private void setImages() {
 		for (int i = 0; i < mProductsArray.size(); i++) {
 			ProductModel mObj = mProductsArray.get(i);
-			switch (i) {
-			case 0:
-				mObj.setImage(R.drawable.frigde);
-				break;
-			case 1:
-				mObj.setImage(R.drawable.sofas);
-				break;
-			case 2:
-				mObj.setImage(R.drawable.digicamera);
-				break;
-			case 3:
-				mObj.setImage(R.drawable.oven);
-				break;
-			case 4:
-				mObj.setImage(R.drawable.mobile_tablet);
-				break;
-			case 5:
-				mObj.setImage(R.drawable.laptop);
-				break;
-			case 6:
-				mObj.setImage(R.drawable.tv);
-				break;
-			case 7:
-				mObj.setImage(R.drawable.automobile);
-				break;
-			case 8:
-				mObj.setImage(R.drawable.musical);
-				break;
-			case 9:
-				mObj.setImage(R.drawable.sports);
-				break;
-			case 10:
-				mObj.setImage(R.drawable.toysgames);
-				break;
-			case 11:
-				mObj.setImage(R.drawable.games);
-				break;
-			case 12:
-				mObj.setImage(R.drawable.books);
-				break;
-			case 13:
+			if (mObj.getTitle().contains("Accessories")) {
 				mObj.setImage(R.drawable.watch);
-				break;
-			case 14:
-				mObj.setImage(R.drawable.kidsfurniture);
-				break;
-			case 15:
+			} else if (mObj.getTitle().contains("Appliances")) {
+				mObj.setImage(R.drawable.frigde);
+			} else if (mObj.getTitle().contains("Automobiles")) {
+				mObj.setImage(R.drawable.automobile);
+			}  else if (mObj.getTitle().contains("Books & Media")) {
+				mObj.setImage(R.drawable.books);
+			} else if (mObj.getTitle().contains("Baby products")) {
+				mObj.setImage(R.drawable.toysgames);
+			} else if (mObj.getTitle().contains("Camera Equipment")) {
+				mObj.setImage(R.drawable.digicamera);
+			} else if (mObj.getTitle().contains("Festivals")) {
 				mObj.setImage(R.drawable.camcorder);
-				break;
-			case 16:
-				mObj.setImage(R.drawable.house);
-				break;
-			default:
+			} else if (mObj.getTitle().contains("Furniture")) {
+				mObj.setImage(R.drawable.sofas);
+			} else if (mObj.getTitle().contains("Gaming")) {
+				mObj.setImage(R.drawable.games);
+			} else if (mObj.getTitle().contains("Kitchenware")) {
+				mObj.setImage(R.drawable.oven);
+			} else if (mObj.getTitle().contains("Laptops & Computers")) {
+				mObj.setImage(R.drawable.laptop);
+			} else if (mObj.getTitle().contains("Mobiles & Tablets")) {
+				mObj.setImage(R.drawable.mobile_tablet);
+			} else if (mObj.getTitle().contains("Musical Instruments")) {
+				mObj.setImage(R.drawable.musical);
+			} else if (mObj.getTitle().contains("Packages")) {
 				mObj.setImage(R.drawable.suits);
-				break;
+			} else if (mObj.getTitle().contains("Sports & Fitness")) {
+				mObj.setImage(R.drawable.sports);
+			} else if (mObj.getTitle().contains("Toys & Games")) {
+				mObj.setImage(R.drawable.games);
+			} else if (mObj.getTitle().contains("TV & Audio Video")) {
+				mObj.setImage(R.drawable.tv);
+			} else if (mObj.getTitle().contains("Vacation Homes")) {
+				mObj.setImage(R.drawable.house);
+			} else {
+				mObj.setImage(R.drawable.suits);
 			}
 			mProductsArray.set(i, mObj);
 		}

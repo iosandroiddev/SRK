@@ -774,7 +774,7 @@ public class LoginActivity extends BaseActivity
 							if (mObjSpecifications != null) {
 								if (mObjSpecifications.optString("UserValues") != null) {
 									StorageClass.getInstance(this)
-											.setServiceTitle(mObjSpecifications.optString("Title"));
+											.setServiceTitle(mObjSpecifications.optString("ProviderServiceCode"));
 									StorageClass.getInstance(this)
 											.setServiceValue(mObjSpecifications.optString("UserValues"));
 								}

@@ -126,16 +126,39 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			if (mSaver.isPanCardSelected()) {
 				isPanCardSelected = true;
 				isAadharCardSelected = false;
+				isDrivingLicenseSelected = false;
+				mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
+				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.btn_unselect, 0, 0, 0);
 				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
 						R.drawable.btn_select, 0, 0, 0);
 			} else {
 				if (mSaver.isAaadharCardSelected()) {
 					isAadharCardSelected = true;
 					isPanCardSelected = false;
+					isDrivingLicenseSelected = false;
+					mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+							R.drawable.btn_unselect, 0, 0, 0);
 					mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
 							R.drawable.btn_select, 0, 0, 0);
+					mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+							R.drawable.btn_unselect, 0, 0, 0);
 				} else {
+					if (mSaver.isDrivingLicenseSelected()) {
+						isAadharCardSelected = false;
+						isPanCardSelected = false;
+						isDrivingLicenseSelected = true;
+						mbtnDrivingLicense
+								.setCompoundDrawablesWithIntrinsicBounds(
+										R.drawable.btn_select, 0, 0, 0);
+						mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+								R.drawable.btn_unselect, 0, 0, 0);
+						mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+								R.drawable.btn_unselect, 0, 0, 0);
+					} else {
 
+					}
 				}
 			}
 		} else {
@@ -151,17 +174,29 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		if (StorageClass.getInstance(this).getServiceTitle().contains("PAN")) {
 			meditPanCardNumber.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnPanCardClicked();
+			isPanCardSelected = true;
+			isAadharCardSelected = false;
+			isDrivingLicenseSelected = false;
+			mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
-				.contains("Aadhaar")) {
+				.contains("AADHAAR")) {
 			mEditAadharCardNumber.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnAadharCardClicked();
+			isPanCardSelected = false;
+			isAadharCardSelected = true;
+			isDrivingLicenseSelected = false;
+			mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
-				.contains("Driving")) {
+				.contains("DL")) {
 			mEditDrvingLicense.setText(StorageClass.getInstance(this)
 					.getServiceValue());
-			btnDrivingLicenseClicked();
+			isPanCardSelected = false;
+			isAadharCardSelected = false;
+			isDrivingLicenseSelected = true;
+			mbtnDrivingLicense.setCompoundDrawablesWithIntrinsicBounds(
+					R.drawable.btn_select, 0, 0, 0);
 		}
 
 	}
@@ -237,6 +272,9 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		case R.id.btnPanCard:
 			btnPanCardClicked();
 			break;
+		case R.id.btnDrivingLicense:
+			btnDrivingLicenseClicked();
+			break;
 		case R.id.btnNext:
 			btnNextClicked();
 			break;
@@ -301,7 +339,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 										showToast("Please Enter Valid Phone Number");
 									} else {
 										if (!isPanCardSelected
-												&& !isAadharCardSelected) {
+												&& !isAadharCardSelected
+												&& !isDrivingLicenseSelected) {
 											showToast("Please Select Documents");
 										} else if (isPanCardSelected) {
 											if (TextUtils
@@ -457,6 +496,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 
 		mAdSaver.setPanCardSelected(isPanCardSelected);
 		mAdSaver.setAaadharCardSelected(isAadharCardSelected);
+		mAdSaver.setDrivingLicenseSelected(isDrivingLicenseSelected);
 		mAdSaver.setProductAddressChecked(mCheckAddress.isChecked());
 
 		Intent mIntent = new Intent(this, PostAdPreview.class);
@@ -570,7 +610,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			}
 			if (isPanCardSelected) {
 				isPanCardSelected = false;
-				mbtnAadharCard.setCompoundDrawablesWithIntrinsicBounds(
+				mbtnPanCard.setCompoundDrawablesWithIntrinsicBounds(
 						R.drawable.btn_unselect, 0, 0, 0);
 				StaticUtils.expandCollapse(mPanCardLayout, false);
 			}
