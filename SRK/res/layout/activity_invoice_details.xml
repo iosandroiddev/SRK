@@ -1,0 +1,998 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res/com.sabrentkaro"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="5dp" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.utils.CustomTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="#55000000"
+                android:padding="5dp"
+                android:text="@string/invoice_heading"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_order_id"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceOrderId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_amount"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceAmount"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/securityDepositLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/security_deposit"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceSecurityDeposit"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/facilitation_charges"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceFacilitaion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/service_tax"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceServiceTax"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/logistics_cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceLogistics"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_rental_start_date"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceRentalStartDate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_rental_end_date"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceRentalEndDate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="top"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:padding="3dp"
+                        android:text="@string/invoice_rental_period"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceRentalPeriod"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_quantity"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceQuantity"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_phone"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoicePhone"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_brand"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceBrand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/invoice_product_category"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceProductCategory"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="#55000000"
+                android:padding="5dp"
+                android:text="@string/invoice_billing_address"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                custom:fonttype="trebuchet_ms" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:background="#55000000"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:visibility="invisible"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtFecilitationCost"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/invoiceBillingAddress"
+                        android:layout_width="fill_parent"
+                        android:layout_height="110dp"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:background="#55000000"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:visibility="invisible"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtServiceTaxCost"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:background="#55000000"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/cost"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <com.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="@string/_"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:visibility="invisible"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtLogisticsTaxCost"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.utils.CustomTextView
+                android:id="@+id/btnDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:background="@drawable/blue_custom_button_selector"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/invoice_done"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:fonttype="trebuchet_ms" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
