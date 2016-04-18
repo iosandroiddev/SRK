@@ -51,12 +51,14 @@ import com.utils.GetSocialDetails.IFbLoginCallBack;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
-public class LoginActivity extends BaseActivity
-		implements IFbLoginCallBack, ConnectionCallbacks, OnConnectionFailedListener {
+public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
+		ConnectionCallbacks, OnConnectionFailedListener {
 
 	private EditText mEditEmail, mEditPassword;
-	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword, mbtnFacebok, mbtnGoogle;
-	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice, mProductDescription, mQuantity;
+	private TextView mbtnLogin, mbtnRegister, mbtnForgotPassword, mbtnFacebok,
+			mbtnGoogle;
+	private String selectedProductAdId, mPrice, mMonthPrice, mWeekPrice,
+			mProductDescription, mQuantity;
 	private Dialog mForgotPasswordDialog;
 
 	private String mCategory;
@@ -89,6 +91,7 @@ public class LoginActivity extends BaseActivity
 
 	GoogleApiClient mGoogleApiClient;
 	private ConnectionResult mConnectionResult;
+	private String mItemDetailsArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,8 +105,10 @@ public class LoginActivity extends BaseActivity
 	}
 
 	private void initGoogleApiClient() {
-		mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this).addApi(Plus.API, PlusOptions.builder().build())
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.addApi(Plus.API, PlusOptions.builder().build())
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
 	}
 
@@ -118,7 +123,8 @@ public class LoginActivity extends BaseActivity
 				mProductDesc = mBundle.getString("productDescription");
 				mAdditionalStuff = mBundle.getString("additionalStuff");
 				mUserInstructions = mBundle.getString("userInstructions");
-				mProductPurchasedPrice = mBundle.getString("productPurchasedPrice");
+				mProductPurchasedPrice = mBundle
+						.getString("productPurchasedPrice");
 				mDailyCost = mBundle.getString("dailyCost");
 				mMonthCost = mBundle.getString("monthlyCost");
 				mWeekCost = mBundle.getString("weekCost");
@@ -128,7 +134,8 @@ public class LoginActivity extends BaseActivity
 				mProductAdId = mBundle.getString("productAdId");
 				mtxtRating = mBundle.getString("productCondition");
 				mtxtCondName = mBundle.getString("productConditionName");
-				controlLayouts = (HashMap<String, String>) mBundle.getSerializable("controlLayouts");
+				controlLayouts = (HashMap<String, String>) mBundle
+						.getSerializable("controlLayouts");
 			} else {
 				hasBundle = true;
 				selectedProductAdId = mBundle.getString("selectedAdId");
@@ -139,6 +146,7 @@ public class LoginActivity extends BaseActivity
 				mSecurityDeposit = mBundle.getString("securitDeposit");
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
+				mItemDetailsArray = mBundle.getString("mItemDetailsArray");
 			}
 		}
 	}
@@ -238,7 +246,8 @@ public class LoginActivity extends BaseActivity
 	private void btnRegisterClicked() {
 		Intent mIntent = new Intent(this, RegisterActivity.class);
 		if (hasBundle) {
-			if (selectedProductAdId == null || selectedProductAdId.length() == 0) {
+			if (selectedProductAdId == null
+					|| selectedProductAdId.length() == 0) {
 				Bundle mBundle = new Bundle();
 				mBundle.putString("category", mCategory);
 				mBundle.putString("subCategory", mSubCategory);
@@ -247,7 +256,8 @@ public class LoginActivity extends BaseActivity
 				mBundle.putString("productCondition", "");
 				mBundle.putString("userInstructions", mUserInstructions);
 				mBundle.putString("additionalStuff", mAdditionalStuff);
-				mBundle.putString("productPurchasedPrice", mProductPurchasedPrice);
+				mBundle.putString("productPurchasedPrice",
+						mProductPurchasedPrice);
 				mBundle.putString("dailyCost", mDailyCost);
 				mBundle.putString("productAdId", mProductAdId);
 				mBundle.putString("weekCost", mWeekCost);
@@ -318,7 +328,8 @@ public class LoginActivity extends BaseActivity
 
 		JSONObject mCurrentPassword = new JSONObject();
 		try {
-			mCurrentPassword.put("CurrentPassword", mEditPassword.getText().toString());
+			mCurrentPassword.put("CurrentPassword", mEditPassword.getText()
+					.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -356,7 +367,8 @@ public class LoginActivity extends BaseActivity
 			e.printStackTrace();
 		}
 
-		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.POSTUSERINFORMATION, mParams,
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.POSTUSERINFORMATION, mParams,
 				new Listener<JSONObject>() {
 
 					@Override
@@ -382,49 +394,66 @@ public class LoginActivity extends BaseActivity
 	private void responseForLoginApi(JSONObject response) {
 		String userName = "";
 		if (response != null) {
-			if (response.optString("Information") == null || response.optString("Information").equalsIgnoreCase("null")
+			if (response.optString("Information") == null
+					|| response.optString("Information").equalsIgnoreCase(
+							"null")
 					|| response.optString("Information").length() == 0) {
 				JSONObject mObjUser = response.optJSONObject("User");
 				if (mObjUser != null) {
 					JSONObject mLogin = mObjUser.optJSONObject("Login");
 					if (mLogin != null) {
 						String mloginId = mLogin.optString("LoginId");
-						StorageClass.getInstance(this).setUserId(Integer.parseInt(mloginId));
+						StorageClass.getInstance(this).setUserId(
+								Integer.parseInt(mloginId));
 					}
-					String authenticationHeader = mObjUser.optJSONObject("UserTransactions")
-							.optString("AuthenticationHeader");
-					JSONObject mObjUserProfile = mObjUser.optJSONObject("UserProfile");
+					String authenticationHeader = mObjUser.optJSONObject(
+							"UserTransactions").optString(
+							"AuthenticationHeader");
+					JSONObject mObjUserProfile = mObjUser
+							.optJSONObject("UserProfile");
 					if (mObjUserProfile != null) {
 						userName = mObjUserProfile.optString("Name");
 					}
-					JSONObject mObjUserAdress = (JSONObject) mObjUser.optJSONArray("Addresses").opt(0);
+					JSONObject mObjUserAdress = (JSONObject) mObjUser
+							.optJSONArray("Addresses").opt(0);
 					if (mObjUserAdress != null) {
 						try {
-							String addressLine = mObjUserAdress.getString("AddressLine1") + " "
+							String addressLine = mObjUserAdress
+									.getString("AddressLine1")
+									+ " "
 									+ mObjUserAdress.getString("AddressLine2");
 							String city = mObjUserAdress.getString("City");
 							String state = mObjUserAdress.getString("State");
-							String country = mObjUserAdress.getString("Country");
-							String pincode = mObjUserAdress.getString("PinCode");
-							String mobileNumber = mObjUserAdress.getString("MobileNo");
+							String country = mObjUserAdress
+									.getString("Country");
+							String pincode = mObjUserAdress
+									.getString("PinCode");
+							String mobileNumber = mObjUserAdress
+									.getString("MobileNo");
 
 							StorageClass.getInstance(this).setUserCity(city);
-							StorageClass.getInstance(this).setUserEmail(mEditEmail.getText().toString());
+							StorageClass.getInstance(this).setUserEmail(
+									mEditEmail.getText().toString());
 							StorageClass.getInstance(this).setUserState(state);
-							StorageClass.getInstance(this).setUserCountry(country);
+							StorageClass.getInstance(this).setUserCountry(
+									country);
 							StorageClass.getInstance(this).setPinCode(pincode);
-							StorageClass.getInstance(this).setMobileNumber(mobileNumber);
+							StorageClass.getInstance(this).setMobileNumber(
+									mobileNumber);
 							showToast("User Logged In Successfully!");
-							StorageClass.getInstance(this).setAddress(addressLine);
-							StorageClass.getInstance(this).setUserName(userName);
-							StorageClass.getInstance(this).setAuthHeader(authenticationHeader);
+							StorageClass.getInstance(this).setAddress(
+									addressLine);
+							StorageClass.getInstance(this)
+									.setUserName(userName);
+							StorageClass.getInstance(this).setAuthHeader(
+									authenticationHeader);
 							initServicerProvider();
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 
 					}
-					
+
 				} else {
 					showToast(response.optString("Information"));
 				}
@@ -436,7 +465,8 @@ public class LoginActivity extends BaseActivity
 
 	private void navigation() {
 		if (hasBundle) {
-			if (selectedProductAdId == null || selectedProductAdId.length() == 0) {
+			if (selectedProductAdId == null
+					|| selectedProductAdId.length() == 0) {
 				navigateToPostAdDocuments();
 			} else {
 				navigateToRentDates();
@@ -488,6 +518,7 @@ public class LoginActivity extends BaseActivity
 		mBundle.putString("productPriceMonth", mMonthPrice);
 		mBundle.putString("productPriceWeek", mWeekPrice);
 		mBundle.putString("productDescription", mProductDescription);
+		mBundle.putString("mItemDetailsArray", mItemDetailsArray.toString());
 		intent.putExtras(mBundle);
 		startActivity(intent);
 		finish();
@@ -498,12 +529,16 @@ public class LoginActivity extends BaseActivity
 		mForgotPasswordDialog.setCancelable(false);
 		mForgotPasswordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mForgotPasswordDialog.setContentView(R.layout.forgot_password_popup);
-		mForgotPasswordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		mForgotPasswordDialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-		TextView mbtnCancel = (TextView) mForgotPasswordDialog.findViewById(R.id.btn_cancel);
-		TextView mbtnSubmit = (TextView) mForgotPasswordDialog.findViewById(R.id.btn_submit);
+		TextView mbtnCancel = (TextView) mForgotPasswordDialog
+				.findViewById(R.id.btn_cancel);
+		TextView mbtnSubmit = (TextView) mForgotPasswordDialog
+				.findViewById(R.id.btn_submit);
 
-		final EditText meditFrgtEmail = (EditText) mForgotPasswordDialog.findViewById(R.id.editMobileNumber);
+		final EditText meditFrgtEmail = (EditText) mForgotPasswordDialog
+				.findViewById(R.id.editMobileNumber);
 		StaticUtils.setEditTextHintFont(meditFrgtEmail, this);
 
 		mForgotPasswordDialog.show();
@@ -523,7 +558,8 @@ public class LoginActivity extends BaseActivity
 				if (TextUtils.isEmpty(meditFrgtEmail.getText().toString())) {
 					showToast("Please Enter Mobile Number");
 				} else {
-					initiateForgotPassswordApi(meditFrgtEmail.getText().toString());
+					initiateForgotPassswordApi(meditFrgtEmail.getText()
+							.toString());
 				}
 			}
 		});
@@ -532,7 +568,8 @@ public class LoginActivity extends BaseActivity
 	private void initiateForgotPassswordApi(String string) {
 		showProgressLayout();
 
-		JsonObjectRequest mObjReq = new JsonObjectRequest(ApiUtils.GETEMAILFROMMOBILE + "" + string, null,
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.GETEMAILFROMMOBILE + "" + string, null,
 				new Listener<JSONObject>() {
 
 					@Override
@@ -558,7 +595,9 @@ public class LoginActivity extends BaseActivity
 
 	private void responseForForgotPassAPi(JSONObject response) {
 		if (response != null) {
-			if (response.optString("Information") == null || response.optString("Information").equalsIgnoreCase("null")
+			if (response.optString("Information") == null
+					|| response.optString("Information").equalsIgnoreCase(
+							"null")
 					|| response.optString("Information").length() == 0) {
 				showToast("Message was sent to your mobile");
 			} else {
@@ -667,8 +706,8 @@ public class LoginActivity extends BaseActivity
 			if (signedInUser.hasImage()) {
 				String userProfilePicUrl = signedInUser.getImage().getUrl();
 				int profilePicRequestSize = 250;
-				userProfilePicUrl = userProfilePicUrl.substring(0, userProfilePicUrl.length() - 2)
-						+ profilePicRequestSize;
+				userProfilePicUrl = userProfilePicUrl.substring(0,
+						userProfilePicUrl.length() - 2) + profilePicRequestSize;
 				mGPlusUserInfo.setProfilePic(userProfilePicUrl);
 			}
 
@@ -683,7 +722,8 @@ public class LoginActivity extends BaseActivity
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
 		if (!result.hasResolution()) {
-			GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 11).show();
+			GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+					11).show();
 			return;
 		}
 		if (!mIntentInProgress) {
@@ -697,7 +737,8 @@ public class LoginActivity extends BaseActivity
 	}
 
 	private void initServicerProvider() {
-		final String mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
+		final String mAuthHeader = StorageClass.getInstance(this)
+				.getAuthHeader();
 		showProgressLayout();
 		JSONObject mTpType = new JSONObject();
 		try {
@@ -724,7 +765,8 @@ public class LoginActivity extends BaseActivity
 			e.printStackTrace();
 		}
 
-		JsonArrayRequest mRequest = new JsonArrayRequest(ApiUtils.GETPROVIDERSERVICES, mParams,
+		JsonArrayRequest mRequest = new JsonArrayRequest(
+				ApiUtils.GETPROVIDERSERVICES, mParams,
 				new Response.Listener<JSONArray>() {
 
 					@Override
@@ -768,16 +810,24 @@ public class LoginActivity extends BaseActivity
 			for (int i = 0; i < response.length(); i++) {
 				JSONObject mObj = response.optJSONObject(i);
 				if (mObj != null) {
-					JSONArray mSpecificationsArray = mObj.optJSONArray("TpServiceInputSpecifications");
+					JSONArray mSpecificationsArray = mObj
+							.optJSONArray("TpServiceInputSpecifications");
 					if (mSpecificationsArray != null) {
 						for (int j = 0; j < mSpecificationsArray.length(); j++) {
-							JSONObject mObjSpecifications = mSpecificationsArray.optJSONObject(i);
+							JSONObject mObjSpecifications = mSpecificationsArray
+									.optJSONObject(i);
 							if (mObjSpecifications != null) {
 								if (mObjSpecifications.optString("UserValues") != null) {
-									StorageClass.getInstance(this)
-											.setServiceTitle(mObjSpecifications.optString("ProviderServiceCode"));
-									StorageClass.getInstance(this)
-											.setServiceValue(mObjSpecifications.optString("UserValues"));
+									StorageClass
+											.getInstance(this)
+											.setServiceTitle(
+													mObjSpecifications
+															.optString("ProviderServiceCode"));
+									StorageClass
+											.getInstance(this)
+											.setServiceValue(
+													mObjSpecifications
+															.optString("UserValues"));
 								}
 							}
 						}

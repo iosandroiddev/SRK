@@ -463,13 +463,23 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			params.put("AdOtp", mAdaptParams);
 
 			JSONObject mAddressParams = new JSONObject();
-			mAddressParams.put("AddressLine1", mAddress);
-			mAddressParams.put("AddressLine2", "");
-			mAddressParams.put("City", mCity);
-			mAddressParams.put("State", mState);
-			mAddressParams.put("Postcode", mPinCode);
-			mAddressParams.put("ContactNumber", mMobileNubmer);
-			params.put("AdAddress", mAddressParams);
+			if (showCurrentAdrees) {
+				mAddressParams.put("AddressLine1", mAddressUser);
+				mAddressParams.put("AddressLine2", "");
+				mAddressParams.put("City", mCityUser);
+				mAddressParams.put("State", mStateUser);
+				mAddressParams.put("Postcode", mPinCodeUser);
+				mAddressParams.put("ContactNumber", mMobileNubmerUser);
+				params.put("AdAddress", mAddressParams);
+			} else {
+				mAddressParams.put("AddressLine1", mAddress);
+				mAddressParams.put("AddressLine2", "");
+				mAddressParams.put("City", mCity);
+				mAddressParams.put("State", mState);
+				mAddressParams.put("Postcode", mPinCode);
+				mAddressParams.put("ContactNumber", mMobileNubmer);
+				params.put("AdAddress", mAddressParams);
+			}
 
 			JSONArray mOwnersArray = new JSONArray();
 			JSONObject mOwnersObject = new JSONObject();

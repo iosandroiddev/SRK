@@ -30,6 +30,8 @@ public class InternalApp extends Application {
 	private ArrayList<File> mFileImagesArray;
 	private ArrayList<PostAdModel> mArrayFields;
 
+	public static boolean isProductionApi = true;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

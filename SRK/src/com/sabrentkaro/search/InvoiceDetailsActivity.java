@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -19,9 +20,11 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.internal.mj;
 import com.models.PostAdModel;
@@ -30,6 +33,7 @@ import com.sabrentkaro.HomeActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.utils.ApiUtils;
+import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
 public class InvoiceDetailsActivity extends BaseActivity {
@@ -43,13 +47,18 @@ public class InvoiceDetailsActivity extends BaseActivity {
 	private TextView orderId, invoiceAmount, rentalStartDate, rentalEndDate,
 			rentalPeriod, invoiceQuantity, invoicePhone, invoiceBrand,
 			invoiceCategory, billingAddress, doneBtn, mtxtLogisticCost,
-			mtxtServiceCost, mtxtFacCost, mtxtSecurityDeposit;
+			mtxtServiceCost, mtxtFacCost, mtxtSecurityDeposit,
+			mtxtProductRentalValue;
 	private LinearLayout mLayoutSecurityDeposit;
 	private String mAuthHeader;
 	private String mStartDateStr = "";
 	private String mStartEndStr = "";
+	private LinearLayout mLayoutFiedlsValues;
 	private JSONObject mData = null;
 	private JSONObject mAddressObject;
+	private JSONArray mItemDataArray;
+	private String mProductRentalValue;
+	private String mTransactionId = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,84 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		getDetails();
 		loadLayoutReferences();
 		loadDetails();
+		initSaveRentalPayment();
+	}
+
+	private void initSaveRentalPayment() {
+		showProgressLayout();
+		mAuthHeader = StorageClass.getInstance(this).getAuthHeader();
+		JSONObject mRentalPayment = new JSONObject();
+		try {
+			mRentalPayment.put("PaymentAmount", invoiceAmountVal);
+			mRentalPayment.put("TransactionAmount", "null");
+			mRentalPayment.put("PaymentReferenceNo", mTransactionId);
+			mRentalPayment.put("PaymentTransactionId", mTransactionId);
+			mRentalPayment.put("PaymentMode", "null");
+			mRentalPayment.put("PaymentComments", "Payment is Done");
+			mRentalPayment.put("PaymentLineItems", "null");
+			mRentalPayment.put("RentalId", mData.opt("Id"));
+			JSONObject mPaymentStatus = new JSONObject();
+			mPaymentStatus.put("Title", "Success");
+			mPaymentStatus.put("Code", "SUCCESS");
+			mRentalPayment.put("PaymentStatus", mPaymentStatus);
+
+			JSONObject mPaymentMode = new JSONObject();
+			mPaymentMode.put("Title", "NEFT");
+			mPaymentMode.put("Code", "NEFT");
+			mRentalPayment.put("PaymentMode", mPaymentMode);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.SAVERENTALPAYMENT, mRentalPayment,
+				new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						hideProgressLayout();
+						responseForSaveRentalPayment(response);
+						showToast("Success");
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast("Failure");
+					}
+
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+				return map;
+			}
+
+		};
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mObjReq);
+
+	}
+
+	private void responseForSaveRentalPayment(JSONObject response) {
+		if (response != null) {
+			try {
+				mData.put("RentalPayment", response);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private void loadLayoutReferences() {
@@ -77,6 +164,8 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		mtxtServiceCost = (TextView) findViewById(R.id.invoiceServiceTax);
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.invoiceSecurityDeposit);
 		mLayoutSecurityDeposit = (LinearLayout) findViewById(R.id.securityDepositLayout);
+		mLayoutFiedlsValues = (LinearLayout) findViewById(R.id.rootFieldsValues);
+		mtxtProductRentalValue = (TextView) findViewById(R.id.txtProductRentalValue);
 
 		doneBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -85,6 +174,9 @@ public class InvoiceDetailsActivity extends BaseActivity {
 				initFinaliseRentalApi();
 			}
 		});
+
+		if (mItemDataArray != null)
+			loadProductValues(mItemDataArray);
 	}
 
 	private void loadDetails() {
@@ -103,7 +195,8 @@ public class InvoiceDetailsActivity extends BaseActivity {
 
 		rentalPeriod.setText(String.valueOf(days + 1));
 		orderId.setText(orderIdVal);
-		invoiceAmount.setText(invoiceAmountVal);
+		invoiceAmount
+				.setText((getString(R.string.rupeeone) + " " + invoiceAmountVal));
 		rentalStartDate.setText(rentalStartDateVal);
 		rentalEndDate.setText(rentalEndDateVal);
 		invoiceQuantity.setText(invoiceQuantityVal);
@@ -115,13 +208,15 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		mtxtServiceCost.setText(serviceCost);
 		mtxtLogisticCost.setText(logisticsCost);
 		mtxtFacCost.setText(faciliationCost);
+		mtxtProductRentalValue.setText(mProductRentalValue);
 
 		if (mSecurityDepositValue == null
 				|| mSecurityDepositValue.equalsIgnoreCase("0")
 				|| mSecurityDepositValue.length() == 0) {
 			mLayoutSecurityDeposit.setVisibility(View.GONE);
 		} else {
-			mtxtSecurityDeposit.setText(mSecurityDeposit);
+			mtxtSecurityDeposit
+					.setText((getString(R.string.rupeeone) + " " + mSecurityDeposit));
 			mLayoutSecurityDeposit.setVisibility(View.VISIBLE);
 		}
 
@@ -146,10 +241,13 @@ public class InvoiceDetailsActivity extends BaseActivity {
 				mSecurityDepositValue = mBundle
 						.getString("securityDepositValue");
 				mSecurityDeposit = mBundle.getString("securityDeposit");
+				mProductRentalValue = mBundle.getString("productRentalValue");
 				productAdId = mBundle.getString("adId");
-				mStartDateStr = mBundle.getString("startDate");
-				mStartEndStr = mBundle.getString("endDate");
+				mStartDateStr = mBundle.getString("startDateStr");
+				mStartEndStr = mBundle.getString("endDateStr");
+				mTransactionId = mBundle.getString("transacationID");
 				String mdataStr = mBundle.getString("data");
+
 				try {
 					mData = new JSONObject(mdataStr);
 				} catch (JSONException e) {
@@ -158,6 +256,13 @@ public class InvoiceDetailsActivity extends BaseActivity {
 				String mAddressStr = mBundle.getString("addressResponse");
 				try {
 					mAddressObject = new JSONObject(mAddressStr);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				String mItemDetailsArray = mBundle
+						.getString("mItemDetailsArray");
+				try {
+					mItemDataArray = new JSONArray(mItemDetailsArray);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -200,23 +305,6 @@ public class InvoiceDetailsActivity extends BaseActivity {
 			// params.put("RentalLogisticsList", new JSONArray());
 			// params.put("Notifications", new JSONArray());
 			//
-			JSONObject mRentalPayment = new JSONObject();
-			mRentalPayment.put("PaymentAmount", invoiceAmountVal);
-			mRentalPayment.put("TransactionAmount", 0);
-			mRentalPayment.put("ServiceTaxAmount", 0);
-			mRentalPayment.put("ProcessingFeeAmount", 0);
-			mRentalPayment.put("PaymentReferenceNo", "");
-			mRentalPayment.put("PaymentTransactionId", 0);
-			mRentalPayment.put("PaymentMode", "null");
-			mRentalPayment.put("PaymentComments", "null");
-			mRentalPayment.put("PaymentLineItems", "null");
-			mRentalPayment.put("RentalId", mData.opt("Id"));
-			JSONObject mPaymentStatus = new JSONObject();
-			mPaymentStatus.put("Title", "Success");
-			mPaymentStatus.put("Code", "SUCCESS");
-			mRentalPayment.put("PaymentStatus", mPaymentStatus);
-
-			mData.put("RentalPayment", mRentalPayment);
 
 			if (mAddressObject != null) {
 				mAddressObject.put("AddressTypeId", 3);
@@ -500,6 +588,32 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mIntent);
 		finish();
+	}
+
+	private void loadProductValues(JSONArray mItemDetailsArray) {
+		for (int j = 0; j < mItemDetailsArray.length(); j++) {
+			JSONObject mItemObj = mItemDetailsArray.optJSONObject(j);
+			if (mItemObj != null) {
+				View mView = LayoutInflater.from(this).inflate(
+						R.layout.customproducts, null);
+
+				TextView mtxtTitle = (TextView) mView
+						.findViewById(R.id.txtPTitle);
+				TextView mtxtValue = (TextView) mView
+						.findViewById(R.id.txtPValue);
+
+				mtxtTitle.setText(mItemObj.optString("Title"));
+				mtxtValue.setText(mItemObj.optString("Value"));
+
+				if (mItemObj.optString("Title") == null
+						|| mItemObj.optString("Title").contains("null")
+						|| mItemObj.optString("Title").length() == 0) {
+
+				} else {
+					mLayoutFiedlsValues.addView(mView);
+				}
+			}
+		}
 	}
 
 }

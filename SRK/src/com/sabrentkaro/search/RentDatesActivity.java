@@ -50,6 +50,7 @@ public class RentDatesActivity extends BaseActivity implements
 	private String mStartEndStr = "";
 	private String mAuthHeader = "";
 	private Calendar[] mAvaiableDatesCalendar;
+	private String itemDetailsArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class RentDatesActivity extends BaseActivity implements
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
-		c.add(Calendar.DATE, 35); // number of days to add
+		c.add(Calendar.DATE, 180); // number of days to add
 		endDate = sdf.format(c.getTime());
 		JSONObject params = new JSONObject();
 		try {
@@ -103,6 +104,7 @@ public class RentDatesActivity extends BaseActivity implements
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						hideProgressLayout();
+						showToast("Unable to Retrieve Availablity Dates for this product");
 					}
 
 				}) {
@@ -160,6 +162,8 @@ public class RentDatesActivity extends BaseActivity implements
 			} else {
 				showErrorAlert();
 			}
+		} else {
+			showErrorAlert();
 		}
 
 	}
@@ -198,6 +202,7 @@ public class RentDatesActivity extends BaseActivity implements
 				mProductDescription = mBundle.getString("productDescription");
 				mQuantity = mBundle.getString("quantity");
 				mSecurityDeposit = mBundle.getString("securitDeposit");
+				itemDetailsArray = mBundle.getString("mItemDetailsArray");
 			}
 		}
 	}
@@ -317,6 +322,7 @@ public class RentDatesActivity extends BaseActivity implements
 		mBundle.putString("productDescription", mProductDescription);
 		mBundle.putString("startDate", mStartDateStr);
 		mBundle.putString("endDate", mStartEndStr);
+		mBundle.putString("mItemDetailsArray", itemDetailsArray);
 		intent.putExtras(mBundle);
 		startActivity(intent);
 	}
@@ -324,32 +330,43 @@ public class RentDatesActivity extends BaseActivity implements
 	private void btnStartDateClicked() {
 		// showDatePicker(mtxtStartDate);
 		// showDateTimeDialog(mtxtStartDate);
-		this.mtxtDateField = mtxtStartDate;
-		Calendar now = Calendar.getInstance();
-		DatePickerDialog dpd = DatePickerDialog.newInstance(
-				RentDatesActivity.this, now.get(Calendar.YEAR),
-				now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-		dpd.setThemeDark(false);
-		dpd.vibrate(true);
-		dpd.dismissOnPause(false);
-		dpd.showYearPickerFirst(false);
-		dpd.setSelectableDays(mAvaiableDatesCalendar);
-		dpd.show(getFragmentManager(), "Datepickerdialog");
+		if (mAvaiableDatesCalendar != null
+				&& mAvaiableDatesCalendar.length != 0) {
+			this.mtxtDateField = mtxtStartDate;
+			Calendar now = Calendar.getInstance();
+			DatePickerDialog dpd = DatePickerDialog.newInstance(
+					RentDatesActivity.this, now.get(Calendar.YEAR),
+					now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+			dpd.setThemeDark(false);
+			dpd.vibrate(true);
+			dpd.dismissOnPause(false);
+			dpd.showYearPickerFirst(false);
+			dpd.setSelectableDays(mAvaiableDatesCalendar);
+			dpd.show(getFragmentManager(), "Datepickerdialog");
+		} else {
+			showErrorAlert();
+		}
+
 	}
 
 	private void btnEndDateClicked() {
 		// showDatePicker(mtxtEndDate);
-		this.mtxtDateField = mtxtEndDate;
-		Calendar now = Calendar.getInstance();
-		DatePickerDialog dpd = DatePickerDialog.newInstance(
-				RentDatesActivity.this, now.get(Calendar.YEAR),
-				now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-		dpd.setThemeDark(false);
-		dpd.vibrate(true);
-		dpd.dismissOnPause(false);
-		dpd.showYearPickerFirst(false);
-		dpd.setSelectableDays(mAvaiableDatesCalendar);
-		dpd.show(getFragmentManager(), "Datepickerdialog");
+		if (mAvaiableDatesCalendar != null
+				&& mAvaiableDatesCalendar.length != 0) {
+			this.mtxtDateField = mtxtEndDate;
+			Calendar now = Calendar.getInstance();
+			DatePickerDialog dpd = DatePickerDialog.newInstance(
+					RentDatesActivity.this, now.get(Calendar.YEAR),
+					now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+			dpd.setThemeDark(false);
+			dpd.vibrate(true);
+			dpd.dismissOnPause(false);
+			dpd.showYearPickerFirst(false);
+			dpd.setSelectableDays(mAvaiableDatesCalendar);
+			dpd.show(getFragmentManager(), "Datepickerdialog");
+		} else {
+			showErrorAlert();
+		}
 	}
 
 	@Override

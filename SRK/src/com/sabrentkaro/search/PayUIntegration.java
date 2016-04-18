@@ -2,15 +2,12 @@ package com.sabrentkaro.search;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.sabrentkaro.HomeActivity;
-import com.sabrentkaro.R;
-import com.utils.StorageClass;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,6 +18,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sabrentkaro.HomeActivity;
+import com.sabrentkaro.InternalApp;
+import com.sabrentkaro.R;
+import com.utils.StorageClass;
 
 public class PayUIntegration extends FragmentActivity {
 
@@ -32,6 +35,7 @@ public class PayUIntegration extends FragmentActivity {
 	TextView txtview;
 	private String amount;
 	private String orderId;
+	private String mtransactionId;
 
 	/*
 	 * protected void writeStatus(String str){ txtview.setText(str); }
@@ -64,8 +68,13 @@ public class PayUIntegration extends FragmentActivity {
 		// webviewPayment.loadUrl("http://timesofindia.com/");
 		StringBuilder url_s = new StringBuilder();
 		// http://merirakhi.com/processor/payment/endpoint?order_id=aAbBcC&amount=10&currency=USD
-		url_s.append("https://test.payu.in/_payment");
-		// url_s.append("https://secure.payu.in/_payment");
+
+		if (InternalApp.isProductionApi) {
+			url_s.append("https://secure.payu.in/_payment");
+		} else {
+			url_s.append("https://test.payu.in/_payment");
+		}
+
 		Log.e(TAG, "call url " + url_s);
 
 		// webviewPayment.loadUrl(url_s.toString());
@@ -116,9 +125,10 @@ public class PayUIntegration extends FragmentActivity {
 			PayUIntegration.this.orderId = paymentId;
 			runOnUiThread(new Runnable() {
 				public void run() {
-					// Toast.makeText(PayUIntegration.this, "Status is txn is
-					// success " + " payment id is " + paymentId,
-					// 8000).show();
+					Toast.makeText(
+							PayUIntegration.this,
+							"Status is txn is success " + " payment id is "
+									+ paymentId, 8000).show();
 					// String
 					// str="Status is txn is success "+" payment id is
 					// "+paymentId;
@@ -137,9 +147,10 @@ public class PayUIntegration extends FragmentActivity {
 			// PayUIntegration.this.orderId = paymentId;
 			runOnUiThread(new Runnable() {
 				public void run() {
-					// Toast.makeText(PayUIntegration.this, "Status is txn is
-					// success " + " payment id is " + "", 8000)
-					// .show();
+					Toast.makeText(
+							PayUIntegration.this,
+							"Status is txn is success " + " payment id is "
+									+ "", 8000).show();
 					// String
 					// str="Status is txn is success "+" payment id is
 					// "+paymentId;
@@ -153,7 +164,6 @@ public class PayUIntegration extends FragmentActivity {
 				}
 			});
 		}
-
 	}
 
 	private void showSuccessPage() {
@@ -166,11 +176,16 @@ public class PayUIntegration extends FragmentActivity {
 		Bundle mBundle = getIntent().getExtras();
 		Intent mIntent = new Intent(this, InvoiceDetailsActivity.class);
 		Bundle invoicePageData = new Bundle();
+		invoicePageData.putString("transacationID", mtransactionId);
 		invoicePageData.putString("orderId", orderId);
 		invoicePageData.putString("amount", mBundle.getString("amount"));
 		invoicePageData.putString("quantity", mBundle.getString("quantity"));
 		invoicePageData.putString("startDate", mBundle.getString("startDate"));
 		invoicePageData.putString("endDate", mBundle.getString("endDate"));
+		invoicePageData.putString("startDateStr",
+				mBundle.getString("startDateStr"));
+		invoicePageData
+				.putString("endDateStr", mBundle.getString("endDateStr"));
 		invoicePageData.putString("address", mBundle.getString("address"));
 		invoicePageData.putString("facilitationCost",
 				mBundle.getString("facilitationCost"));
@@ -187,7 +202,12 @@ public class PayUIntegration extends FragmentActivity {
 		invoicePageData.putString("securityDepositValue",
 				mBundle.getString("securityDepositValue"));
 		invoicePageData.putString("data", mBundle.getString("data"));
-		invoicePageData.putString("addressResponse", mBundle.getString("addressResponse"));
+		invoicePageData.putString("addressResponse",
+				mBundle.getString("addressResponse"));
+		invoicePageData.putString("mItemDetailsArray",
+				mBundle.getString("mItemDetailsArray"));
+		invoicePageData.putString("productRentalValue",
+				mBundle.getString("productRentalValue"));
 		mIntent.putExtras(invoicePageData);
 		startActivity(mIntent);
 	}
@@ -206,11 +226,23 @@ public class PayUIntegration extends FragmentActivity {
 	}
 
 	private String getPostString() {
-		String key = "OygoFs";
-		// String key = "v8zzo2Bg";
-		String salt = "BV1QBwCv";
-		// String salt = "5UkdKIu29m";
-		String txnid = "TXN_1";
+
+		String key = "";
+		String salt = "";
+		if (InternalApp.isProductionApi) {
+			key = "v8zzo2Bg";
+			salt = "5UkdKIu29m";
+		} else {
+			key = "OygoFs";
+			salt = "BV1QBwCv";
+		}
+
+		Random rand = new Random();
+		String randomString = Integer.toString(rand.nextInt())
+				+ (System.currentTimeMillis() / 1000L);
+
+		mtransactionId = "";
+		mtransactionId = hashCal("SHA-256", randomString).substring(0, 20);
 		String amnnt = amount;
 		String firstname = StorageClass.getInstance(this).getUserName();
 		String email = StorageClass.getInstance(this).getUserEmail();
@@ -221,7 +253,7 @@ public class PayUIntegration extends FragmentActivity {
 		post.append(key);
 		post.append("&");
 		post.append("txnid=");
-		post.append(txnid);
+		post.append(mtransactionId);
 		post.append("&");
 		post.append("amount=");
 		post.append(amnnt);
@@ -257,7 +289,7 @@ public class PayUIntegration extends FragmentActivity {
 
 			checkSumStr.append(key);
 			checkSumStr.append("|");
-			checkSumStr.append(txnid);
+			checkSumStr.append(mtransactionId);
 			checkSumStr.append("|");
 			checkSumStr.append(amount);
 			checkSumStr.append("|");
@@ -322,6 +354,26 @@ public class PayUIntegration extends FragmentActivity {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public String hashCal(String type, String str) {
+		byte[] hashSequence = str.getBytes();
+		StringBuffer hexString = new StringBuffer();
+		try {
+			MessageDigest algorithm = MessageDigest.getInstance(type);
+			algorithm.reset();
+			algorithm.update(hashSequence);
+			byte messageDigest[] = algorithm.digest();
+
+			for (int i = 0; i < messageDigest.length; i++) {
+				String hex = Integer.toHexString(0xFF & messageDigest[i]);
+				if (hex.length() == 1)
+					hexString.append("0");
+				hexString.append(hex);
+			}
+		} catch (NoSuchAlgorithmException NSAE) {
+		}
+		return hexString.toString();
 	}
 
 	private static String bytesToHexString(byte[] bytes) {

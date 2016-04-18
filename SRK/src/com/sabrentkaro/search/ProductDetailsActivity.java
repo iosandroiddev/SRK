@@ -49,6 +49,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	private String mImageUrl;
 	private LinearLayout mLayoutFiedlsValues;
 	private ImageLoader mImageLoader;
+	private JSONArray mItemDetailsArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -277,6 +278,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	}
 
 	private void loadProductValues(JSONArray mItemDetailsArray) {
+		this.mItemDetailsArray = mItemDetailsArray;
 		for (int j = 0; j < mItemDetailsArray.length(); j++) {
 			JSONObject mItemObj = mItemDetailsArray.optJSONObject(j);
 			if (mItemObj != null) {
@@ -291,9 +293,9 @@ public class ProductDetailsActivity extends BaseActivity {
 				mtxtTitle.setText(mItemObj.optString("Title"));
 				mtxtValue.setText(mItemObj.optString("Value"));
 
-				if (mItemObj.optString("title") == null
-						|| mItemObj.optString("title").contains("null")
-						|| mItemObj.optString("title").length() == 0) {
+				if (mItemObj.optString("Title") == null
+						|| mItemObj.optString("Title").contains("null")
+						|| mItemObj.optString("Title").length() == 0) {
 
 				} else {
 					mLayoutFiedlsValues.addView(mView);
@@ -425,7 +427,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		mBundle.putString("productPriceMonth", mMonthlyCost);
 		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
-		mBundle.putString("securitDeposit", mtxtSecurityDeposit.getText().toString());
+		mBundle.putString("securitDeposit", mtxtSecurityDeposit.getText()
+				.toString());
 		if (mBrand == null || mBrand.equalsIgnoreCase("null")
 				|| mBrand.length() == 0) {
 			mBundle.putString("productDescription", mProductCategory);
@@ -433,6 +436,7 @@ public class ProductDetailsActivity extends BaseActivity {
 			mBundle.putString("productDescription", mBrand + " "
 					+ mProductCategory);
 		}
+		mBundle.putString("mItemDetailsArray", mItemDetailsArray.toString());
 		intent.putExtras(mBundle);
 		startActivity(intent);
 	}
@@ -445,7 +449,8 @@ public class ProductDetailsActivity extends BaseActivity {
 		mBundle.putString("productPriceMonth", mMonthlyCost);
 		mBundle.putString("productPriceWeek", mWeekCost);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
-		mBundle.putString("securitDeposit", mtxtSecurityDeposit.getText().toString());
+		mBundle.putString("securitDeposit", mtxtSecurityDeposit.getText()
+				.toString());
 		if (mBrand == null || mBrand.equalsIgnoreCase("null")
 				|| mBrand.length() == 0) {
 			mBundle.putString("productDescription", mProductCategory);
@@ -453,6 +458,7 @@ public class ProductDetailsActivity extends BaseActivity {
 			mBundle.putString("productDescription", mBrand + " "
 					+ mProductCategory);
 		}
+		mBundle.putString("mItemDetailsArray", mItemDetailsArray.toString());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}

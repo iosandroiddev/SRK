@@ -50,6 +50,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 	private String mStartDateStr = "";
 	private String mStartEndStr = "";
 	private JSONObject mAddressResponse;
+	private String itemDetailsArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +163,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 				mSecurityDeposit = mBundle.getString("securitDeposit");
 				mStartDateStr = mBundle.getString("startDate");
 				mStartEndStr = mBundle.getString("endDate");
+				itemDetailsArray = mBundle.getString("mItemDetailsArray");
 			}
 		}
 	}
@@ -341,6 +343,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mBundle.putString("startDate", mStartDateStr);
 		mBundle.putString("endDate", mStartEndStr);
 		mBundle.putString("mAddressJson", mAddressResponse.toString());
+		mBundle.putString("mItemDetailsArray", itemDetailsArray);
 		intent.putExtras(mBundle);
 		startActivity(intent);
 	}

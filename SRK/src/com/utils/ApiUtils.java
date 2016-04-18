@@ -1,10 +1,14 @@
 package com.utils;
 
+import com.sabrentkaro.InternalApp;
+
 public class ApiUtils {
 
 	public static final String ONLINE_URL = "http://allrental.co.in/businessservices/api/";
 	public static final String ONLINE_LIVE_URL = "https://www.sabrentkaro.com/businessservices/api/";
-	public static final String BASE_URL = ONLINE_URL;
+
+	public static final String BASE_URL = InternalApp.isProductionApi ? ONLINE_LIVE_URL
+			: ONLINE_URL;
 
 	public static final String GETALLPRODUCTS = BASE_URL
 			+ "Product/GetAllProducts";
@@ -62,7 +66,10 @@ public class ApiUtils {
 
 	public static final String INITIATERENTAL = BASE_URL
 			+ "Rental/InitiateRental";
-	
+
 	public static final String GETADDRESSLIST = BASE_URL
 			+ "User/GetAddressList";
+	
+	public static final String SAVERENTALPAYMENT = BASE_URL
+			+ "Rental/SaveRentalPayment";
 }

@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -60,6 +59,8 @@ public class OrderDetailsActivity extends BaseActivity {
 	private String mMobile;
 
 	private String addressResponse = "";
+
+	private String itemDetailsArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -287,6 +288,7 @@ public class OrderDetailsActivity extends BaseActivity {
 				mStartDateStr = mBundle.getString("startDate");
 				mStartEndStr = mBundle.getString("endDate");
 				addressResponse = mBundle.getString("mAddressJson");
+				itemDetailsArray = mBundle.getString("mItemDetailsArray");
 			}
 		}
 	}
@@ -485,10 +487,12 @@ public class OrderDetailsActivity extends BaseActivity {
 		mBundle.putString("securityDeposit", mtxtSecurityDeposit.getText()
 				.toString());
 		mBundle.putString("securityDepositValue", mSecurityDeposit);
-		mBundle.putString("startDate", mStartDateStr);
-		mBundle.putString("endDate", mStartEndStr);
+		mBundle.putString("startDateStr", mStartDateStr);
+		mBundle.putString("endDateStr", mStartEndStr);
 		mBundle.putString("data", mResponseObj.toString());
 		mBundle.putString("addressResponse", addressResponse);
+		mBundle.putString("mItemDetailsArray", itemDetailsArray);
+		mBundle.putString("productRentalValue", mtxtProductRentalValue.getText().toString());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
