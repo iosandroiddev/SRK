@@ -44,6 +44,9 @@ public class ApiUtils {
 
 	public static final String UPLOADADCONTENT = BASE_URL
 			+ "Product/UploadAdContent";
+	
+	public static final String SAVEUSERTPINFORMATION = BASE_URL
+			+ "Product/SaveUserTpInformation";
 
 	public static final String INITIATEAD = BASE_URL + "Product/InitiateAd";
 

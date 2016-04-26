@@ -299,7 +299,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		for (int i = 0; i < mProductsArray.size(); i++) {
 			ProductModel mObj = mProductsArray.get(i);
 			if (mObj.getTitle().contains("Accessories")) {
-				mObj.setImage(R.drawable.watch);
+				mObj.setImage(R.drawable.watches);
 			} else if (mObj.getTitle().contains("Appliances")) {
 				mObj.setImage(R.drawable.frigde);
 			} else if (mObj.getTitle().contains("Automobiles")) {
@@ -317,7 +317,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 			} else if (mObj.getTitle().contains("Gaming")) {
 				mObj.setImage(R.drawable.games);
 			} else if (mObj.getTitle().contains("Kitchenware")) {
-				mObj.setImage(R.drawable.oven);
+				mObj.setImage(R.drawable.kitchware);
 			} else if (mObj.getTitle().contains("Laptops & Computers")) {
 				mObj.setImage(R.drawable.laptop);
 			} else if (mObj.getTitle().contains("Mobiles & Tablets")) {
@@ -333,7 +333,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 			} else if (mObj.getTitle().contains("TV & Audio Video")) {
 				mObj.setImage(R.drawable.tv);
 			} else if (mObj.getTitle().contains("Vacation Homes")) {
-				mObj.setImage(R.drawable.house);
+				mObj.setImage(R.drawable.sofa);
 			} else {
 				mObj.setImage(R.drawable.suits);
 			}
@@ -438,7 +438,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		if (mApp != null) {
 			mApp.setCategoryMappingArray(mCateogoryMappingsArray);
 		}
-		if (StorageClass.getInstance(this).getAuthHeader().length() != 0)
+		if (StorageClass.getInstance(this).getAuthHeader().length() != 0
+				&& StorageClass.getInstance(this).getServiceValue().length() == 0)
 			initServicerProvider();
 	}
 

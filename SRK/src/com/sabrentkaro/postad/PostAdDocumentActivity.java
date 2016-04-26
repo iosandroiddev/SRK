@@ -2,6 +2,10 @@ package com.sabrentkaro.postad;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -17,11 +21,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.StringRequest;
 import com.models.CityModel;
 import com.models.PostAdModel;
 import com.sabrentkaro.BaseActivity;
+import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.PostAdSaver;
 import com.sabrentkaro.R;
+import com.utils.ApiUtils;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
@@ -59,6 +72,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 			isDrivingLicenseSelected = false;
 	private LinearLayout mPanCardLayout, mAAadharCardLayout,
 			mDrivingLicenseLayout;
+	private String mPricingArray;
+	private String minimumRentalPeriod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +109,9 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				mtxtCondName = mBundle.getString("productConditionName");
 				controlLayouts = (HashMap<String, String>) mBundle
 						.getSerializable("controlLayouts");
+				mPricingArray = mBundle.getString("pricingArray");
+				minimumRentalPeriod = mBundle.getString("minimumRentalPeriod");
+
 			}
 		}
 	}
@@ -181,8 +199,18 @@ public class PostAdDocumentActivity extends BaseActivity implements
 					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
 				.contains("AADHAAR")) {
-			mEditAadharCardNumber.setText(StorageClass.getInstance(this)
-					.getServiceValue());
+
+			String mArrayValues = StorageClass.getInstance(this)
+					.getServiceValue();
+			String[] mValues = mArrayValues.split(",");
+			if (mValues != null && mValues.length >= 2) {
+				mEditAadharCardNumber.setText(mValues[0]);
+				mEditAadharCardName.setText(mValues[1]);
+			} else {
+				mEditAadharCardNumber.setText(StorageClass.getInstance(this)
+						.getServiceValue());
+			}
+
 			isPanCardSelected = false;
 			isAadharCardSelected = true;
 			isDrivingLicenseSelected = false;
@@ -190,8 +218,16 @@ public class PostAdDocumentActivity extends BaseActivity implements
 					R.drawable.btn_select, 0, 0, 0);
 		} else if (StorageClass.getInstance(this).getServiceTitle()
 				.contains("DL")) {
-			mEditDrvingLicense.setText(StorageClass.getInstance(this)
-					.getServiceValue());
+			String mArrayValues = StorageClass.getInstance(this)
+					.getServiceValue();
+			String[] mValues = mArrayValues.split(",");
+			if (mValues != null && mValues.length >= 2) {
+				mEditDrvingLicense.setText(mValues[0]);
+				mEditDrvingState.setText(mValues[1]);
+			} else {
+				mEditDrvingLicense.setText(StorageClass.getInstance(this)
+						.getServiceValue());
+			}
 			isPanCardSelected = false;
 			isAadharCardSelected = false;
 			isDrivingLicenseSelected = true;
@@ -354,7 +390,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 														.length() != 10) {
 													showToast("Please Enter Valid PAN Card Number");
 												} else {
-													navigateToPostPreview();
+													// navigateToPostPreview();
+													initSaveUserTpInformationApi();
 												}
 											}
 										} else if (isAadharCardSelected) {
@@ -374,7 +411,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 														.length() != 12) {
 													showToast("Please Enter Valid AadharCard Number");
 												} else {
-													navigateToPostPreview();
+													// navigateToPostPreview();
+													initSaveUserTpInformationApi();
 												}
 											}
 										} else if (isDrivingLicenseSelected) {
@@ -394,7 +432,8 @@ public class PostAdDocumentActivity extends BaseActivity implements
 														.length() != 16) {
 													showToast("Please Enter Valid Driving License Number");
 												} else {
-													navigateToPostPreview();
+													// navigateToPostPreview();
+													initSaveUserTpInformationApi();
 												}
 											}
 										}
@@ -478,6 +517,22 @@ public class PostAdDocumentActivity extends BaseActivity implements
 
 	private void navigateToPostPreview() {
 
+		if (isPanCardSelected) {
+			StorageClass.getInstance(this).setServiceTitle("PAN");
+			StorageClass.getInstance(this).setServiceValue(
+					meditPanCardNumber.getText().toString());
+		} else if (isAadharCardSelected) {
+			StorageClass.getInstance(this).setServiceTitle("AADHAAR");
+			StorageClass.getInstance(this).setServiceValue(
+					mEditAadharCardNumber.getText().toString() + ","
+							+ mEditAadharCardName.getText().toString());
+		} else {
+			StorageClass.getInstance(this).setServiceTitle("DL");
+			StorageClass.getInstance(this).setServiceValue(
+					mEditDrvingLicense.getText().toString() + ","
+							+ mEditDrvingState.getText().toString());
+		}
+
 		PostAdSaver mAdSaver = PostAdSaver.getInstance(this);
 		mAdSaver.setCity(mbtnSelectCity.getText().toString());
 		mAdSaver.setAadharname(mEditAadharCardName.getText().toString());
@@ -523,6 +578,7 @@ public class PostAdDocumentActivity extends BaseActivity implements
 		mBundle.putString("stateValue", meditState.getText().toString());
 		mBundle.putString("pincode", mEditPinCode.getText().toString());
 		mBundle.putSerializable("controlLayouts", controlLayouts);
+		mBundle.putString("minimumRentalPeriod", minimumRentalPeriod);
 
 		if (mCheckAddress.isChecked()) {
 			mBundle.putString("displayCurrent", "false");
@@ -544,7 +600,14 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				.toString());
 		mBundle.putString("aadharCardNumber", mEditAadharCardNumber.getText()
 				.toString());
+		mBundle.putString("drivingState", mEditDrvingState.getText().toString());
+
 		mBundle.putString("mobileNumber", mEditPhone.getText().toString());
+		mBundle.putString("pricingArray", mPricingArray.toString());
+
+		mBundle.putBoolean("isPanCardSelected", isPanCardSelected);
+		mBundle.putBoolean("isAadharSelected", isAadharCardSelected);
+		mBundle.putBoolean("drivingLicenseSelected", isDrivingLicenseSelected);
 		mIntent.putExtras(mBundle);
 		startActivityForResult(mIntent, 100);
 	}
@@ -690,6 +753,74 @@ public class PostAdDocumentActivity extends BaseActivity implements
 				alert.show();
 			}
 		}
+	}
+
+	private void initSaveUserTpInformationApi() {
+		final String mAuthHeader = StorageClass.getInstance(this)
+				.getAuthHeader();
+		showProgressLayout();
+
+		JSONObject mParams = new JSONObject();
+		try {
+			if (isPanCardSelected) {
+				mParams.put("ProviderServiceCode", "PAN");
+				mParams.put("UserDetails", meditPanCardNumber.getText()
+						.toString());
+				mParams.put("UserId", "null");
+			} else if (isAadharCardSelected) {
+				mParams.put("ProviderServiceCode", "AADHAAR");
+				mParams.put("UserDetails", mEditAadharCardNumber.getText()
+						.toString()
+						+ ","
+						+ mEditAadharCardName.getText().toString());
+				mParams.put("UserId", "null");
+			} else {
+				mParams.put("ProviderServiceCode", "DL");
+				mParams.put("UserDetails", mEditDrvingLicense.getText()
+						.toString()
+						+ ","
+						+ mEditDrvingState.getText().toString());
+				mParams.put("UserId", "null");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		StringRequest mReq = new StringRequest(Method.POST,
+				ApiUtils.SAVEUSERTPINFORMATION, new Listener<String>() {
+
+					@Override
+					public void onResponse(String response) {
+						hideProgressLayout();
+						navigateToPostPreview();
+					}
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						navigateToPostPreview();
+					}
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+
+				return map;
+			}
+
+		};
+
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mReq);
 	}
 
 	// @Override

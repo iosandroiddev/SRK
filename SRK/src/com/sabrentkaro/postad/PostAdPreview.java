@@ -55,6 +55,7 @@ import com.utils.PostAd.IPostAd;
 import com.utils.SquareImageView;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
+import com.utils.UtilNetwork;
 
 public class PostAdPreview extends BaseActivity implements IImageUpload,
 		IPostAd {
@@ -126,6 +127,13 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	int currentImageCount = 0;
 	private JSONArray mItemsMediaArrayResponse;
 	private LinearLayout mLayoutAttachments;
+	private String mPricingArrayString;
+	private String minimumRentalPeriod;
+	private TextView mtxtFields;
+	private String mDrvingState;
+	private boolean isDrivingLicenseSelected;
+	private boolean isAadharCardSelected;
+	private boolean isPanCardSelected;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -273,6 +281,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	@SuppressLint("NewApi")
 	private void loadControlLaoyuts() {
 		mSelectLayout.removeAllViews();
+		String mttitle = "";
 		if (controlLayouts != null) {
 			for (Map.Entry<String, String> entry : controlLayouts.entrySet()) {
 				String key = entry.getKey();
@@ -285,6 +294,10 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				params.setMargins(20, 10, 10, 10);
 				mtxtView.setPadding(20, 10, 10, 10);
 				mtxtView.setLayoutParams(params);
+				if (mttitle.length() == 0)
+					mttitle = key;
+				else
+					mttitle = mttitle + ", " + key;
 				String mtxt = "<font color='black'>" + key
 						+ " : </font> <font color='#EC016D'>" + value
 						+ "</font>";
@@ -292,6 +305,12 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 						TextView.BufferType.SPANNABLE);
 				mSelectLayout.addView(mtxtView);
 			}
+		}
+		if (mttitle.length() == 0) {
+			mtxtFields.setVisibility(View.GONE);
+		} else {
+			mtxtFields.setVisibility(View.VISIBLE);
+			mtxtFields.setText(mttitle);
 		}
 		StaticUtils.expandCollapse(mSelectLayout, true);
 	}
@@ -325,12 +344,21 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				mPinCode = mBundle.getString("pincode");
 				mPanCard = mBundle.getString("panCard");
 				mDrvingNumber = mBundle.getString("drivinglicense");
+				mDrvingState = mBundle.getString("drivingState");
 				mAadharName = mBundle.getString("aadharCardName");
 				mAadthrNumber = mBundle.getString("aadharCardNumber");
 				mMobileNubmer = mBundle.getString("mobileNumber");
 				mtxtCondName = mBundle.getString("productConditionName");
 				controlLayouts = (HashMap<String, String>) mBundle
 						.getSerializable("controlLayouts");
+				mPricingArrayString = mBundle.getString("pricingArray");
+				minimumRentalPeriod = mBundle.getString("minimumRentalPeriod");
+
+				isPanCardSelected = mBundle.getBoolean("isPanCardSelected");
+				isAadharCardSelected = mBundle.getBoolean("isAadharSelected");
+				isDrivingLicenseSelected = mBundle
+						.getBoolean("drivingLicenseSelected");
+
 				InternalApp mApp = (InternalApp) getApplication();
 				mArrayFields = mApp.getArray();
 				if (mBundle.getString("displayCurrent").equalsIgnoreCase(
@@ -376,6 +404,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.securityDeposit);
 		mbtnSubmit = (TextView) findViewById(R.id.btnSubmit);
 		mbtnBack = (TextView) findViewById(R.id.btnEdit);
+		mtxtFields = (TextView) findViewById(R.id.txtFields);
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
 		mSelectLayout = (LinearLayout) findViewById(R.id.layoutControlTypeCapacity);
@@ -419,13 +448,18 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	}
 
 	private void btnSubmitClicked() {
-		showProgressLayout();
+		if (!UtilNetwork.isOnline(this)) {
+			showAlertForNoInternetConnection();
+		} else {
+			showProgressLayout();
 
-		InternalApp mApp = (InternalApp) getApplication();
-		if (mApp.getUriArray() != null && mApp.getUriArray().size() > 0) {
-			if (currentImageUploadCount < mApp.getUriArray().size()) {
-				startPhotUpload(currentImageUploadCount, mApp);
+			InternalApp mApp = (InternalApp) getApplication();
+			if (mApp.getUriArray() != null && mApp.getUriArray().size() > 0) {
+				if (currentImageUploadCount < mApp.getUriArray().size()) {
+					startPhotUpload(currentImageUploadCount, mApp);
+				}
 			}
+
 		}
 	}
 
@@ -451,7 +485,9 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			params.put("CreatedDate", new Date().getTime());
 			params.put("Pricing", "null");
 			params.put("Business", "null");
-			params.put("MinimumRentalPeriod", "null");
+			params.put("PricePerDay", mDailyCost);
+			int period = Integer.parseInt(minimumRentalPeriod);
+			params.put("MinimumRentalPeriod", period);
 			params.put("Tags", new JSONArray());
 
 			JSONObject mAdaptParams = new JSONObject();
@@ -533,22 +569,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 				}
 			}
 
-			JSONArray mPricingArray = new JSONArray();
-			JSONObject mPricingobject = new JSONObject();
-			mPricingobject.put("Price", mDailyCost);
-			mPricingobject.put("UnitCode", "PerWeekDay");
-			mPricingobject.put("UnitTitle", "Per WeekDay");
-			mPricingArray.put(mPricingobject);
-			mPricingobject = new JSONObject();
-			mPricingobject.put("Price", mWeekCost);
-			mPricingobject.put("UnitCode", "PerWeek");
-			mPricingobject.put("UnitTitle", "Per Week");
-			mPricingArray.put(mPricingobject);
-			mPricingobject = new JSONObject();
-			mPricingobject.put("Price", mMonthCost);
-			mPricingobject.put("UnitCode", "PerMonth");
-			mPricingobject.put("UnitTitle", "Per Month");
-			mPricingArray.put(mPricingobject);
+			JSONArray mPricingArray = new JSONArray(mPricingArrayString);
 			mProdcutsObj.put("Pricing", mPricingArray);
 
 			JSONArray mItemMediaArray = new JSONArray();
@@ -586,7 +607,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 										else
 											type = "select";
 									} else {
-										type = "";
+										type = "text";
 									}
 								}
 							}
@@ -605,35 +626,63 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			JSONArray mServiceInputs = new JSONArray();
 			JSONObject mServicesObject = new JSONObject();
 			JSONObject mserviceField = new JSONObject();
-			if (mPanCard.length() == 0) {
+
+			if (isPanCardSelected) {
 				mserviceField.put("panId", mPanCard);
+			} else if (isAadharCardSelected) {
+				mserviceField.put("strAadhaar", mAadthrNumber);
+				mserviceField.put("strAadhaarName", mAadharName);
+			} else if (isDrivingLicenseSelected) {
+				mserviceField.put("driverlicenseid", mDrvingNumber);
+				mserviceField.put("state", mDrvingState);
 			} else {
-				if (mAadthrNumber.length() == 0) {
+				if (mPanCard.length() == 0) {
+					if (mAadthrNumber.length() == 0) {
+						if (mDrvingNumber.length() == 0) {
+							mserviceField.put("panId", mPanCard);
+						} else {
+							mserviceField.put("driverlicenseid", mDrvingNumber);
+							mserviceField.put("state", mDrvingState);
+						}
+					} else {
+						mserviceField.put("strAadhaar", mAadthrNumber);
+						mserviceField.put("strAadhaarName", mAadharName);
+					}
+				} else {
 					mserviceField.put("panId", mPanCard);
 				}
-				mserviceField.put("panId", mPanCard);
 			}
 
 			JSONObject mserviceProvider = new JSONObject();
-			if (mPanCard.length() == 0) {
-				// if (mAadthrNumber.length() == 0) {
-				// if (mDrvingNumber.length() == 0) {
-				//
-				// } else {
-				// mserviceProvider.put("Code", "DL");
-				// mserviceProvider.put("Title", "null");
-				// }
-				// } else {
-				// mserviceProvider.put("Code", "AADHAAR");
-				// mserviceProvider.put("Title", "null");
-				// }
+			if (isPanCardSelected) {
 				mserviceProvider.put("Code", "PAN");
+				mserviceProvider.put("Title", "null");
+			} else if (isAadharCardSelected) {
+				mserviceProvider.put("Code", "AADHAAR");
+				mserviceProvider.put("Title", "null");
+			} else if (isDrivingLicenseSelected) {
+				mserviceProvider.put("Code", "DL");
 				mserviceProvider.put("Title", "null");
 			} else {
-				mserviceProvider.put("Code", "PAN");
-				mserviceProvider.put("Title", "null");
+				if (mPanCard.length() == 0) {
+					if (mAadthrNumber.length() == 0) {
+						if (mDrvingNumber.length() == 0) {
+							mserviceProvider.put("Code", "PAN");
+							mserviceProvider.put("Title", "null");
+						} else {
+							mserviceProvider.put("Code", "DL");
+							mserviceProvider.put("Title", "null");
+						}
+					} else {
+						mserviceProvider.put("Code", "AADHAAR");
+						mserviceProvider.put("Title", "null");
+					}
+				} else {
+					mserviceProvider.put("Code", "PAN");
+					mserviceProvider.put("Title", "null");
+				}
 			}
-			mServicesObject.put("TpFieldJson", mserviceField);
+			mServicesObject.put("TpFieldJson", mserviceField.toString());
 			mServicesObject.put("AdId", mProductAdId);
 			mServicesObject.put("TpProviderService", mserviceProvider);
 			mServiceInputs.put(mServicesObject);
@@ -655,7 +704,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mProducSpec.put("Code", "RULES");
 			mProducSpec.put("Title", "Rules of usage");
 			mAdSetObj.put("ProductCategorySpecification", mProducSpec);
-			mAdSetObj.put("Value", "Instructions");
+			mAdSetObj.put("Value", mUserInstructions);
 			mAdSetObj.put("Id", "2");
 			mArrayAdSettings.put(mAdSetObj);
 
@@ -664,7 +713,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mProducSpec.put("Code", "INTHEBOX");
 			mProducSpec.put("Title", "In the box");
 			mAdSetObj.put("ProductCategorySpecification", mProducSpec);
-			mAdSetObj.put("Value", "Stuff");
+			mAdSetObj.put("Value", mAdditionalStuff);
 			mAdSetObj.put("Id", "1");
 			mArrayAdSettings.put(mAdSetObj);
 

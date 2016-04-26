@@ -49,15 +49,15 @@ public class SearchActivity extends BaseActivity implements
 		for (int i = 0; i < mProductsArray.size(); i++) {
 			ProductModel mObj = mProductsArray.get(i);
 			if (mObj.getTitle().contains("Accessories")) {
-				mObj.setImage(R.drawable.watch);
+				mObj.setImage(R.drawable.watches);
 			} else if (mObj.getTitle().contains("Appliances")) {
 				mObj.setImage(R.drawable.frigde);
 			} else if (mObj.getTitle().contains("Automobiles")) {
 				mObj.setImage(R.drawable.automobile);
-			}  else if (mObj.getTitle().contains("Books & Media")) {
+			} else if (mObj.getTitle().contains("Books & Media")) {
 				mObj.setImage(R.drawable.books);
 			} else if (mObj.getTitle().contains("Baby products")) {
-				mObj.setImage(R.drawable.toysgames);
+				mObj.setImage(R.drawable.kidsfurniture);
 			} else if (mObj.getTitle().contains("Camera Equipment")) {
 				mObj.setImage(R.drawable.digicamera);
 			} else if (mObj.getTitle().contains("Festivals")) {
@@ -67,7 +67,7 @@ public class SearchActivity extends BaseActivity implements
 			} else if (mObj.getTitle().contains("Gaming")) {
 				mObj.setImage(R.drawable.games);
 			} else if (mObj.getTitle().contains("Kitchenware")) {
-				mObj.setImage(R.drawable.oven);
+				mObj.setImage(R.drawable.kitchware);
 			} else if (mObj.getTitle().contains("Laptops & Computers")) {
 				mObj.setImage(R.drawable.laptop);
 			} else if (mObj.getTitle().contains("Mobiles & Tablets")) {
@@ -79,11 +79,11 @@ public class SearchActivity extends BaseActivity implements
 			} else if (mObj.getTitle().contains("Sports & Fitness")) {
 				mObj.setImage(R.drawable.sports);
 			} else if (mObj.getTitle().contains("Toys & Games")) {
-				mObj.setImage(R.drawable.games);
+				mObj.setImage(R.drawable.toysgames);
 			} else if (mObj.getTitle().contains("TV & Audio Video")) {
 				mObj.setImage(R.drawable.tv);
 			} else if (mObj.getTitle().contains("Vacation Homes")) {
-				mObj.setImage(R.drawable.house);
+				mObj.setImage(R.drawable.sofa);
 			} else {
 				mObj.setImage(R.drawable.suits);
 			}

@@ -31,14 +31,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -73,6 +74,7 @@ import com.utils.SquareImageView;
 import com.utils.StaticData;
 import com.utils.StaticUtils;
 import com.utils.StorageClass;
+import com.utils.UtilNetwork;
 
 public class PostAdActivity extends BaseActivity implements
 		IObjectParseListener, IArrayParseListener {
@@ -89,7 +91,7 @@ public class PostAdActivity extends BaseActivity implements
 	private ArrayList<CityModel> mCityArray = new ArrayList<CityModel>();
 
 	private ArrayList<PostAdModel> mArrayFields = new ArrayList<PostAdModel>();
-	private LinearLayout mSelectLayout, mlayoutFields, mlayoutRents;
+	private LinearLayout mSelectLayout, mlayoutFields;
 
 	private HashMap<String, String> mControlLayouts = new HashMap<String, String>();
 	final static int CAMERA_SELECT_CODE = 1;
@@ -104,14 +106,22 @@ public class PostAdActivity extends BaseActivity implements
 	private String productCode;
 	private LinearLayout mLayoutAttachments;
 	private LinearLayout mLayoutSubCat;
-
+	private LinearLayout mLayoutRentalPeriods;
 	private ArrayList<String> mImageArrayPaths = new ArrayList<String>();
 	private ArrayList<File> mImageFileArray = new ArrayList<File>();
-
+	private LinearLayout perDayLayout, threeDayLayout, perWeekLayout,
+			perMonthLayout, threeMonthLayout, sixMonthLayout, nineMonthLayout,
+			yearLayout;
 	private ArrayList<Uri> mUriArray = new ArrayList<Uri>();
 
 	private HorizontalScrollView mScrollimages;
 	private File cameraFile;
+
+	private TextView mbtnSelectPeriod;
+
+	private EditText mEditPerDay, mEditThreeDay, mEditPerWeek, mEditPerMonth,
+			mEditThreeMonth, mEditSixMonth, mEditNineMonth, mEditYear;
+	private String minimumRentalPeriod = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +130,11 @@ public class PostAdActivity extends BaseActivity implements
 		getDatafromIntent();
 		loadReferences();
 		addClickListeners();
-		initProdcutAdId();
+		if (!UtilNetwork.isOnline(this)) {
+			showAlertForNoInternetConnection();
+		} else {
+			initProdcutAdId();
+		}
 
 	}
 
@@ -180,14 +194,38 @@ public class PostAdActivity extends BaseActivity implements
 		mEditInstructions = (EditText) findViewById(R.id.editInstructions);
 		mEditStuff = (EditText) findViewById(R.id.editStuff);
 		mEditPurchasedCost = (EditText) findViewById(R.id.editPricePurchased);
-		mEditDailyCost = (EditText) findViewById(R.id.editPricePerDayRent);
-		mEditWeeklyCost = (EditText) findViewById(R.id.editPricePerWeekRent);
-		mEditMonthlyCost = (EditText) findViewById(R.id.editPricePerMonthRent);
+		mEditDailyCost = (EditText) findViewById(R.id.editPricePerDay);
+		mEditWeeklyCost = (EditText) findViewById(R.id.editPricePerWeek);
+		mEditMonthlyCost = (EditText) findViewById(R.id.editPricePerMonth);
 		mEditQuantity = (EditText) findViewById(R.id.editQuantity);
 		mEditSecurityDeposit = (EditText) findViewById(R.id.editSecurityDeposit);
 		mLayoutSubCat = (LinearLayout) findViewById(R.id.layoutSubCat);
 		mScrollimages = (HorizontalScrollView) findViewById(R.id.scrollImages);
 		mLayoutAttachments = (LinearLayout) findViewById(R.id.layoutAttachments);
+		mbtnSelectPeriod = (TextView) findViewById(R.id.btnSelectPeriod);
+		mLayoutRentalPeriods = (LinearLayout) findViewById(R.id.rentalPeriods);
+
+		perDayLayout = (LinearLayout) findViewById(R.id.layoutPerDay);
+		threeDayLayout = (LinearLayout) findViewById(R.id.layoutPerThreeDay);
+		perWeekLayout = (LinearLayout) findViewById(R.id.layoutPerWeek);
+		perMonthLayout = (LinearLayout) findViewById(R.id.layoutPerMonth);
+
+		threeMonthLayout = (LinearLayout) findViewById(R.id.layoutPerThreeMonth);
+		sixMonthLayout = (LinearLayout) findViewById(R.id.layoutPerSixMonth);
+		nineMonthLayout = (LinearLayout) findViewById(R.id.layoutPerNineMonth);
+		yearLayout = (LinearLayout) findViewById(R.id.layoutPerTwelveMonth);
+		mLayoutRentalPeriods.setVisibility(View.GONE);
+		mbtnSelectPeriod.setOnClickListener(this);
+
+		mEditPerDay = (EditText) findViewById(R.id.editPricePerDayRent);
+		mEditThreeDay = (EditText) findViewById(R.id.editPricePerThreeDayRent);
+		mEditPerWeek = (EditText) findViewById(R.id.editPricePerWeekRent);
+		mEditPerMonth = (EditText) findViewById(R.id.editPricePerMonthRent);
+		mEditThreeMonth = (EditText) findViewById(R.id.editPriceThreeMonth);
+		mEditSixMonth = (EditText) findViewById(R.id.editPriceSixMonth);
+		mEditNineMonth = (EditText) findViewById(R.id.editPriceNineMonth);
+		mEditYear = (EditText) findViewById(R.id.editPriceTweleveMonth);
+
 		mEditDailyCost.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
@@ -252,6 +290,15 @@ public class PostAdActivity extends BaseActivity implements
 		StaticUtils.setEditTextHintFont(mEditMonthlyCost, this);
 		StaticUtils.setEditTextHintFont(mEditQuantity, this);
 		StaticUtils.setEditTextHintFont(mEditSecurityDeposit, this);
+
+		StaticUtils.setEditTextHintFont(mEditPerDay, this);
+		StaticUtils.setEditTextHintFont(mEditThreeDay, this);
+		StaticUtils.setEditTextHintFont(mEditPerWeek, this);
+		StaticUtils.setEditTextHintFont(mEditPerMonth, this);
+		StaticUtils.setEditTextHintFont(mEditThreeMonth, this);
+		StaticUtils.setEditTextHintFont(mEditSixMonth, this);
+		StaticUtils.setEditTextHintFont(mEditYear, this);
+		StaticUtils.setEditTextHintFont(mEditNineMonth, this);
 	}
 
 	@Override
@@ -276,9 +323,137 @@ public class PostAdActivity extends BaseActivity implements
 		case R.id.btnSelectRating:
 			btnSelectRatingClicked();
 			break;
+		case R.id.btnSelectPeriod:
+			btnSelectPeriodClicked();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void btnSelectPeriodClicked() {
+		final String[] mPeriods = { "1 Day", "3 Days", "1 Week", "1 Month",
+				"3 Months", "6 Months", "9 Months", "12 Months" };
+		if (mPeriods != null) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle("Select Period");
+			int position = -1;
+			for (int i = 0; i < mPeriods.length; i++) {
+				if (mbtnSelectRating.getText().toString()
+						.equalsIgnoreCase("Select Minimum Period")) {
+					position = -1;
+				} else {
+					if (mPeriods[i].equalsIgnoreCase(mbtnSelectPeriod.getText()
+							.toString())) {
+						position = i;
+					}
+				}
+			}
+			alert.setSingleChoiceItems(mPeriods, position,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mbtnSelectPeriod.setText(mPeriods[which]);
+							loadDynamicView(mPeriods[which]);
+							dialog.dismiss();
+						}
+
+					});
+			alert.show();
+		}
+	}
+
+	private void loadDynamicView(String mSelectedPeriod) {
+		if (mSelectedPeriod.equalsIgnoreCase("1 Day")) {
+			minimumRentalPeriod = "1";
+			perDayLayout.setVisibility(View.VISIBLE);
+			threeDayLayout.setVisibility(View.VISIBLE);
+			perWeekLayout.setVisibility(View.VISIBLE);
+			perMonthLayout.setVisibility(View.VISIBLE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.GONE);
+			nineMonthLayout.setVisibility(View.GONE);
+			yearLayout.setVisibility(View.GONE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("3 Days")) {
+			minimumRentalPeriod = "3";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.VISIBLE);
+			perWeekLayout.setVisibility(View.VISIBLE);
+			perMonthLayout.setVisibility(View.VISIBLE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.GONE);
+			nineMonthLayout.setVisibility(View.GONE);
+			yearLayout.setVisibility(View.GONE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("1 Week")) {
+			minimumRentalPeriod = "7";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.VISIBLE);
+			perMonthLayout.setVisibility(View.VISIBLE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.GONE);
+			nineMonthLayout.setVisibility(View.GONE);
+			yearLayout.setVisibility(View.GONE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("1 Month")) {
+			minimumRentalPeriod = "30";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.GONE);
+			perMonthLayout.setVisibility(View.VISIBLE);
+			threeMonthLayout.setVisibility(View.VISIBLE);
+			sixMonthLayout.setVisibility(View.VISIBLE);
+			nineMonthLayout.setVisibility(View.VISIBLE);
+			yearLayout.setVisibility(View.VISIBLE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("3 Months")) {
+			minimumRentalPeriod = "90";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.GONE);
+			perMonthLayout.setVisibility(View.GONE);
+			threeMonthLayout.setVisibility(View.VISIBLE);
+			sixMonthLayout.setVisibility(View.VISIBLE);
+			nineMonthLayout.setVisibility(View.VISIBLE);
+			yearLayout.setVisibility(View.VISIBLE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("6 Months")) {
+			minimumRentalPeriod = "180";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.GONE);
+			perMonthLayout.setVisibility(View.GONE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.VISIBLE);
+			nineMonthLayout.setVisibility(View.VISIBLE);
+			yearLayout.setVisibility(View.VISIBLE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("9 Months")) {
+			minimumRentalPeriod = "270";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.GONE);
+			perMonthLayout.setVisibility(View.GONE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.GONE);
+			nineMonthLayout.setVisibility(View.VISIBLE);
+			yearLayout.setVisibility(View.VISIBLE);
+
+		} else if (mSelectedPeriod.equalsIgnoreCase("12 Months")) {
+			minimumRentalPeriod = "365";
+			perDayLayout.setVisibility(View.GONE);
+			threeDayLayout.setVisibility(View.GONE);
+			perWeekLayout.setVisibility(View.GONE);
+			perMonthLayout.setVisibility(View.GONE);
+			threeMonthLayout.setVisibility(View.GONE);
+			sixMonthLayout.setVisibility(View.GONE);
+			nineMonthLayout.setVisibility(View.GONE);
+			yearLayout.setVisibility(View.VISIBLE);
+
+		}
+		StaticUtils.expandCollapse(mLayoutRentalPeriods, true);
 	}
 
 	private void btnUploadClicked() {
@@ -369,19 +544,33 @@ public class PostAdActivity extends BaseActivity implements
 										.length() == 0) {
 									showToast("Please Enter Purchased Cost");
 								} else {
-									if (mEditDailyCost.getText().toString()
-											.length() == 0
-											&& mEditWeeklyCost.getText()
-													.toString().length() == 0
-											&& mEditMonthlyCost.getText()
-													.toString().length() == 0) {
-										showToast("Please Enter Either Daily Cost, Weekly Cost or Monthly Cost");
+									// if (!rentalPeriodsValidated()) {
+									//
+									// }
+									if (!arePricingFieldsValidated()) {
+
 									} else {
 										if (mEditQuantity.getText().toString()
 												.length() == 0) {
 											showToast("Please Enter Quantity");
 										} else {
-											navigateToPostDocuments();
+											if (mEditSecurityDeposit.length() > 0) {
+												int purchasedCost = Integer
+														.parseInt(mEditPurchasedCost
+																.getText()
+																.toString());
+												int securityDeposit = Integer
+														.parseInt(mEditSecurityDeposit
+																.getText()
+																.toString());
+												if (securityDeposit > purchasedCost) {
+													showToast("Security Deposit should be less than the Purchased Cost");
+												} else {
+													navigateToPostDocuments();
+												}
+											} else {
+												navigateToPostDocuments();
+											}
 										}
 									}
 								}
@@ -392,6 +581,270 @@ public class PostAdActivity extends BaseActivity implements
 			}
 		}
 
+	}
+
+	private boolean rentalPeriodsValidated() {
+		boolean isSuccess = false;
+		mPricingArray = new JSONArray();
+		try {
+
+			String mSelectedPeriod = mbtnSelectPeriod.getText().toString();
+			if (mSelectedPeriod.equalsIgnoreCase("Select Minimum Period")) {
+				showToast("Please Select Minimum Period");
+			} else {
+				if (mSelectedPeriod.equalsIgnoreCase("1 Day")) {
+					if (mEditPerDay.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditPerDay.requestFocus();
+					} else {
+						isSuccess = true;
+					}
+				} else if (mSelectedPeriod.equalsIgnoreCase("3 Days")) {
+					if (mEditThreeDay.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditThreeDay.requestFocus();
+					} else {
+						isSuccess = true;
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("1 Week")) {
+
+					if (mEditPerWeek.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditPerWeek.requestFocus();
+					} else {
+						isSuccess = true;
+
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("1 Month")) {
+					if (mEditPerMonth.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditPerMonth.requestFocus();
+					} else {
+
+						isSuccess = true;
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("3 Months")) {
+
+					if (mEditThreeMonth.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditThreeMonth.requestFocus();
+					} else {
+
+						isSuccess = true;
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("6 Months")) {
+
+					if (mEditSixMonth.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditSixMonth.requestFocus();
+					} else {
+
+						isSuccess = true;
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("9 Months")) {
+
+					if (mEditNineMonth.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditNineMonth.requestFocus();
+					} else {
+
+						isSuccess = true;
+					}
+
+				} else if (mSelectedPeriod.equalsIgnoreCase("12 Months")) {
+
+					if (mEditYear.getText().toString().length() == 0) {
+						isSuccess = false;
+						showToast("Please Enter Cost");
+						mEditYear.requestFocus();
+					} else {
+
+						isSuccess = true;
+					}
+
+				}
+			}
+
+			String perDayCost = mEditPerDay.getText().toString();
+			String threeDayCost = mEditThreeDay.getText().toString();
+			String weekCost = mEditPerWeek.getText().toString();
+			String monthCost = mEditPerMonth.getText().toString();
+			String threeMonthCost = mEditThreeMonth.getText().toString();
+			String sixMonthCost = mEditSixMonth.getText().toString();
+			String nineMonthCost = mEditNineMonth.getText().toString();
+			String yearCost = mEditYear.getText().toString();
+
+			JSONObject mPricingobject;
+
+			if (perDayCost == null || perDayCost.equalsIgnoreCase("null")
+					|| perDayCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", perDayCost);
+				mPricingobject.put("UnitCode", "PerWeekDay");
+				mPricingobject.put("UnitTitle", "Per WeekDay");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (threeDayCost == null || threeDayCost.equalsIgnoreCase("null")
+					|| threeDayCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", threeDayCost);
+				mPricingobject.put("UnitCode", "Per3Days");
+				mPricingobject.put("UnitTitle", "Per 3 Days");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (weekCost == null || weekCost.equalsIgnoreCase("null")
+					|| weekCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", weekCost);
+				mPricingobject.put("UnitCode", "PerWeek");
+				mPricingobject.put("UnitTitle", "Per Week");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (monthCost == null || monthCost.equalsIgnoreCase("null")
+					|| monthCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", monthCost);
+				mPricingobject.put("UnitCode", "PerMonth");
+				mPricingobject.put("UnitTitle", "Per Month");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (threeMonthCost == null
+					|| threeMonthCost.equalsIgnoreCase("null")
+					|| threeMonthCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", threeMonthCost);
+				mPricingobject.put("UnitCode", "Per3Months");
+				mPricingobject.put("UnitTitle", "Per 3 Months");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (sixMonthCost == null || sixMonthCost.equalsIgnoreCase("null")
+					|| sixMonthCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", sixMonthCost);
+				mPricingobject.put("UnitCode", "Per6Months");
+				mPricingobject.put("UnitTitle", "Per 6 Months");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (nineMonthCost == null || nineMonthCost.equalsIgnoreCase("null")
+					|| nineMonthCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", nineMonthCost);
+				mPricingobject.put("UnitCode", "Per9Months");
+				mPricingobject.put("UnitTitle", "Per 9 Months");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (yearCost == null || yearCost.equalsIgnoreCase("null")
+					|| yearCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", yearCost);
+				mPricingobject.put("UnitCode", "Per12Months");
+				mPricingobject.put("UnitTitle", "Per 12 Months");
+				mPricingArray.put(mPricingobject);
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+	}
+
+	private boolean arePricingFieldsValidated() {
+		boolean isSucess;
+		mPricingArray = new JSONArray();
+		try {
+			JSONObject mPricingobject;
+			String perDayCost = mEditDailyCost.getText().toString();
+			String weekCost = mEditWeeklyCost.getText().toString();
+			String monthCost = mEditMonthlyCost.getText().toString();
+
+			if (perDayCost == null || perDayCost.equalsIgnoreCase("null")
+					|| perDayCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", perDayCost);
+				mPricingobject.put("UnitCode", "PerWeekDay");
+				mPricingobject.put("UnitTitle", "Per WeekDay");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (weekCost == null || weekCost.equalsIgnoreCase("null")
+					|| weekCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", weekCost);
+				mPricingobject.put("UnitCode", "PerWeek");
+				mPricingobject.put("UnitTitle", "Per Week");
+				mPricingArray.put(mPricingobject);
+			}
+
+			if (monthCost == null || monthCost.equalsIgnoreCase("null")
+					|| monthCost.equalsIgnoreCase("0")) {
+
+			} else {
+				mPricingobject = new JSONObject();
+				mPricingobject.put("Price", monthCost);
+				mPricingobject.put("UnitCode", "PerMonth");
+				mPricingobject.put("UnitTitle", "Per Month");
+				mPricingArray.put(mPricingobject);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (mEditDailyCost.getText().toString().length() == 0
+				&& mEditWeeklyCost.getText().toString().length() == 0
+				&& mEditMonthlyCost.getText().toString().length() == 0) {
+			showToast("Please Enter Either Daily Cost or Weekly Cost or Monthly Cost");
+			isSucess = false;
+		} else {
+			if (mEditDailyCost.getText().toString().length() != 0) {
+				minimumRentalPeriod = "1";
+			} else if (mEditWeeklyCost.getText().toString().length() != 0) {
+				minimumRentalPeriod = "7";
+			} else if (mEditMonthlyCost.getText().toString().length() != 0) {
+				minimumRentalPeriod = "30";
+			}
+			isSucess = true;
+		}
+		return isSucess;
 	}
 
 	private boolean areFieldsValidated() {
@@ -438,6 +891,7 @@ public class PostAdActivity extends BaseActivity implements
 		mApp.setUriArray(mUriArray);
 		mApp.setImageFilesArray(mImageFileArray);
 		mApp.setArray(mArrayFields);
+
 		if (TextUtils.isEmpty(StorageClass.getInstance(this).getUserName())) {
 			startLoginActivity();
 		} else {
@@ -469,6 +923,8 @@ public class PostAdActivity extends BaseActivity implements
 			mBundle.putString("filePath", mImageProfilePicPath);
 			mBundle.putString("productAdId", productAdId);
 			mBundle.putSerializable("controlLayouts", mControlLayouts);
+			mBundle.putSerializable("pricingArray", mPricingArray.toString());
+			mBundle.putString("minimumRentalPeriod", minimumRentalPeriod);
 			mIntent.putExtras(mBundle);
 			startActivity(mIntent);
 		}
@@ -505,6 +961,7 @@ public class PostAdActivity extends BaseActivity implements
 		mBundle.putString("filePath", mImageProfilePicPath);
 		mBundle.putString("productAdId", productAdId);
 		mBundle.putSerializable("controlLayouts", mControlLayouts);
+		mBundle.putSerializable("pricingArray", mPricingArray.toString());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}
@@ -513,6 +970,7 @@ public class PostAdActivity extends BaseActivity implements
 	private ArrayList<String> mSubCategories = new ArrayList<String>();
 	private JSONArray mFieldsArray;
 	private Dialog mCustomDialog;
+	private JSONArray mPricingArray;
 
 	private void btnSelectSubProductCategoryClicked() {
 		showProgressLayout();
@@ -589,6 +1047,8 @@ public class PostAdActivity extends BaseActivity implements
 		mImageArrayPaths.clear();
 		StaticUtils.expandCollapse(mScrollimages, false);
 		mImageFileArray.clear();
+		mLayoutRentalPeriods.setVisibility(View.GONE);
+		mbtnSelectPeriod.setText("Select Minimum Period");
 	}
 
 	private void initTemplateForCategoryApi() {
@@ -679,6 +1139,26 @@ public class PostAdActivity extends BaseActivity implements
 						mEditTexxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
 						mFieldName.add(mModel.getFieldTitle());
 						StaticUtils.setEditTextHintFont(mEditTexxt, this);
+						mEditTexxt.addTextChangedListener(new TextWatcher() {
+
+							@Override
+							public void onTextChanged(CharSequence s,
+									int start, int before, int count) {
+								mControlLayouts.put(mModel.getFieldTitle(), ""
+										+ s);
+							}
+
+							@Override
+							public void beforeTextChanged(CharSequence s,
+									int start, int count, int after) {
+
+							}
+
+							@Override
+							public void afterTextChanged(Editable s) {
+
+							}
+						});
 						mSelectLayout.addView(mEditTexxt);
 					} else {
 						final TextView mtxtView = (TextView) LayoutInflater

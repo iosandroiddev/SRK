@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,6 +18,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -37,6 +40,7 @@ import com.utils.ApiUtils;
 import com.utils.MiscUtils;
 import com.utils.StaticData;
 import com.utils.StorageClass;
+import com.utils.UtilNetwork;
 
 public class SplashActivity extends FragmentActivity implements
 		IObjectParseListener, IArrayParseListener {
@@ -67,8 +71,32 @@ public class SplashActivity extends FragmentActivity implements
 				.getIndeterminateDrawable().setColorFilter(
 						getResources().getColor(R.color.pink),
 						PorterDuff.Mode.SRC_IN);
-		initProductsApi();
+		if (!UtilNetwork.isOnline(this)) {
+			showAlertForNoInternetConnection();
+		} else {
+			initProductsApi();
+		}
 
+	}
+
+	public void showAlertForNoInternetConnection() {
+		new AlertDialog.Builder(this)
+				.setTitle("Error")
+				.setMessage("Please check your Internet Connection.")
+				.setOnDismissListener(new OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						dialog.cancel();
+						finish();
+					}
+				})
+				.setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).create().show();
 	}
 
 	private void initiateHandler() {
@@ -126,15 +154,15 @@ public class SplashActivity extends FragmentActivity implements
 	public void ErrorResponse(VolleyError error, int requestCode) {
 		switch (requestCode) {
 		case StaticData.GETALLPRODUCTS_RESPONSE_CODE:
-			showToast("Something went Wrong at Initiating Products Api");
+			showToast("Please Check your Internet Connection.");
 			finish();
 			break;
 		case StaticData.GETCATEGORYMAPPINGS_RESPONSE_CODE:
-			showToast("Something went Wrong at Category Mappings  Api");
+			showToast("Please Check your Internet Connection.");
 			finish();
 			break;
 		case StaticData.GETCITY_RESPONSE_CODE:
-			showToast("Something went Wrong at Initiating Cities Api");
+			showToast("Please Check your Internet Connection.");
 			finish();
 			break;
 		default:

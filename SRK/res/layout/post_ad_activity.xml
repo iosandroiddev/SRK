@@ -337,6 +337,56 @@
                 android:orientation="vertical"
                 android:padding="10dp" >
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="2dp"
+                        android:gravity="start"
+                        android:padding="3dp"
+                        android:text="@string/your_preferred_minimum_period_for_rent_"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/btnSelectPeriod"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/blue_button_selector"
+                        android:drawableEnd="@drawable/ic_arrow_down_"
+                        android:drawableRight="@drawable/ic_arrow_down_"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:text="@string/select_minimum_period"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
+
+                    <LinearLayout
+                        android:id="@+id/rentalPeriods"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <include
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            layout="@layout/layout_rental_periods" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <com.utils.CustomTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -358,58 +408,65 @@
                     android:inputType="number"
                     android:textSize="14sp" />
 
-                <com.utils.CustomTextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="2dp"
-                    android:gravity="start"
-                    android:padding="3dp"
-                    android:text="@string/how_much_do_you_want_to_rent_it_for_"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    custom:fonttype="trebuchet_ms" />
-
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="vertical"
+                    android:visibility="visible" >
 
-                    <EditText
-                        android:id="@+id/editPricePerDayRent"
-                        android:layout_width="0dp"
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_margin="2dp"
-                        android:layout_weight="1"
-                        android:hint="@string/enter_daily_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
+                        android:gravity="start"
+                        android:padding="3dp"
+                        android:text="@string/how_much_do_you_want_to_rent_it_for_"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        custom:fonttype="trebuchet_ms" />
 
-                    <EditText
-                        android:id="@+id/editPricePerWeekRent"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1"
-                        android:hint="@string/enter_weekly_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
+                        android:orientation="horizontal" >
 
-                    <EditText
-                        android:id="@+id/editPricePerMonthRent"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1"
-                        android:hint="@string/enter_monthly_rent_cost"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
+                        <EditText
+                            android:id="@+id/editPricePerDay"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:hint="@string/enter_daily_rent_cost"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/editPricePerWeek"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:hint="@string/enter_weekly_rent_cost"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/editPricePerMonth"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:hint="@string/enter_monthly_rent_cost"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <com.utils.CustomTextView

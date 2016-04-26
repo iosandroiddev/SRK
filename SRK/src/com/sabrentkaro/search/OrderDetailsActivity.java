@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
@@ -25,6 +26,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
@@ -45,6 +47,11 @@ public class OrderDetailsActivity extends BaseActivity {
 			mtxtPerMonthCost, mtxtFacilitaionCharges, mtxtFaciCost,
 			mtxtServiceTax, mtxtServiceTaxCost, mtxtLogistics,
 			mtxtLogisticsCost, mtxtSecurityDeposit;
+
+	private boolean isPanCardSelected = false, isAadharCardSelected = false,
+			isDrivingLicenseSelected = false;
+	private String panCard = "", aadharCardname = "", aadharCardNumber = "",
+			drivingLicense = "", drivingState = "";
 
 	private String mProdRentValue, mServiceValue, mLogisticsValue,
 			mFaciliValue;
@@ -289,6 +296,18 @@ public class OrderDetailsActivity extends BaseActivity {
 				mStartEndStr = mBundle.getString("endDate");
 				addressResponse = mBundle.getString("mAddressJson");
 				itemDetailsArray = mBundle.getString("mItemDetailsArray");
+
+				isPanCardSelected = mBundle.getBoolean("pancardSelected");
+				isAadharCardSelected = mBundle
+						.getBoolean("isaadharCardSelected");
+				isDrivingLicenseSelected = mBundle
+						.getBoolean("drivinglicenseSelected");
+
+				panCard = mBundle.getString("panId");
+				aadharCardname = mBundle.getString("aadharName");
+				aadharCardNumber = mBundle.getString("aadharId");
+				drivingLicense = mBundle.getString("drvingLicense");
+
 			}
 		}
 	}
@@ -399,18 +418,66 @@ public class OrderDetailsActivity extends BaseActivity {
 			params.put("StepInput", mStepCount);
 
 			JSONArray mRentalTpServiceInputs = new JSONArray();
-			JSONObject mRentalTpServiceInputsObj = new JSONObject();
-			mRentalTpServiceInputsObj.put("AdId", selectedProductAdId);
-			JSONObject mTpFieldJson = new JSONObject();
-			mTpFieldJson.put("panId", "");
-			mRentalTpServiceInputsObj.put("TpFieldJson",
-					mTpFieldJson.toString());
-			JSONObject mTpProviderService = new JSONObject();
-			mTpProviderService.put("Title", "null");
-			mTpProviderService.put("Code", "PAN");
-			mRentalTpServiceInputsObj.put("TpProviderService",
-					mTpProviderService);
-			mRentalTpServiceInputs.put(mRentalTpServiceInputsObj);
+			if (isPanCardSelected) {
+				JSONObject mRentalTpServiceInputsObj = new JSONObject();
+				mRentalTpServiceInputsObj.put("AdId", selectedProductAdId);
+				JSONObject mTpFieldJson = new JSONObject();
+				mTpFieldJson.put("panId", panCard);
+				mRentalTpServiceInputsObj.put("TpFieldJson",
+						mTpFieldJson.toString());
+				JSONObject mTpProviderService = new JSONObject();
+				mTpProviderService.put("Title", "null");
+				mTpProviderService.put("Code", "PAN");
+				mRentalTpServiceInputsObj.put("TpProviderService",
+						mTpProviderService);
+				mRentalTpServiceInputsObj.put("RentalId", "0");
+				mRentalTpServiceInputsObj.put("UserId", StorageClass
+						.getInstance(this).getUserId());
+				mRentalTpServiceInputsObj
+						.put("Url",
+								"http://evoke.jocatagrid.in/Evoke/webservices/ident/getPanInformation");
+				mRentalTpServiceInputs.put(mRentalTpServiceInputsObj);
+			} else if (isAadharCardSelected) {
+				JSONObject mRentalTpServiceInputsObj = new JSONObject();
+				mRentalTpServiceInputsObj.put("AdId", selectedProductAdId);
+				JSONObject mTpFieldJson = new JSONObject();
+				mTpFieldJson.put("strAadhaar", aadharCardNumber);
+				mTpFieldJson.put("strAadhaarName", aadharCardname);
+				mRentalTpServiceInputsObj.put("TpFieldJson",
+						mTpFieldJson.toString());
+				JSONObject mTpProviderService = new JSONObject();
+				mTpProviderService.put("Title", "null");
+				mTpProviderService.put("Code", "AADHAAR");
+				mRentalTpServiceInputsObj.put("TpProviderService",
+						mTpProviderService);
+				mRentalTpServiceInputsObj.put("RentalId", "0");
+				mRentalTpServiceInputsObj.put("UserId", StorageClass
+						.getInstance(this).getUserId());
+				mRentalTpServiceInputsObj
+						.put("Url",
+								"http://evoke.jocatagrid.in/Evoke/webservices/ident/getAadhaarAuthentication");
+				mRentalTpServiceInputs.put(mRentalTpServiceInputsObj);
+			} else {
+				JSONObject mRentalTpServiceInputsObj = new JSONObject();
+				mRentalTpServiceInputsObj.put("AdId", selectedProductAdId);
+				JSONObject mTpFieldJson = new JSONObject();
+				mTpFieldJson.put("driverlicenseid", drivingLicense);
+				mTpFieldJson.put("state", drivingState);
+				mRentalTpServiceInputsObj.put("TpFieldJson",
+						mTpFieldJson.toString());
+				JSONObject mTpProviderService = new JSONObject();
+				mTpProviderService.put("Title", "null");
+				mTpProviderService.put("Code", "DL");
+				mRentalTpServiceInputsObj.put("TpProviderService",
+						mTpProviderService);
+				mRentalTpServiceInputsObj.put("RentalId", "0");
+				mRentalTpServiceInputsObj.put("UserId", StorageClass
+						.getInstance(this).getUserId());
+				mRentalTpServiceInputsObj
+						.put("Url",
+								"http://evoke.jocatagrid.in/Evoke/webservices/ident/getDriversLicInfo");
+				mRentalTpServiceInputs.put(mRentalTpServiceInputsObj);
+			}
 			params.put("RentalTpServiceInputs", mRentalTpServiceInputs);
 
 		} catch (JSONException e) {
@@ -457,18 +524,143 @@ public class OrderDetailsActivity extends BaseActivity {
 	}
 
 	private void saveResponse(JSONObject response) {
-		if (response != null) {
-			if (response.optBoolean("IsSuccess")) {
-				if (response.optJSONObject("Data") != null) {
-					JSONObject mResponseObj = response.optJSONObject("Data");
-					btnContinueClicked(mResponseObj);
-				}
-			}
-		}
+
+		initServicerProvider(response);
 
 	}
 
+	private void initServicerProvider(final JSONObject dataResponse) {
+		final String mAuthHeader = StorageClass.getInstance(this)
+				.getAuthHeader();
+		showProgressLayout();
+		JSONObject mTpType = new JSONObject();
+		try {
+			mTpType.put("Code", "VERIFICATION");
+			mTpType.put("Title", "null");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject mTpProvider = new JSONObject();
+		try {
+			mTpProvider.put("Code", "JOCATA");
+			mTpProvider.put("Title", "null");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject mParams = new JSONObject();
+		try {
+			mParams.put("UserId", "null");
+			mParams.put("TpType", mTpType);
+			mParams.put("TpProvider", mTpProvider);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JsonArrayRequest mRequest = new JsonArrayRequest(
+				ApiUtils.GETPROVIDERSERVICES, mParams,
+				new Response.Listener<JSONArray>() {
+
+					@Override
+					public void onResponse(JSONArray response) {
+						hideProgressLayout();
+						responseForProviderApi(response);
+						if (dataResponse != null) {
+							if (dataResponse.optBoolean("IsSuccess")) {
+								if (dataResponse.optJSONObject("Data") != null) {
+									JSONObject mResponseObj = dataResponse
+											.optJSONObject("Data");
+									btnContinueClicked(mResponseObj);
+								}
+							}
+						}
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast(error.toString());
+						if (dataResponse != null) {
+							if (dataResponse.optBoolean("IsSuccess")) {
+								if (dataResponse.optJSONObject("Data") != null) {
+									JSONObject mResponseObj = dataResponse
+											.optJSONObject("Data");
+									btnContinueClicked(mResponseObj);
+								}
+							}
+						}
+					}
+
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+
+				return map;
+			}
+
+		};
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mRequest);
+	}
+
+	private void responseForProviderApi(JSONArray response) {
+		if (response != null) {
+			for (int i = 0; i < response.length(); i++) {
+				JSONObject mObj = response.optJSONObject(i);
+				if (mObj != null) {
+					JSONArray mSpecificationsArray = mObj
+							.optJSONArray("TpServiceInputSpecifications");
+					if (mSpecificationsArray != null) {
+						for (int j = 0; j < mSpecificationsArray.length(); j++) {
+							JSONObject mObjSpecifications = mSpecificationsArray
+									.optJSONObject(i);
+							if (mObjSpecifications != null) {
+								if (mObjSpecifications.optString("UserValues") != null) {
+									StorageClass
+											.getInstance(this)
+											.setServiceTitle(
+													mObjSpecifications
+															.optString("ProviderServiceCode"));
+									StorageClass
+											.getInstance(this)
+											.setServiceValue(
+													mObjSpecifications
+															.optString("UserValues"));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void btnContinueClicked(JSONObject mResponseObj) {
+
+		if (isPanCardSelected) {
+			StorageClass.getInstance(this).setServiceTitle("PAN");
+			StorageClass.getInstance(this).setServiceValue(panCard);
+		} else if (isAadharCardSelected) {
+			StorageClass.getInstance(this).setServiceTitle("AADHAAR");
+			StorageClass.getInstance(this).setServiceValue(
+					aadharCardNumber + "," + aadharCardname);
+		} else {
+			StorageClass.getInstance(this).setServiceTitle("DL");
+			StorageClass.getInstance(this).setServiceValue(
+					drivingLicense + "," + drivingState);
+		}
 
 		Intent mIntent = new Intent(this, PayUIntegration.class);
 		Bundle mBundle = new Bundle();
@@ -492,7 +684,8 @@ public class OrderDetailsActivity extends BaseActivity {
 		mBundle.putString("data", mResponseObj.toString());
 		mBundle.putString("addressResponse", addressResponse);
 		mBundle.putString("mItemDetailsArray", itemDetailsArray);
-		mBundle.putString("productRentalValue", mtxtProductRentalValue.getText().toString());
+		mBundle.putString("productRentalValue", mtxtProductRentalValue
+				.getText().toString());
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 	}

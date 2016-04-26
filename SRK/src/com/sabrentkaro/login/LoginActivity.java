@@ -92,6 +92,8 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 	GoogleApiClient mGoogleApiClient;
 	private ConnectionResult mConnectionResult;
 	private String mItemDetailsArray;
+	private String mPricingArray;
+	private String minimumRentalPeriod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,9 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 				mtxtCondName = mBundle.getString("productConditionName");
 				controlLayouts = (HashMap<String, String>) mBundle
 						.getSerializable("controlLayouts");
+
+				mPricingArray = mBundle.getString("pricingArray");
+				minimumRentalPeriod = mBundle.getString("minimumRentalPeriod");
 			} else {
 				hasBundle = true;
 				selectedProductAdId = mBundle.getString("selectedAdId");
@@ -504,6 +509,8 @@ public class LoginActivity extends BaseActivity implements IFbLoginCallBack,
 		mBundle.putString("securityDeposit", mSecurityDeposit);
 		mBundle.putString("productConditionName", mtxtCondName);
 		mBundle.putSerializable("controlLayouts", controlLayouts);
+		mBundle.putString("pricingArray", mPricingArray);
+		mBundle.putString("minimumRentalPeriod", minimumRentalPeriod);
 		mIntent.putExtras(mBundle);
 		startActivity(mIntent);
 		finish();

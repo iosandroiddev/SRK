@@ -59,6 +59,7 @@ public class InvoiceDetailsActivity extends BaseActivity {
 	private JSONArray mItemDataArray;
 	private String mProductRentalValue;
 	private String mTransactionId = "";
+	private TextView mtxtransactionId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,7 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		mLayoutSecurityDeposit = (LinearLayout) findViewById(R.id.securityDepositLayout);
 		mLayoutFiedlsValues = (LinearLayout) findViewById(R.id.rootFieldsValues);
 		mtxtProductRentalValue = (TextView) findViewById(R.id.txtProductRentalValue);
+		mtxtransactionId = (TextView) findViewById(R.id.transactionId);
 
 		doneBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -204,6 +206,8 @@ public class InvoiceDetailsActivity extends BaseActivity {
 		invoiceCategory.setText(invoiceCategoryVal);
 		billingAddress.setText(billingAddressVal);
 		invoicePhone.setText(invoicePhoneVal);
+
+		mtxtransactionId.setText(mTransactionId);
 
 		mtxtServiceCost.setText(serviceCost);
 		mtxtLogisticCost.setText(logisticsCost);

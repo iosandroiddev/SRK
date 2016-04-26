@@ -226,10 +226,23 @@
                     custom:fonttype="trebuchet_ms" />
             </LinearLayout>
 
+            <com.utils.CustomTextView
+                android:id="@+id/txtFields"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#55000000"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                custom:fonttype="trebuchet_ms" />
+
             <LinearLayout
                 android:id="@+id/layoutControlTypeCapacity"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical"
                 android:visibility="gone" >
             </LinearLayout>
