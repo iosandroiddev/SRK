@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sabrentkaro"
-    android:versionCode="1"
-    android:versionName="1.1" >
+    android:versionCode="2"
+    android:versionName="1.2" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -113,16 +113,6 @@
         <activity
             android:name="com.sabrentkaro.WebActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.sabrentkaro.search.PaymentActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.sabrentkaro.search.PayUMoneyActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.sabrentkaro.search.SubSearchActivity"

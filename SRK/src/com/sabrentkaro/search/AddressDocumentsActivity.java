@@ -52,7 +52,7 @@ public class AddressDocumentsActivity extends BaseActivity {
 			mSecurityDeposit;
 	private String mStartDateStr = "";
 	private String mStartEndStr = "";
-	private JSONObject mAddressResponse;
+	private JSONObject mAddressResponse = new JSONObject();
 	private String itemDetailsArray;
 
 	@Override
@@ -413,7 +413,6 @@ public class AddressDocumentsActivity extends BaseActivity {
 	}
 
 	private void startOrdersActivity() {
-		
 
 		Intent intent = new Intent(this, OrderDetailsActivity.class);
 		Bundle mBundle = new Bundle();
@@ -434,7 +433,8 @@ public class AddressDocumentsActivity extends BaseActivity {
 		mBundle.putString("securitDeposit", mSecurityDeposit);
 		mBundle.putString("startDate", mStartDateStr);
 		mBundle.putString("endDate", mStartEndStr);
-		mBundle.putString("mAddressJson", mAddressResponse.toString());
+		if (mAddressResponse != null)
+			mBundle.putString("mAddressJson", mAddressResponse.toString());
 		mBundle.putString("mItemDetailsArray", itemDetailsArray);
 		mBundle.putString("panId", meditPanCardNumber.getText().toString());
 		mBundle.putString("aadharId", mEditAadharCardNumber.getText()

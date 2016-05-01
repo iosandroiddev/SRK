@@ -4,10 +4,20 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.provider.Settings;
+import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,12 +35,18 @@ public class StorageClass {
 	public static String BRAND_NAME = "brand_name";
 	public static String AUTOLOGIND = "auto_login";
 
+	protected static final String UTF8 = "utf-8";
+	private static final char[] SEKRIT = { 11, 75, 81, 90, 39, 10, 57, 62, 17,
+			114, 15, 19, 75, 15, 112, 64 };
+
 	private static StorageClass instance;
 	private SharedPreferences sh;
 	private Editor edit;
 	private boolean isViewed = false;
+	private Context mContext;
 
 	private StorageClass(Context mContext) {
+		this.mContext = mContext;
 		sh = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
 		edit = sh.edit();
 	}
@@ -329,5 +345,60 @@ public class StorageClass {
 
 	public void setServiceValue(String value) {
 		edit.putString("service_value", value).commit();
+	}
+
+	public String getJSONArrayCertificates() {
+		String value = sh.getString("certificate_json_arry", "");
+		return value != null && value.length() != 0 ? decrypt(value) : value;
+	}
+
+	public void setJSONArrayCertificates(JSONArray mArray) {
+		edit.putString("certificate_json_arry", encrypt(mArray.toString()))
+				.commit();
+	}
+
+	protected String encrypt(String value) {
+
+		try {
+			final byte[] bytes = value != null ? value.getBytes(UTF8)
+					: new byte[0];
+			SecretKeyFactory keyFactory = SecretKeyFactory
+					.getInstance("PBEWithMD5AndDES");
+			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(SEKRIT));
+			Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+			pbeCipher.init(
+					Cipher.ENCRYPT_MODE,
+					key,
+					new PBEParameterSpec(Settings.Secure.getString(
+							mContext.getContentResolver(),
+							Settings.System.ANDROID_ID).getBytes(UTF8), 20));
+			return new String(Base64.encode(pbeCipher.doFinal(bytes),
+					Base64.NO_WRAP), UTF8);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	protected String decrypt(String value) {
+		try {
+			final byte[] bytes = value != null ? Base64.decode(value,
+					Base64.DEFAULT) : new byte[0];
+			SecretKeyFactory keyFactory = SecretKeyFactory
+					.getInstance("PBEWithMD5AndDES");
+			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(SEKRIT));
+			Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+			pbeCipher.init(
+					Cipher.DECRYPT_MODE,
+					key,
+					new PBEParameterSpec(Settings.Secure.getString(
+							mContext.getContentResolver(),
+							Settings.System.ANDROID_ID).getBytes(UTF8), 20));
+			return new String(pbeCipher.doFinal(bytes), UTF8);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

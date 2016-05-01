@@ -1,8 +1,33 @@
 package com.sabrentkaro.search;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.util.EncodingUtils;
 import org.json.JSONArray;
@@ -10,10 +35,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.http.SslError;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.ClientCertRequest;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,6 +64,10 @@ public class PayUIntegration extends FragmentActivity {
 
 	// private Button button;
 
+	public static boolean isExpired = false;
+	public static boolean isHostMisMatch = false;
+	public static boolean isNotTrusted = false;
+
 	private static final String TAG = "MainActivity";
 	WebView webviewPayment;
 	WebView mwebview;
@@ -36,6 +75,16 @@ public class PayUIntegration extends FragmentActivity {
 	private String amount;
 	private String orderId;
 	private String mtransactionId;
+	private String mwvUrl = "";
+	private String strTrustError = "";
+	private String strMisMatchError = "";
+	private String strExpiryError = "";
+
+	private SSLContext sslContext;
+	private final int timeoutConnection = 20000;
+	private final int timeoutRead = 20000;
+	private X509Certificate[] currentCertificateChain;
+	public JSONArray mUCertificateArray;
 
 	/*
 	 * protected void writeStatus(String str){ txtview.setText(str); }
@@ -83,31 +132,39 @@ public class PayUIntegration extends FragmentActivity {
 				EncodingUtils.getBytes(getPostString(), "utf-8"));
 
 		// webviewPayment.loadUrl("http://128.199.193.113/rakhi/payment/endpoint?order_id=aAbBcC45&amount=0.10&currency=USD");
+		setWebViewClient();
+		// webviewPayment.setWebViewClient(new WebViewClient() {
+		// @Override
+		// public void onPageFinished(WebView view, String url) {
+		// super.onPageFinished(view, url);
+		// if
+		// (url.contains("https://www.payumoney.com/mobileapp/payumoney/success.php"))
+		// {
+		// showSuccessPage();
+		// } else if (url
+		// .contains("https://www.payumoney.com/mobileapp/payumoney/failure.php"))
+		// {
+		// showFailurePage();
+		// }
+		// }
+		//
+		// @Override
+		// public void onReceivedSslError(WebView view,
+		// SslErrorHandler handler, SslError error) {
+		// handler.proceed();
+		// }
+		//
+		// @Override
+		// public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		// view.loadUrl(url);
+		// return true;
+		// }
+		//
+		// });
+	}
 
-		webviewPayment.setWebViewClient(new WebViewClient() {
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				if (url.contains("https://www.payumoney.com/mobileapp/payumoney/success.php")) {
-					showSuccessPage();
-				} else if (url
-						.contains("https://www.payumoney.com/mobileapp/payumoney/failure.php")) {
-					showFailurePage();
-				}
-			}
-
-			@SuppressWarnings("unused")
-			public void onReceivedSslError(WebView view) {
-				Log.e("Error", "Exception caught!");
-			}
-
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				view.loadUrl(url);
-				return true;
-			}
-
-		});
+	private void setWebViewClient() {
+		webviewPayment.setWebViewClient(new SSLTolerentWebViewClient());
 	}
 
 	private void getDeatils() {
@@ -143,27 +200,6 @@ public class PayUIntegration extends FragmentActivity {
 			});
 		}
 
-		public void success() {
-			// PayUIntegration.this.orderId = paymentId;
-			runOnUiThread(new Runnable() {
-				public void run() {
-					Toast.makeText(
-							PayUIntegration.this,
-							"Status is txn is success " + " payment id is "
-									+ "", 8000).show();
-					// String
-					// str="Status is txn is success "+" payment id is
-					// "+paymentId;
-					// new MainActivity().writeStatus(str);
-
-					// TextView txtview;
-					// txtview = (TextView) findViewById(R.id.textView1);
-					// txtview.setText("Status is txn is success "
-					// + " payment id is " + paymentId);
-
-				}
-			});
-		}
 	}
 
 	private void showSuccessPage() {
@@ -389,4 +425,603 @@ public class PayUIntegration extends FragmentActivity {
 		return sb.toString();
 	}
 
+	private class SSLTolerentWebViewClient extends WebViewClient {
+
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler,
+				SslError error) {
+			// mwvUrl = view.getUrl();
+			new RetrieveFeedTask().startExecution(handler);
+		}
+
+		@SuppressLint("NewApi")
+		@Override
+		public void onReceivedClientCertRequest(WebView view,
+				ClientCertRequest request) {
+			super.onReceivedClientCertRequest(view, request);
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			super.onPageStarted(view, url, favicon);
+			mwvUrl = url;
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			if (url.contains("https://www.payumoney.com/mobileapp/payumoney/success.php")) {
+				showSuccessPage();
+			} else if (url
+					.contains("https://www.payumoney.com/mobileapp/payumoney/failure.php")) {
+				showFailurePage();
+			}
+		}
+
+	}
+
+	class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
+
+		private SslErrorHandler handler;
+
+		@Override
+		protected Void doInBackground(String... params) {
+			HttpURLConnection connection = checkAuthentication(mwvUrl, null);
+			try {
+				if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			if (handler != null) {
+				if (isExpired) {
+					String message = "";
+					if (TextUtils.isEmpty(strExpiryError)) {
+						message = "The secure connection failed because the server certificate has expired.";
+					} else {
+						message = strExpiryError;
+					}
+					new AlertDialog.Builder(PayUIntegration.this)
+							.setMessage(message)
+							.setCancelable(false)
+							.setOnDismissListener(new OnDismissListener() {
+
+								@Override
+								public void onDismiss(DialogInterface dialog) {
+								}
+							})
+							.setNegativeButton(android.R.string.ok,
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+											handler.cancel();
+											finishActivity();
+										}
+									}).create().show();
+				} else if (isHostMisMatch) {
+					String message = "";
+					if (TextUtils.isEmpty(strMisMatchError)) {
+						message = "The host name doesn\'t matched with certificate\'s common name.";
+					} else {
+						message = strMisMatchError;
+					}
+					new AlertDialog.Builder(PayUIntegration.this)
+							.setMessage(message)
+							.setCancelable(false)
+							.setOnDismissListener(new OnDismissListener() {
+
+								@Override
+								public void onDismiss(DialogInterface dialog) {
+								}
+							})
+							.setNegativeButton(android.R.string.ok,
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+											handler.cancel();
+											finishActivity();
+										}
+									}).create().show();
+				} else if (isNotTrusted) {
+
+					boolean isAlreadyTrustedByUser = false;
+					boolean isAlreadyTrusted = false;
+
+					String mArray = StorageClass.getInstance(
+							PayUIntegration.this).getJSONArrayCertificates();
+					JSONArray mJSONArray = null;
+					try {
+						mJSONArray = new JSONArray(mArray);
+					} catch (JSONException e) {
+						if (e != null && e.getMessage() != null) {
+							// if (mListener != null) {
+							// mListener.onFailure(e.getMessage());
+							// if (mCurrentView != null)
+							// removeCurrentView();
+							// }
+						}
+						e.printStackTrace();
+					}
+					if (mJSONArray != null) {
+						for (int i = 0; i < mJSONArray.length(); i++) {
+							JSONObject mItem;
+							try {
+								mItem = mJSONArray.getJSONObject(i);
+								byte[] sig = currentCertificateChain[0]
+										.getSignature();
+								try {
+									String text = new String(sig, "UTF-8");
+									if (mItem.getString("sigAlgName")
+											.equalsIgnoreCase(text)) {
+										isAlreadyTrustedByUser = true;
+										break;
+									}
+								} catch (UnsupportedEncodingException e1) {
+									e1.printStackTrace();
+								}
+							} catch (JSONException e) {
+								// if (e != null && e.getMessage() != null) {
+								// if (mListener != null) {
+								// mListener.onFailure(e.getMessage());
+								// if (mCurrentView != null)
+								// removeCurrentView();
+								// }
+								// }
+								e.printStackTrace();
+							}
+						}
+					}
+
+					if (mUCertificateArray != null) {
+						for (int i = 0; i < mUCertificateArray.length(); i++) {
+							JSONObject mItem;
+							try {
+								mItem = mUCertificateArray.getJSONObject(i);
+								byte[] sig = currentCertificateChain[0]
+										.getSignature();
+								try {
+									String text = new String(sig, "UTF-8");
+									if (mItem.getString("sigAlgName")
+											.equalsIgnoreCase(text)) {
+										isAlreadyTrusted = true;
+										break;
+									}
+								} catch (UnsupportedEncodingException e1) {
+									e1.printStackTrace();
+								}
+							} catch (JSONException e) {
+								// if (e != null && e.getMessage() != null) {
+								// if (mListener != null) {
+								// mListener.onFailure(e.getMessage());
+								// if (mCurrentView != null)
+								// removeCurrentView();
+								// }
+								// }
+								e.printStackTrace();
+							}
+						}
+					}
+
+					if (isAlreadyTrustedByUser | isAlreadyTrusted) {
+						handler.proceed();
+					} else {
+						String message = "";
+						if (TextUtils.isEmpty(strTrustError)) {
+							message = "The server couldn\'t be verified and its security certificate is not trusted. Do you want to continue?";
+						} else {
+							message = strTrustError;
+						}
+						String title = "";
+						title = "Warning";
+						String pButton = "";
+						pButton = "Continue";
+						new AlertDialog.Builder(PayUIntegration.this)
+								.setTitle(title)
+								.setMessage(message)
+								.setCancelable(false)
+								.setPositiveButton(pButton,
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												dialog.cancel();
+												saveCertificate(
+														currentCertificateChain,
+														handler);
+												// handler.proceed();
+											}
+
+										})
+								.setNegativeButton(android.R.string.cancel,
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+												dialog.cancel();
+												handler.cancel();
+												finishActivity();
+											}
+										}).create().show();
+					}
+
+				} else {
+					handler.proceed();
+				}
+
+			}
+		}
+
+		public void startExecution(SslErrorHandler handler) {
+			this.handler = handler;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				execute();
+			}
+		}
+
+	}
+
+	private void finishActivity() {
+		finish();
+	}
+
+	private HttpURLConnection checkAuthentication(final String mUrl, String body) {
+
+		final ArrayList<TrustManager> managers = new ArrayList<>();
+		try {
+			TrustManagerFactory factory = TrustManagerFactory
+					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			factory.init((KeyStore) null);
+			managers.addAll(Arrays.asList(factory.getTrustManagers()));
+		} catch (NoSuchAlgorithmException | KeyStoreException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+		}
+
+		X509TrustManager trustManager = new X509TrustManager() {
+			@Override
+			public void checkClientTrusted(X509Certificate[] chain,
+					String authType) throws CertificateException {
+				for (TrustManager tm : managers) {
+					if (tm instanceof X509TrustManager) {
+						((X509TrustManager) tm).checkClientTrusted(chain,
+								authType);
+					}
+				}
+			}
+
+			@Override
+			public void checkServerTrusted(final X509Certificate[] chain,
+					String authType) {
+
+				for (X509Certificate cert : chain) {
+
+					final String mCertificatinoType = cert.getType();
+					Date afterDate = cert.getNotAfter();
+					Date beforeDate = cert.getNotBefore();
+					Date currentDate = new Date();
+
+					try {
+						cert.checkValidity(new Date());
+					} catch (CertificateExpiredException e) {
+						isExpired = true;
+						e.printStackTrace();
+					} catch (CertificateNotYetValidException e) {
+						isExpired = true;
+						e.printStackTrace();
+					}
+
+					if (afterDate.compareTo(currentDate)
+							* currentDate.compareTo(beforeDate) > 0) {
+						isExpired = false;
+					} else {
+						isExpired = true;
+					}
+
+					String dn = cert.getSubjectDN().getName();
+					String CN = getValByAttributeTypeFromIssuerDN(dn, "CN=");
+
+					String host = "";
+					if (TextUtils.isEmpty(mUrl)) {
+
+					} else {
+						try {
+							URL url = new URL(mUrl);
+							host = url.getAuthority();
+							if (host.contains(String.valueOf(url.getPort()))) {
+								String toBeReplaced = ":" + url.getPort();
+								host = host.replace(toBeReplaced, "");
+							}
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+					}
+
+					for (TrustManager tm : managers) {
+						if (tm instanceof X509TrustManager) {
+							try {
+								((X509TrustManager) tm).checkServerTrusted(
+										chain, authType);
+							} catch (CertificateException e) {
+								if (e.getMessage() != null
+										&& e.getMessage()
+												.contains(
+														"Trust anchor for certification path not found.")) {
+									isNotTrusted = true;
+									setCurrentCertificate(chain);
+
+								}
+								e.printStackTrace();
+							}
+						}
+
+					}
+
+					if (isNotTrusted) {
+						if (CN.startsWith("*.")) {
+							String sunCN = CN.substring(2, CN.length());
+							if (host.contains(sunCN)) {
+								isHostMisMatch = false;
+							} else {
+								isHostMisMatch = true;
+							}
+						} else {
+							if (CN.equalsIgnoreCase(host)) {
+								isHostMisMatch = false;
+							} else {
+								isHostMisMatch = true;
+							}
+						}
+					}
+
+				}
+
+			}
+
+			@Override
+			public X509Certificate[] getAcceptedIssuers() {
+				ArrayList<X509Certificate> issuers = new ArrayList<>();
+				for (TrustManager tm : managers) {
+					if (tm instanceof X509TrustManager) {
+						issuers.addAll(Arrays.asList(((X509TrustManager) tm)
+								.getAcceptedIssuers()));
+					}
+				}
+				return issuers.toArray(new X509Certificate[issuers.size()]);
+			}
+
+		};
+
+		final HostnameVerifier defaultVerifier = HttpsURLConnection
+				.getDefaultHostnameVerifier();
+		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+			@Override
+			public boolean verify(String hostname, SSLSession session) {
+				// exception to accept iux2013-1.gdeinfor2.com
+				// server
+				return defaultVerifier.verify(hostname, session);
+			}
+		});
+
+		try {
+			sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, new TrustManager[] { trustManager }, null);
+		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+		}
+
+		URL url = null;
+		try {
+			url = new URL(mUrl);
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+			if (urlConnection instanceof HttpsURLConnection
+					&& sslContext != null) {
+				((HttpsURLConnection) urlConnection)
+						.setSSLSocketFactory(sslContext.getSocketFactory());
+			}
+
+			urlConnection.setRequestMethod(HttpMethod.GET.name());
+			urlConnection.setConnectTimeout(timeoutConnection);
+			urlConnection.setReadTimeout(timeoutRead);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		if (body != null) {
+			byte[] buffer = null;
+			try {
+				buffer = body.getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			urlConnection.setFixedLengthStreamingMode(buffer.length);
+			try {
+				urlConnection.getOutputStream().write(buffer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return urlConnection;
+
+	}
+
+	public String getValByAttributeTypeFromIssuerDN(String dn,
+			String attributeType) {
+		String[] dnSplits = dn.split(",");
+		for (String dnSplit : dnSplits) {
+			if (dnSplit.contains(attributeType)) {
+				String[] cnSplits = dnSplit.trim().split("=");
+				if (cnSplits[1] != null) {
+					return cnSplits[1].trim();
+				}
+			}
+		}
+		return "";
+	}
+
+	public enum HttpMethod {
+		GET, PUT, POST, DELETE;
+	}
+
+	private void setCurrentCertificate(X509Certificate[] chain) {
+		this.currentCertificateChain = chain;
+
+	}
+
+	public void saveCertificate(X509Certificate[] chain, SslErrorHandler handler) {
+
+		String mArray = StorageClass.getInstance(PayUIntegration.this)
+				.getJSONArrayCertificates();
+		JSONArray mJSONArray = null;
+		try {
+			mJSONArray = new JSONArray(mArray);
+		} catch (JSONException e) {
+			// if (e != null && e.getMessage() != null) {
+			// if (mListener != null) {
+			// mListener.onFailure(e.getMessage());
+			// if (mCurrentView != null)
+			// removeCurrentView();
+			// }
+			// }
+			e.printStackTrace();
+		}
+
+		try {
+			mJSONArray = new JSONArray(mArray);
+		} catch (JSONException e) {
+			// if (e != null && e.getMessage() != null) {
+			// if (mListener != null) {
+			// mListener.onFailure(e.getMessage());
+			// if (mCurrentView != null)
+			// removeCurrentView();
+			// }
+			// }
+			e.printStackTrace();
+		}
+
+		JSONObject mObj = new JSONObject();
+		try {
+			byte[] sig = chain[0].getSignature();
+			String text = "";
+			try {
+				text = new String(sig, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			Date afterDate = chain[0].getNotAfter();
+			Date beforeDate = chain[0].getNotBefore();
+			BigInteger mNim = chain[0].getSerialNumber();
+			String mNum = mNim.toString();
+			BigInteger bi = new BigInteger(mNum);
+			String mSerialNumber = bi.toString(16);
+
+			String subjectName = chain[0].getSubjectDN().getName();
+			String issuerName = chain[0].getIssuerDN().getName();
+			String mSubjectCommonName = getValByAttributeTypeFromIssuerDN(
+					subjectName, "CN=");
+			String mIssuerCommonName = getValByAttributeTypeFromIssuerDN(
+					issuerName, "CN=");
+			mObj.put("sigAlgName", text);
+			mObj.put("serialNumber", mSerialNumber);
+			mObj.put("afterDate", afterDate.toString());
+			mObj.put("issuerName", issuerName);
+			mObj.put("subjectName", subjectName);
+			mObj.put("subjectCommonName", mSubjectCommonName);
+			mObj.put("issuerCommonName", mIssuerCommonName);
+			mObj.put("beforeDate", beforeDate.toString());
+			try {
+				mObj.put("SHA1", getThumbPrint(chain[0]));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (java.security.cert.CertificateEncodingException e) {
+				e.printStackTrace();
+			}
+			try {
+				mObj.put("MD5", getMD5(chain[0]));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (java.security.cert.CertificateEncodingException e) {
+				e.printStackTrace();
+			}
+			if (mJSONArray == null)
+				mJSONArray = new JSONArray();
+			mJSONArray.put(mObj);
+		} catch (JSONException e) {
+			if (e != null && e.getMessage() != null) {
+			}
+			e.printStackTrace();
+		}
+
+		StorageClass.getInstance(PayUIntegration.this)
+				.setJSONArrayCertificates(mJSONArray);
+
+		handler.proceed();
+	}
+
+	public static String getThumbPrint(X509Certificate cert)
+			throws NoSuchAlgorithmException, CertificateEncodingException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		byte[] der = null;
+		try {
+			der = cert.getEncoded();
+		} catch (java.security.cert.CertificateEncodingException e) {
+			e.printStackTrace();
+		}
+		md.update(der);
+		byte[] digest = md.digest();
+		return hexify(digest);
+
+	}
+
+	public static String getMD5(X509Certificate cert)
+			throws NoSuchAlgorithmException, CertificateEncodingException {
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		byte[] der = null;
+		try {
+			der = cert.getEncoded();
+		} catch (java.security.cert.CertificateEncodingException e) {
+			e.printStackTrace();
+		}
+		md.update(der);
+		byte[] digest = md.digest();
+		return hexify(digest);
+
+	}
+
+	public static String hexify(byte bytes[]) {
+		char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+				'a', 'b', 'c', 'd', 'e', 'f' };
+		StringBuffer buf = new StringBuffer(bytes.length * 2);
+		for (int i = 0; i < bytes.length; ++i) {
+			buf.append(hexDigits[(bytes[i] & 0xf0) >> 4]);
+			buf.append(hexDigits[bytes[i] & 0x0f]);
+		}
+		return buf.toString();
+	}
 }

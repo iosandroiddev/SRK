@@ -188,7 +188,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener,
 		showProgressLayout();
 		JSONObject params = new JSONObject();
 		try {
-			params.put("DeviceId", deviceUdId);
+			params.put("DeviceId", deviceUdId);	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
