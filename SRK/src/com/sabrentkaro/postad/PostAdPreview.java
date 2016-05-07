@@ -134,6 +134,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 	private boolean isDrivingLicenseSelected;
 	private boolean isAadharCardSelected;
 	private boolean isPanCardSelected;
+	private LinearLayout mMinRentalPeriod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -276,6 +277,8 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		}
 
 		loadControlLaoyuts();
+
+		loadMinRental();
 	}
 
 	@SuppressLint("NewApi")
@@ -313,6 +316,72 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 			mtxtFields.setText(mttitle);
 		}
 		StaticUtils.expandCollapse(mSelectLayout, true);
+	}
+
+	@SuppressLint("NewApi")
+	private void loadMinRental() {
+		mMinRentalPeriod.removeAllViews();
+		String mttitle = "";
+		try {
+			JSONArray mPricingArray = new JSONArray(mPricingArrayString);
+			if (mPricingArray != null) {
+				for (int i = 0; i < mPricingArray.length(); i++) {
+					JSONObject mObj = mPricingArray.optJSONObject(i);
+					if (mObj != null) {
+						String key = mObj.optString("UnitTitle");
+						String value = mObj.optString("Price");
+						final TextView mtxtView = (TextView) LayoutInflater
+								.from(this).inflate(R.layout.showcontrol, null);
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+								new LayoutParams(LayoutParams.MATCH_PARENT,
+										LayoutParams.WRAP_CONTENT));
+						params.setMargins(20, 10, 10, 10);
+						mtxtView.setPadding(20, 10, 10, 10);
+						mtxtView.setLayoutParams(params);
+
+						if (key.equalsIgnoreCase("Per WeekDay")) {
+							key = "Per Day";
+						} else if (key.equalsIgnoreCase("Per 3 Days")) {
+							key = "Per Day (Min. 3 Days rent)";
+						} else if (key.equalsIgnoreCase("Per Week")) {
+							key = "Per Week";
+						} else if (key.equalsIgnoreCase("Per Month")) {
+							key = "Per Month (Min. Month rent)";
+						} else if (key.equalsIgnoreCase("Per 3 Months")) {
+							key = "Per Month (Min. 3 Months rent)";
+						} else if (key.equalsIgnoreCase("Per 6 Months")) {
+							key = "Per Month (Min. 6 Months rent)";
+						} else if (key.equalsIgnoreCase("Per 9 Months")) {
+							key = "Per Month (Min. 9 Months rent)";
+						} else if (key.equalsIgnoreCase("Per 12 Months")) {
+							key = "Per Month (Min. 12 Months rent)";
+						} else {
+						}
+
+						if (mttitle.length() == 0)
+							mttitle = key;
+						else
+							mttitle = mttitle + ", " + key;
+
+						if (value == null || value.length() == 0) {
+
+						} else {
+							String mtxt = "<font color='black'>" + key
+									+ " : </font> <font color='#EC016D'>"
+									+ value + "</font>";
+							mtxtView.setText(Html.fromHtml(mtxt),
+									TextView.BufferType.SPANNABLE);
+							mMinRentalPeriod.addView(mtxtView);
+						}
+
+					}
+				}
+			}
+			StaticUtils.expandCollapse(mMinRentalPeriod, true);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -408,6 +477,7 @@ public class PostAdPreview extends BaseActivity implements IImageUpload,
 		mbtnSubmit.setOnClickListener(this);
 		mbtnBack.setOnClickListener(this);
 		mSelectLayout = (LinearLayout) findViewById(R.id.layoutControlTypeCapacity);
+		mMinRentalPeriod = (LinearLayout) findViewById(R.id.layoutMinRentPeriod);
 		mScrollimages = (HorizontalScrollView) findViewById(R.id.scrollImages);
 		mLayoutAttachments = (LinearLayout) findViewById(R.id.layoutAttachments);
 

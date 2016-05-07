@@ -544,10 +544,10 @@ public class PostAdActivity extends BaseActivity implements
 										.length() == 0) {
 									showToast("Please Enter Purchased Cost");
 								} else {
-									// if (!rentalPeriodsValidated()) {
-									//
-									// }
-									if (!arePricingFieldsValidated()) {
+									if (!rentalPeriodsValidated()) {
+										//
+										// }
+										// if (!arePricingFieldsValidated()) {
 
 									} else {
 										if (mEditQuantity.getText().toString()

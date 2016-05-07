@@ -213,5 +213,9 @@
     <string name="your_preferred_minimum_period_for_rent_">Your preferred Minimum Period for Rent*</string>
     <string name="select_minimum_period">Select Minimum Period</string>
     <string name="transaction_id">Transaction Id</string>
+    <string name="grand_total">Grand Total</string>
+    <string name="got_a_coupon_code_enter_it_here_">Got a coupon code? Enter it here!</string>
+    <string name="coupon_code">Coupon Code</string>
+    <string name="apply_code">Apply Code</string>
 
 </resources>

@@ -14,11 +14,11 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
@@ -26,11 +26,11 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.sabrentkaro.BaseActivity;
 import com.sabrentkaro.InternalApp;
 import com.sabrentkaro.R;
 import com.utils.ApiUtils;
+import com.utils.StaticUtils;
 import com.utils.StorageClass;
 
 public class OrderDetailsActivity extends BaseActivity {
@@ -46,12 +46,14 @@ public class OrderDetailsActivity extends BaseActivity {
 	private TextView mtxtProductRentalValue, mtxtPerDayCost, mtxtPerWeekCost,
 			mtxtPerMonthCost, mtxtFacilitaionCharges, mtxtFaciCost,
 			mtxtServiceTax, mtxtServiceTaxCost, mtxtLogistics,
-			mtxtLogisticsCost, mtxtSecurityDeposit;
+			mtxtLogisticsCost, mtxtSecurityDeposit, mtxtGrandTotal;
 
 	private boolean isPanCardSelected = false, isAadharCardSelected = false,
 			isDrivingLicenseSelected = false;
 	private String panCard = "", aadharCardname = "", aadharCardNumber = "",
 			drivingLicense = "", drivingState = "";
+
+	private TextView mbtnApplyCode;
 
 	private String mProdRentValue, mServiceValue, mLogisticsValue,
 			mFaciliValue;
@@ -60,6 +62,8 @@ public class OrderDetailsActivity extends BaseActivity {
 	private String fromDate;
 	private String toDate;
 	private String mSecurityValue;
+
+	private EditText mEditCouponCode;
 
 	private String mPincode;
 	private LinearLayout mLayoutSecurityDeposit;
@@ -182,6 +186,11 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtFromDate = (TextView) findViewById(R.id.txtFromDate);
 		mtxtToDate = (TextView) findViewById(R.id.txtToDate);
 		mbtnContinue = (TextView) findViewById(R.id.btnContinue);
+		mtxtGrandTotal = (TextView) findViewById(R.id.txtGrandTotal);
+
+		mbtnApplyCode = (TextView) findViewById(R.id.btnApplyCode);
+
+		mbtnApplyCode.setOnClickListener(this);
 
 		mtxtProductRentalValue = (TextView) findViewById(R.id.txtTotalAmount);
 		mtxtPerDayCost = (TextView) findViewById(R.id.txtPerDayCost);
@@ -193,6 +202,10 @@ public class OrderDetailsActivity extends BaseActivity {
 		mtxtServiceTaxCost = (TextView) findViewById(R.id.txtServiceTaxCost);
 		mtxtLogistics = (TextView) findViewById(R.id.txtLogisticsTax);
 		mtxtLogisticsCost = (TextView) findViewById(R.id.txtLogisticsTaxCost);
+
+		mEditCouponCode = (EditText) findViewById(R.id.editCouponcode);
+
+		StaticUtils.setEditTextHintFont(mEditCouponCode, this);
 
 		mtxtSecurityDeposit = (TextView) findViewById(R.id.txtSecurityDeposit);
 		mLayoutSecurityDeposit = (LinearLayout) findViewById(R.id.layoutSecurityDeposit);
@@ -213,6 +226,8 @@ public class OrderDetailsActivity extends BaseActivity {
 				+ Integer.parseInt(mFaciliValue)
 				+ Integer.parseInt(mServiceValue)
 				+ Integer.parseInt(mLogisticsValue);
+
+		mtxtGrandTotal.setText(getString(R.string.rupeeone) + " " + totalCost);
 
 		if (mSecurityDeposit == null || mSecurityDeposit.equalsIgnoreCase("0")
 				|| mSecurityDeposit.length() == 0) {
@@ -317,6 +332,68 @@ public class OrderDetailsActivity extends BaseActivity {
 		super.onClick(v);
 		if (v.getId() == R.id.btnContinue) {
 			initiateRentalApi();
+		} else if (v.getId() == R.id.btnApplyCode) {
+			initiateApplyCodeApi();
+		}
+	}
+
+	private void initiateApplyCodeApi() {
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put("CouponCode", mEditCouponCode.getText().toString());
+			params.put("AdId", selectedProductAdId);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JsonObjectRequest mObjReq = new JsonObjectRequest(
+				ApiUtils.VALIDATECOUPON, params, new Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						hideProgressLayout();
+						validateCouponCodeResponse(response);
+					}
+
+				}, new ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						hideProgressLayout();
+						showToast("Failure");
+					}
+				}) {
+
+			public String getBodyContentType() {
+				return "application/json; charset=" + getParamsEncoding();
+			}
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("x-auth", mAuthHeader);
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json; charset=UTF-8");
+				return map;
+			}
+
+		};
+
+		RequestQueue mQueue = ((InternalApp) getApplication()).getQueue();
+		mQueue.add(mObjReq);
+	}
+
+	protected void validateCouponCodeResponse(JSONObject response) {
+		if (response != null) {
+			JSONObject mData = response.optJSONObject("Data");
+			if (mData != null) {
+				if (mData.optBoolean("IsValid")) {
+					showToast(mData.optString("CouponText"));
+				} else {
+					showToast(mData.optString("CouponText"));
+				}
+			}
 		}
 	}
 

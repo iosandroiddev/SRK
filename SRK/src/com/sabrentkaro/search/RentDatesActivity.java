@@ -51,6 +51,9 @@ public class RentDatesActivity extends BaseActivity implements
 	private String mAuthHeader = "";
 	private Calendar[] mAvaiableDatesCalendar;
 	private String itemDetailsArray;
+	private String mStrMinRent = "";
+
+	private String mStartDateString = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class RentDatesActivity extends BaseActivity implements
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
-		c.add(Calendar.DATE, 180); // number of days to add
+		c.add(Calendar.DATE, 365); // number of days to add
 		endDate = sdf.format(c.getTime());
 		JSONObject params = new JSONObject();
 		try {
@@ -203,6 +206,7 @@ public class RentDatesActivity extends BaseActivity implements
 				mQuantity = mBundle.getString("quantity");
 				mSecurityDeposit = mBundle.getString("securitDeposit");
 				itemDetailsArray = mBundle.getString("mItemDetailsArray");
+				mStrMinRent = mBundle.getString("minRent");
 			}
 		}
 	}
@@ -351,21 +355,63 @@ public class RentDatesActivity extends BaseActivity implements
 
 	private void btnEndDateClicked() {
 		// showDatePicker(mtxtEndDate);
-		if (mAvaiableDatesCalendar != null
-				&& mAvaiableDatesCalendar.length != 0) {
-			this.mtxtDateField = mtxtEndDate;
-			Calendar now = Calendar.getInstance();
-			DatePickerDialog dpd = DatePickerDialog.newInstance(
-					RentDatesActivity.this, now.get(Calendar.YEAR),
-					now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-			dpd.setThemeDark(false);
-			dpd.vibrate(true);
-			dpd.dismissOnPause(false);
-			dpd.showYearPickerFirst(false);
-			dpd.setSelectableDays(mAvaiableDatesCalendar);
-			dpd.show(getFragmentManager(), "Datepickerdialog");
+		if (mtxtStartDate.getText().toString().contains("Select")) {
+			showToast("Please Select Start Date");
 		} else {
-			showErrorAlert();
+			if (mAvaiableDatesCalendar != null
+					&& mAvaiableDatesCalendar.length != 0) {
+				this.mtxtDateField = mtxtEndDate;
+				Calendar now = Calendar.getInstance();
+				DatePickerDialog dpd = DatePickerDialog
+						.newInstance(RentDatesActivity.this,
+								now.get(Calendar.YEAR),
+								now.get(Calendar.MONTH),
+								now.get(Calendar.DAY_OF_MONTH));
+				dpd.setThemeDark(false);
+				dpd.vibrate(true);
+
+				// Calendar calendar = Calendar.getInstance();
+				// SimpleDateFormat sdf = new
+				// SimpleDateFormat(mStartDateString);
+				// String strDate = sdf.format(calendar.getTime());
+				//
+				// String endDate = strDate; // Start date
+				// try {
+				// calendar.setTime(sdf.parse(endDate));
+				// } catch (ParseException e1) {
+				// e1.printStackTrace();
+				// }
+				// calendar.add(Calendar.DATE, Integer.parseInt(mStrMinRent));
+				// endDate = sdf.format(calendar.getTime());
+
+				String dt = mStartDateString; // Start date
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar c = Calendar.getInstance();
+				try {
+					c.setTime(sdf.parse(dt));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				int minRent = Integer.parseInt(mStrMinRent);
+				c.add(Calendar.DATE, minRent);
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+				String output = sdf1.format(c.getTime());
+
+				try {
+					Date date = new SimpleDateFormat("yyyy-MM-dd")
+							.parse(output);
+					c.setTime(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				dpd.setMinDate(c);
+				dpd.dismissOnPause(false);
+				dpd.showYearPickerFirst(false);
+				// dpd.setSelectableDays(mAvaiableDatesCalendar);s
+				dpd.show(getFragmentManager(), "Datepickerdialog");
+			} else {
+				showErrorAlert();
+			}
 		}
 	}
 
@@ -383,6 +429,9 @@ public class RentDatesActivity extends BaseActivity implements
 		String mConvertedString = parseDateToddMMyyyy(mDateString);
 		if (mtxtDateField.getId() == R.id.btnStartDate) {
 			mStartDateStr = mConvertedString;
+			mStartDateString = year + "-" + (monthOfYear + 1) + "-"
+					+ dayOfMonth;
+			;
 		} else {
 			mStartEndStr = mConvertedString;
 		}

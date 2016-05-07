@@ -424,7 +424,8 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:background="#55000000" />
+                android:background="#55000000"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -435,7 +436,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp" >
+                android:padding="5dp"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -494,7 +496,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp" >
+                android:padding="5dp"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -553,7 +556,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp" >
+                android:padding="5dp"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -606,7 +610,8 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:background="#55000000" />
+                android:background="#55000000"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -866,6 +871,69 @@
                 android:background="#55000000"
                 android:visibility="invisible" />
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#55000000"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="@string/grand_total"
+                        android:textColor="@color/pink"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <com.utils.CustomTextView
+                        android:id="@+id/txtGrandTotal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:textColor="@color/pink"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#55000000"
+                android:visibility="visible" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:background="#55000000"
+                android:visibility="invisible" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -918,6 +986,70 @@
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         custom:fonttype="trebuchet_ms" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/pink_button_selector"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                <com.utils.CustomTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="@string/got_a_coupon_code_enter_it_here_"
+                    android:textColor="@color/pink"
+                    android:textSize="14sp"
+                    custom:fonttype="trebuchet_ms" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/editCouponcode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:hint="@string/coupon_code"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end|center_vertical"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <com.utils.CustomTextView
+                            android:id="@+id/btnApplyCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/pink_custom_button_selector"
+                            android:gravity="end"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:padding="10dp"
+                            android:singleLine="true"
+                            android:text="@string/apply_code"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            custom:fonttype="trebuchet_ms" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

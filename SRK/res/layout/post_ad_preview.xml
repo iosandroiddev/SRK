@@ -299,15 +299,26 @@
                     android:layout_margin="2dp"
                     android:gravity="start"
                     android:padding="3dp"
-                    android:text="@string/how_much_do_you_want_to_rent_it_for_"
+                    android:text="@string/your_preferred_minimum_period_for_rent_"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     custom:fonttype="trebuchet_ms" />
 
                 <LinearLayout
+                    android:id="@+id/layoutMinRentPeriod"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
 
                     <com.utils.CustomTextView
                         android:id="@+id/dailyCost"

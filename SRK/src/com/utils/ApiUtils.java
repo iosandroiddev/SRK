@@ -75,4 +75,9 @@ public class ApiUtils {
 	
 	public static final String SAVERENTALPAYMENT = BASE_URL
 			+ "Rental/SaveRentalPayment";
+	
+	public static final String VALIDATECOUPON = BASE_URL
+			+ "/Rental/ValidateCoupon";
+	
+	
 }

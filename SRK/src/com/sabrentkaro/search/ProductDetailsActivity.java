@@ -49,6 +49,7 @@ public class ProductDetailsActivity extends BaseActivity {
 	private String mImageUrl;
 	private LinearLayout mLayoutFiedlsValues;
 	private ImageLoader mImageLoader;
+	private String mStrMinRentalPeriod;
 	private JSONArray mItemDetailsArray;
 
 	@Override
@@ -132,6 +133,7 @@ public class ProductDetailsActivity extends BaseActivity {
 
 	private void responseForProductDetailsApi(JSONObject response) {
 		if (response != null) {
+			mStrMinRentalPeriod = response.optString("MinimumRentalPeriod");
 			mStrSecurityDeposit = response.optString("SecurityDeposit");
 			mPTitle = response.optString("Title");
 			Double mSD = response.optDouble("SecurityDeposit");
@@ -426,6 +428,7 @@ public class ProductDetailsActivity extends BaseActivity {
 		mBundle.putString("productPrice", mDailyCost);
 		mBundle.putString("productPriceMonth", mMonthlyCost);
 		mBundle.putString("productPriceWeek", mWeekCost);
+		mBundle.putString("minRent", mStrMinRentalPeriod);
 		mBundle.putString("quantity", mEditQuantity.getText().toString());
 		mBundle.putString("securitDeposit", mtxtSecurityDeposit.getText()
 				.toString());
